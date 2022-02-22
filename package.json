@@ -4,10 +4,11 @@
   "main": "index.js",
   "license": "MIT",
   "private": true,
-  "workspaces": [
-    "dapp",
-    "smart-contracts"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
   "scripts": {
     "dev": "yarn workspace dapp dev --host",
     "build": "yarn workspace dapp build",
