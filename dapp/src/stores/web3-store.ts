@@ -5,6 +5,8 @@ import { useContract } from './contract-store'
 // @ts-ignore
 import Web3 from 'web3/dist/web3.min.js'
 
+import Moralis from 'moralis'
+
 // eslint-disable-next-line
 declare let window: any
 
@@ -16,6 +18,13 @@ export const useWeb3 = defineStore('web3', {
   },
   actions: {
     async connect() {
+      const options: Moralis.StartOptions = {
+        serverUrl: 'https://fyl6j8gl9zhd.usemoralis.com:2053/server',
+        appId: 'eFVrqYn7N4hRoPESX8rqmr21KGkC9WbvNgZGjbug',
+      }
+
+      Moralis.start(options)
+
       if (typeof window.ethereum !== 'undefined') {
         const chainId = parseInt(
           await window.ethereum.request({ method: 'eth_chainId' }),
