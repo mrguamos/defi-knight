@@ -1,0 +1,17 @@
+{
+  "name": "defi-knight",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "dapp",
+    "smart-contracts"
+  ],
+  "scripts": {
+    "dev": "yarn workspace dapp dev --host",
+    "truffle-compile": "yarn workspace smart-contracts compile",
+    "truffle-migrate": "yarn workspace smart-contracts migrate",
+    "truffle-migrate-reset": "yarn workspace smart-contracts migrate-reset"
+  }
+}

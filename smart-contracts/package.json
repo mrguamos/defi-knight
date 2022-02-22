@@ -1,0 +1,30 @@
+{
+  "name": "smart-contracts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate-types": "typechain --target=truffle-v5 'build/contracts/*.json'",
+    "compile": "truffle compile",
+    "migrate": "truffle migrate ",
+    "migrate-reset": "truffle migrate --reset --compile-all"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@chainlink/contracts": "^0.2.2",
+    "@openzeppelin/contracts": "^4.4.0",
+    "@openzeppelin/contracts-upgradeable": "^4.4.0",
+    "@truffle/hdwallet-provider": "^2.0.0"
+  },
+  "devDependencies": {
+    "@openzeppelin/truffle-upgrades": "^1.11.0",
+    "dotenv": "^14.2.0",
+    "truffle-plugin-verify": "^0.5.20"
+  }
+}

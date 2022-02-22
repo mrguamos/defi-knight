@@ -1,0 +1,15 @@
+{
+  "solidity.compileUsingRemoteVersion": "v0.8.2+commit.661d1103",
+  "[vue]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "css.lint.unknownAtRules": "ignore",
+  "editor.formatOnSave": true, 
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    // "source.organizeImports": true,
+  },
+  "eslint.validate": ["javascript","vue","typescript"],
+  "typescript.tsdk": "node_modules/typescript/lib",
+}

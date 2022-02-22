@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .shadow-border {
+    box-shadow: inset 10px -10px 25px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 10px 5px rgba(0, 0, 255, 0.1);
+    -moz-box-shadow: 0 0 10px 5px rgba(0, 0, 255, 0.6);
+    -webkit-box-shadow: 0 0 10px 5px rgba(0, 0, 255, 0.5);
+    -o-box-shadow: 0 0 10px 5px rgba(0, 0, 255, 0.5);
+    border-radius: 25px;
+  }
+
+  .shadow-text {
+    text-shadow: 0 0 5px #1d28b8, 0 0 10px #1d28b8, 0 0 15px #1d28b8,
+      0 0 20px #1d28b8, 0 0 35px #1d28b8, 0 0 40px #1d28b8;
+  }
+}
+
+.router-link-active > .menu {
+  @apply shadow-text;
+  @apply shadow-border;
+}
+
+body {
+  @apply font-lato;
+  background-color: #141416;
+  background-image: url('/src/assets/bg-main.png');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+[role='link']:hover {
+  cursor: pointer;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
