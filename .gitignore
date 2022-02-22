@@ -383,4 +383,4 @@ logs
 secret*.json
 
 # OpenZeppelin
-.openzeppelin/unknown-*.json
+smart-contracts/.openzeppelin/unknown-*.json
