@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
 import { Contract } from 'web3-eth-contract'
 import { AbiItem } from 'web3-utils'
-import commanderABI from '../../../build/contracts/Commander.json'
-import dkABI from '../../../build/contracts/DefiKnight.json'
-import gameABI from '../../../build/contracts/Game.json'
-import guildABI from '../../../build/contracts/Guild.json'
-import knightABI from '../../../build/contracts/Knight.json'
+import commanderABI from 'smart-contracts/build/contracts/Commander.json'
+import dkABI from 'smart-contracts/build/contracts/DefiKnight.json'
+import gameABI from 'smart-contracts/build/contracts/Game.json'
+import guildABI from 'smart-contracts/build/contracts/Guild.json'
+import knightABI from 'smart-contracts/build/contracts/Knight.json'
 import { useWeb3 } from './web3-store'
 
 export const useContract = defineStore('contracts', {
