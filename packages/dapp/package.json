@@ -8,14 +8,17 @@
     "lint": "eslint . --ext .vue,.js,.ts,.jsx,.tsx --fix"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "1.2.34",
+    "@fortawesome/free-brands-svg-icons": "5.15.2",
+    "@fortawesome/free-solid-svg-icons": "5.15.2",
+    "@fortawesome/vue-fontawesome": "3.0.0-4",
     "@headlessui/vue": "^1.4.3",
-    "@heroicons/vue": "^1.0.5",
     "numeral": "^2.0.6",
     "pinia": "^2.0.11",
+    "smart-contracts": "*",
     "vue": "^3.2.25",
     "vue-router": "4",
-    "web3": "^1.7.0",
-    "smart-contracts": "*"
+    "web3": "^1.7.0"
   },
   "devDependencies": {
     "@types/numeral": "^2.0.2",
