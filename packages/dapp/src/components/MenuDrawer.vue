@@ -8,9 +8,6 @@
     class="drawer z-20 flex flex-col h-full fixed w-72 ease-in-out duration-300"
     :class="modelValue ? 'translate-x-0' : '-translate-x-full'"
   >
-    <button @click="emit('update:modelValue', false)">
-      <XIcon class="w-6 h-6 absolute right-1 top-3" />
-    </button>
     <div class="pt-2 pb-[18px]">
       <router-link to="/" @click="emit('update:modelValue', false)">
         <img src="/src/assets/logo-header.png" class="w-[170px]" />
@@ -43,7 +40,6 @@
 </template>
 <script lang="ts" setup>
   import HeaderButton from './HeaderButton.vue'
-  import { XIcon } from '@heroicons/vue/solid'
 
   const emit = defineEmits(['update:modelValue'])
 

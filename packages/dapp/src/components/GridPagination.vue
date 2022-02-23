@@ -51,7 +51,7 @@
             @click="prev()"
           >
             <span class="sr-only">Previous</span>
-            <ChevronLeftIcon class="h-5 w-5" aria-hidden="true" />
+            <FontAwesomeIcon :icon="['fas', 'angle-left']" size="lg" />
           </button>
           <!-- Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" -->
           <button
@@ -71,7 +71,7 @@
             @click="next()"
           >
             <span class="sr-only">Next</span>
-            <ChevronRightIcon class="h-5 w-5" aria-hidden="true" />
+            <FontAwesomeIcon :icon="['fas', 'angle-right']" size="lg" />
           </button>
         </nav>
       </div>
@@ -80,8 +80,6 @@
 </template>
 
 <script lang="ts" setup>
-  import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/solid'
-
   const emit = defineEmits(['update:modelValue'])
 
   const props = defineProps({

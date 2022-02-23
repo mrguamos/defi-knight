@@ -9,7 +9,7 @@
     <div class="flex flex-auto justify-between">
       <div class="ml-5 lg:hidden flex items-center">
         <button @click="drawer = true">
-          <MenuIcon class="h-6 w-6" />
+          <FontAwesomeIcon :icon="['fas', 'bars']" size="lg" />
         </button>
       </div>
       <div class="lg:flex hidden items-center">
@@ -29,27 +29,16 @@
         <router-link to="/marketplace">
           <HeaderButton>MARKETPLACE</HeaderButton>
         </router-link>
-        <!-- <router-link v-slot="{ navigate }" to="/commanders" custom>
-        <div
-          role="link"
-          class="bg-[url('/src/assets/button-commander.png')] hover:bg-[url('/src/assets/button-commander-hl.png')] bg-contain bg-no-repeat bg-center w-44 h-16"
-          @click="navigate"
-        ></div>
-      </router-link>
-      <router-link v-slot="{ navigate }" to="/knights" custom>
-        <div
-          role="link"
-          class="bg-[url('/src/assets/button-knight.png')] hover:bg-[url('/src/assets/button-knight-hl.png')] bg-contain bg-no-repeat bg-center w-44 h-16"
-          @click="navigate"
-        ></div>
-      </router-link> -->
       </div>
       <div class="flex items-center">
         <a href="https://pancakeswap.finance/swap" target="_blank">
           <HeaderButton class="flex items-center mr-2">
-            <currency-dollar-icon class="w-5 h-5 mr-3" />
+            <FontAwesomeIcon :icon="['fas', 'dollar-sign']" class="mr-3" />
             <span>BUY DK</span>
-            <external-link-icon class="w-5 h-5 ml-3" />
+            <FontAwesomeIcon
+              :icon="['fas', 'external-link-alt']"
+              class="ml-3"
+            />
           </HeaderButton>
         </a>
 
@@ -68,9 +57,11 @@
         >
           <div class="flex items-center">
             <MenuButton
-              class="flex justify-center items-center w-full px-4 py-2 text-sm font-medium border-2 border-[#1d28b8] rounded-lg hover:mix-blend-screen"
-              ><span> {{ account.croppedAddress }}</span>
-              <chevron-down-icon class="w-5 h-5" />
+              class="flex justify-center items-center w-full px-4 py-2 text-sm xl:text-md font-medium border-2 border-[#1d28b8] rounded-lg hover:mix-blend-screen"
+              ><span>
+                {{ account.croppedAddress }}
+                <FontAwesomeIcon :icon="['fas', 'angle-down']" size="lg"
+              /></span>
             </MenuButton>
           </div>
           <transition
@@ -107,9 +98,6 @@
 </template>
 
 <script lang="ts" setup>
-  import { CurrencyDollarIcon, MenuIcon } from '@heroicons/vue/solid'
-  import { ExternalLinkIcon } from '@heroicons/vue/solid'
-  import { ChevronDownIcon } from '@heroicons/vue/solid'
   import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
   import HeaderButton from './HeaderButton.vue'
   import numeral from 'numeral'
