@@ -1,6 +1,8 @@
 <template>
   <MenuDrawer v-model="drawer" />
-  <div class="flex top-0 items-center bg-transparent my-2 lg:my-0">
+  <div
+    class="bg-gradient-to-r from-[#040a34] to-[#0b0b0c] flex w-full fixed top-0 z-10 items-center bg-transparent min-h-[60px] lg:min-h-max"
+  >
     <div class="ml-5 lg:block hidden">
       <router-link to="/">
         <img src="/src/assets/logo-header.png" class="w-[170px]" />
