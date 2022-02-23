@@ -4,14 +4,15 @@
   >
     <div class="flex-1 flex justify-between sm:hidden">
       <button
-        class="relative flex disabled:text-opacity-50 items-center px-2 py-1 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+        class="relative flex disabled:text-opacity-50 items-center px-2 py-1 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-black hover:bg-gray-50"
         :disabled="modelValue === 1"
         @click="prev()"
       >
         Previous
       </button>
       <button
-        class="disabled:text-opacity-50 relative flex items-center px-2 py-1 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+        class="disabled:text-opacity-50 relative flex items-center px-2 py-1 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-black hover:bg-gray-50"
+        :disabled="modelValue === pagesNumber"
         @click="next()"
       >
         Next

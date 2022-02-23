@@ -1,47 +1,33 @@
 <template>
-  <div
-    class="flex space-y-2 flex-col p-4 border-4 rounded-lg shadow-lg h-min"
-    :class="{
-      'border-r0': +item.rarity === 0,
-      'border-r1': +item.rarity === 1,
-      'border-r2': +item.rarity === 2,
-      'border-r3': +item.rarity === 3,
-      'border-r4': +item.rarity === 4,
-    }"
-  >
-    <div>
-      <img
-        :src="`/lo-${nft}/${item.class}-${item.gender}-${item.rarity}.png`"
-        class="w-full h-full rounded-lg"
-      />
-    </div>
+  <div>
+    <img
+      :src="`/lo-${nft}/${item.class}-${item.gender}-${item.rarity}.png`"
+      class="rounded-lg"
+    />
     <div
-      class="flex items-center flex-col p-2 border-[1px] border-white rounded-lg shadow-lg"
+      class="text-sm font-medium flex flex-col p-2 rounded-lg shadow-lg h-min"
     >
-      <div class="flex">
-        <StarIconSolid
-          v-for="r of +item.rarity + 1"
-          :key="r"
-          class="h-4 w-4 text-yellow-300"
-        />
-        <StarIcon
-          v-for="r of 5 - (+item.rarity + 1)"
-          :key="r"
-          class="h-4 w-4 text-gray-300"
-        />
+      <div class="flex justify-between">
+        TOKEN ID <span>{{ item.id }}</span>
       </div>
-      <div
-        v-if="+(item as Knight).bonusPower > 0 && nft === 'knights'"
-        class="flex text-sm font-medium"
-      >
-        CP {{ (item as Knight).combatPower }} +
-        {{ (item as Knight).bonusPower }}
+      <div class="flex justify-between">
+        RARITY <span>{{ +item.rarity + 1 }}/5</span>
       </div>
-      <div
-        v-if="(item as Commander).isGenesis && nft === 'commanders'"
-        class="flex text-sm font-medium self-center"
-      >
-        MAX WR + 1
+      <div class="flex justify-between">
+        GENDER <span>{{ item.gender == 0 ? 'Male' : 'Female' }}</span>
+      </div>
+      <div class="flex justify-between">
+        STATS
+        <div v-if="nft === 'knights'">
+          <span>CP {{ (item as Knight).combatPower }}</span>
+          <span v-if="+(item as Knight).bonusPower > 0 ">
+            +
+            {{ (item as Knight).bonusPower }}
+          </span>
+        </div>
+        <div v-if="(item as Commander).isGenesis && nft === 'commanders'">
+          MAX WR + 1
+        </div>
       </div>
     </div>
   </div>
@@ -52,8 +38,6 @@
   import type { Commander } from '../types/commander'
   import type { Knight } from '../types/knight'
   import type { Common } from '../types/common'
-  import { StarIcon } from '@heroicons/vue/outline'
-  import { StarIcon as StarIconSolid } from '@heroicons/vue/solid'
 
   defineProps({
     nft: {
