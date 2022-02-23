@@ -1,8 +1,6 @@
-export type Knight = {
-  rarity: number
-  class: number
-  gender: boolean
+import { Common } from './common'
+
+export type Knight = Common & {
   combatPower: number
   bonusPower: number
-  id: number
 }
