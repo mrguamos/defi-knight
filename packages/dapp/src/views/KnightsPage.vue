@@ -1,7 +1,12 @@
 <template>
   <div class="flex grow flex-col">
     <DefiSpinner v-if="loading" />
-    <KnightList :paginated-knights="paginatedKnights" class="mb-10" />
+    <NFTList
+      :items="paginatedKnights"
+      nft="knights"
+      class="mb-10"
+      mode="inventory"
+    />
     <div class="grow"></div>
     <GridPagination
       v-model="page"
@@ -17,7 +22,6 @@
 </template>
 
 <script lang="ts" setup>
-  import KnightList from '../components/KnightList.vue'
   import { ref, computed } from 'vue'
   import { useKnight } from '../stores/knight-store'
   import { useAccount } from '../stores/account-store'
@@ -26,6 +30,7 @@
   import PrimaryButton from '../components/PrimaryButton.vue'
   import GridPagination from '../components/GridPagination.vue'
   import DefiSpinner from '../components/DefiSpinner.vue'
+  import NFTList from '../components/NFTList.vue'
 
   const page = ref(1)
   const totalVisible = 3

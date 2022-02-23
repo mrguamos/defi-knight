@@ -4,14 +4,15 @@
   >
     <div class="flex-1 flex justify-between sm:hidden">
       <button
-        class="relative flex disabled:text-opacity-50 items-center px-2 py-1 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+        class="relative flex disabled:text-opacity-50 items-center px-2 py-1 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-black hover:bg-gray-50"
         :disabled="modelValue === 1"
         @click="prev()"
       >
         Previous
       </button>
       <button
-        class="disabled:text-opacity-50 relative flex items-center px-2 py-1 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+        class="disabled:text-opacity-50 relative flex items-center px-2 py-1 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-black hover:bg-gray-50"
+        :disabled="modelValue === pagesNumber"
         @click="next()"
       >
         Next
@@ -50,7 +51,7 @@
             @click="prev()"
           >
             <span class="sr-only">Previous</span>
-            <ChevronLeftIcon class="h-5 w-5" aria-hidden="true" />
+            <FontAwesomeIcon :icon="['fas', 'angle-left']" size="lg" />
           </button>
           <!-- Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" -->
           <button
@@ -70,7 +71,7 @@
             @click="next()"
           >
             <span class="sr-only">Next</span>
-            <ChevronRightIcon class="h-5 w-5" aria-hidden="true" />
+            <FontAwesomeIcon :icon="['fas', 'angle-right']" size="lg" />
           </button>
         </nav>
       </div>
@@ -79,8 +80,6 @@
 </template>
 
 <script lang="ts" setup>
-  import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/solid'
-
   const emit = defineEmits(['update:modelValue'])
 
   const props = defineProps({

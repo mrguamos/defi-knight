@@ -1,7 +1,5 @@
-export type Commander = {
-  class: number
-  rarity: number
+import { Common } from './common'
+
+export type Commander = Common & {
   isGenesis: boolean
-  gender: number
-  id: number
 }
