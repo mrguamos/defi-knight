@@ -59,7 +59,7 @@
         >
           <div class="flex items-center">
             <MenuButton
-              class="flex justify-center items-center w-full px-4 py-2 text-sm xl:text-md font-medium border-2 border-[#1d28b8] rounded-lg hover:mix-blend-screen"
+              class="flex justify-center items-center w-full px-4 py-2 text-sm xl:text-md font-medium border-2 border-[#1d28b8] rounded-lg hover:mix-blend-hard-light"
               ><span>
                 {{ account.croppedAddress }}
               </span>
