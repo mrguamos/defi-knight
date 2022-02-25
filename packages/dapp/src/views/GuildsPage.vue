@@ -72,7 +72,7 @@
                 <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
                   {{ item.winRate }}
                 </td>
-                <td>
+                <td class="px-6 text-sm font-medium whitespace-nowrap">
                   <PrimaryButton>MANAGE</PrimaryButton>
                 </td>
               </tr>
