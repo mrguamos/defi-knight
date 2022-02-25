@@ -1,9 +1,9 @@
 <template>
   <div v-if="mode === 'inventory'" class="flex justify-between">
-    <button class="text-[#9ba1fd]" tooltip="sell">
+    <button class="text-[#9ba1fd] inline-flex items-center">
       <FontAwesomeIcon :icon="['fas', 'gift']" size="lg" />
     </button>
-    <button class="text-[#9ba1fd]">
+    <button class="text-[#9ba1fd] inline-flex items-center">
       <FontAwesomeIcon :icon="['fas', 'tag']" size="lg" />
     </button>
   </div>

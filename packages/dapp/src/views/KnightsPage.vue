@@ -1,5 +1,5 @@
 <template>
-  <div class="flex grow flex-col">
+  <div class="flex flex-col h-full pb-10">
     <DefiSpinner v-if="loading" />
     <NFTList
       :items="paginatedKnights"
@@ -38,10 +38,7 @@
   const knight = useKnight()
   const account = useAccount()
   const loading = ref(false)
-  const snackbar = ref(false)
-  const snackbarText = ref('')
   const knights = ref<Knight[]>([])
-  const overlay = ref(false)
 
   account.$subscribe(async (_, state) => {
     if (state.isConnected) {
@@ -55,14 +52,13 @@
     try {
       loading.value = true
       await knight.mintKnight()
-      snackbarText.value = 'Success'
-      snackbar.value = true
+
       knights.value.push(await getKnight())
       // eslint-disable-next-line
     } catch (error: any) {
       console.log(error)
       if (error.code !== 4001) {
-        snackbarText.value = 'Something went wrong'
+        //
       }
     } finally {
       loading.value = false
@@ -78,7 +74,7 @@
   const getKnights = async () => {
     if (account.isConnected) {
       try {
-        overlay.value = true
+        loading.value = true
         const tokens: BN[] = await knight.getKnights()
         knights.value = await Promise.all(
           tokens.map(async (token) => {
@@ -91,7 +87,7 @@
         // eslint-disable-next-line
       } catch (e: any) {
       } finally {
-        overlay.value = false
+        loading.value = false
       }
     }
   }

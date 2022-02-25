@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { useWeb3 } from './web3-store'
 import { useContract } from './contract-store'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -14,10 +13,9 @@ export const useAccount = defineStore('account', {
     }
   },
   actions: {
-    async init() {
+    async init(address: string) {
+      this.address = address
       this.isConnected = true
-      const eth = useWeb3()
-      this.address = (await eth.web3.eth.getAccounts())[0]
       await this.getDK()
     },
     async getDK() {

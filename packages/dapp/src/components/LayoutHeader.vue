@@ -1,6 +1,8 @@
 <template>
   <MenuDrawer v-model="drawer" />
-  <div class="flex top-0 items-center bg-transparent my-2 lg:my-0">
+  <div
+    class="bg-gradient-to-r to-[#040a34] from-gray-900 flex w-full fixed top-0 z-10 items-center bg-transparent min-h-[60px] lg:min-h-max"
+  >
     <div class="ml-5 lg:block hidden">
       <router-link to="/">
         <img src="/src/assets/logo-header.png" class="w-[170px]" />
@@ -8,7 +10,7 @@
     </div>
     <div class="flex flex-auto justify-between">
       <div class="ml-5 lg:hidden flex items-center">
-        <button @click="drawer = true">
+        <button class="inline-flex items-center" @click="drawer = true">
           <FontAwesomeIcon :icon="['fas', 'bars']" size="lg" />
         </button>
       </div>
@@ -32,7 +34,7 @@
       </div>
       <div class="flex items-center">
         <a href="https://pancakeswap.finance/swap" target="_blank">
-          <HeaderButton class="flex items-center mr-2">
+          <HeaderButton class="inline-flex items-center mr-2">
             <FontAwesomeIcon :icon="['fas', 'dollar-sign']" class="mr-3" />
             <span>BUY DK</span>
             <FontAwesomeIcon
@@ -60,8 +62,12 @@
               class="flex justify-center items-center w-full px-4 py-2 text-sm xl:text-md font-medium border-2 border-[#1d28b8] rounded-lg hover:mix-blend-screen"
               ><span>
                 {{ account.croppedAddress }}
-                <FontAwesomeIcon :icon="['fas', 'angle-down']" size="lg"
-              /></span>
+              </span>
+              <FontAwesomeIcon
+                :icon="['fas', 'angle-down']"
+                size="lg"
+                class="ml-1"
+              />
             </MenuButton>
           </div>
           <transition

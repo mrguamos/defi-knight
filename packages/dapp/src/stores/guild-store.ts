@@ -14,7 +14,10 @@ export const useGuild = defineStore('guild', {
   actions: {
     mintGuild(name: string) {
       const contracts = useContract()
-      return contracts.game.methods.mintGuild(Web3.fromAscii(name)).send()
+      const account = useAccount()
+      return contracts.game.methods.mintGuild(Web3.utils.fromAscii(name)).send({
+        from: account.address,
+      })
     },
     isPresale() {
       const contracts = useContract()

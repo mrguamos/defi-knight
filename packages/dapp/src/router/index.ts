@@ -23,6 +23,12 @@ const router = createRouter({
       component: () =>
         import(/* webpackChunkName: "knights" */ '../views/KnightsPage.vue'),
     },
+    {
+      path: '/guilds',
+      name: 'GuildsPage',
+      component: () =>
+        import(/* webpackChunkName: "guilds" */ '../views/GuildsPage.vue'),
+    },
   ],
 })
 

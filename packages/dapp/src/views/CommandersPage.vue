@@ -1,5 +1,5 @@
 <template>
-  <div class="flex grow flex-col">
+  <div class="flex flex-col h-full pb-10">
     <DefiSpinner v-if="loading" />
     <NFTList
       :items="paginatedCommanders"
@@ -38,10 +38,7 @@
   const commander = useCommander()
   const account = useAccount()
   const loading = ref(false)
-  const snackbar = ref(false)
-  const snackbarText = ref('')
   const commanders = ref<Commander[]>([])
-  const overlay = ref(false)
 
   account.$subscribe(async (_, state) => {
     if (state.isConnected) {
@@ -55,14 +52,12 @@
     try {
       loading.value = true
       await commander.mintCommander()
-      snackbarText.value = 'Success'
-      snackbar.value = true
       commanders.value.push(await getCommander())
       // eslint-disable-next-line
     } catch (error: any) {
       console.log(error)
       if (error.code !== 4001) {
-        snackbarText.value = 'Something went wrong'
+        //
       }
     } finally {
       loading.value = false
@@ -81,7 +76,7 @@
   const getCommanders = async () => {
     if (account.isConnected) {
       try {
-        overlay.value = true
+        loading.value = true
         const tokens: BN[] = await commander.getCommanders()
         commanders.value = await Promise.all(
           tokens.map(async (token) => {
@@ -94,7 +89,7 @@
         // eslint-disable-next-line
       } catch (e: any) {
       } finally {
-        overlay.value = false
+        loading.value = false
       }
     }
   }

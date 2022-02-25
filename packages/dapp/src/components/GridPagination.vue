@@ -12,7 +12,7 @@
       </button>
       <button
         class="disabled:text-opacity-50 relative flex items-center px-2 py-1 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-black hover:bg-gray-50"
-        :disabled="modelValue === pagesNumber"
+        :disabled="modelValue === pagesNumber || pagesNumber < 1"
         @click="next()"
       >
         Next
@@ -67,7 +67,7 @@
 
           <button
             class="disabled:text-opacity-50 relative flex items-center px-2 py-1 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-            :disabled="modelValue === pagesNumber"
+            :disabled="modelValue === pagesNumber || pagesNumber < 1"
             @click="next()"
           >
             <span class="sr-only">Next</span>

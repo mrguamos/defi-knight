@@ -10,8 +10,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "generate-types": "typechain --target=truffle-v5 'build/contracts/*.json'",
     "compile": "truffle compile",
-    "migrate": "truffle migrate ",
-    "migrate-reset": "truffle migrate --reset --compile-all"
+    "migrate": "truffle migrate",
+    "migrate-reset": "truffle migrate --reset --compile-all",
+    "truffle-exec": "truffle exec"
   },
   "keywords": [],
   "author": "",
