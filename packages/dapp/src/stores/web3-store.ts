@@ -26,11 +26,11 @@ export const useWeb3 = defineStore('web3', {
           throw new Error('Wrong network')
         }
         this.web3 = new Web3(Web3.givenProvider || 'http://localhost:8545')
-        await this.web3.eth.requestAccounts()
+        const address = await this.web3.eth.requestAccounts()
         const contracts = useContract()
         contracts.init()
         registerListeners()
-        await useAccount().init()
+        await useAccount().init(address[0])
         return
       }
       alert('Please install metamask')
@@ -38,11 +38,11 @@ export const useWeb3 = defineStore('web3', {
   },
 })
 
-const handleAccountsChanged = (accounts: string[]) => {
+const handleAccountsChanged = async (accounts: string[]) => {
   useAccount().$reset()
   if (accounts.length > 0) {
     const account = useAccount()
-    account.init()
+    await account.init(accounts[0])
   }
 }
 
