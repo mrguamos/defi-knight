@@ -79,7 +79,7 @@
             leave-to-class="transform scale-95 opacity-0"
           >
             <MenuItems
-              class="text-white text-sm mt-2 p-2 font-medium shadow-border focus:outline-none absolute right-0 bg-gradient-to-r from-[#0b0b0b] to-[#141416] rounded-lg shadow-lg w-48"
+              class="text-white text-sm mt-2 p-2 font-medium shadow-border focus:outline-none absolute right-0 bg-gradient-to-r to-[#040a34] from-gray-900 rounded-lg shadow-lg w-48"
             >
               <MenuItem>
                 <span

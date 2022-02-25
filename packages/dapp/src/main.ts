@@ -14,6 +14,7 @@ import {
   faBars,
   faTag,
   faGift,
+  faEdit,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 ;(async () => {
@@ -25,7 +26,8 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
     faAngleLeft,
     faBars,
     faTag,
-    faGift
+    faGift,
+    faEdit
   )
   const app = createApp(App)
   app.component('FontAwesomeIcon', FontAwesomeIcon)

@@ -72,8 +72,12 @@
                 <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
                   {{ item.winRate }}
                 </td>
-                <td class="px-6 text-sm font-medium whitespace-nowrap">
-                  <PrimaryButton>MANAGE</PrimaryButton>
+                <td
+                  class="text-right px-6 text-sm font-medium whitespace-nowrap"
+                >
+                  <button class="text-[#9ba1fd] inline-flex items-center">
+                    <FontAwesomeIcon :icon="['fas', 'edit']" size="lg" />
+                  </button>
                 </td>
               </tr>
             </tbody>
