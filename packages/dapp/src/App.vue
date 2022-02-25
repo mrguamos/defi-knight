@@ -3,9 +3,9 @@
 </script>
 
 <template>
-  <div class="flex flex-col grow h-screen text-white">
-    <LayoutHeader />
-    <div class="flex grow pb-10 px-10 pt-28 justify-center">
+  <LayoutHeader />
+  <div class="flex min-h-screen">
+    <div class="container mx-auto pt-28">
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
           <component :is="Component" />

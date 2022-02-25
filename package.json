@@ -7,6 +7,10 @@
   "workspaces": {
     "packages": [
       "packages/*"
+    ],
+    "nohoist": [
+      "**/smart-contracts",
+      "**/smart-contracts/**"
     ]
   },
   "scripts": {
@@ -16,6 +20,7 @@
     "preview": "yarn workspace dapp preview",
     "truffle-compile": "yarn workspace smart-contracts compile",
     "truffle-migrate": "yarn workspace smart-contracts migrate",
-    "truffle-migrate-reset": "yarn workspace smart-contracts migrate-reset"
+    "truffle-migrate-reset": "yarn workspace smart-contracts migrate-reset",
+    "truffle-exec": "yarn workspace smart-contracts truffle-exec"
   }
 }
