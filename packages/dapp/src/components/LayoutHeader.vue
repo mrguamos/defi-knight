@@ -95,6 +95,13 @@
                   REWARDS
                 </span>
               </MenuItem>
+              <MenuItem @click="eth.logout()">
+                <span
+                  class="block px-4 py-2 hover:cursor-pointer hover:shadow-text rounded-lg"
+                >
+                  LOGOUT
+                </span>
+              </MenuItem>
             </MenuItems>
           </transition>
         </Menu>

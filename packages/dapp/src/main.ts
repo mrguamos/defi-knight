@@ -35,7 +35,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
   app.use(router)
   try {
     const eth = useWeb3()
-    await eth.connect()
+    await eth.init()
   } catch (error) {
     console.log(error)
   } finally {

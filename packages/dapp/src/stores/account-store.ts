@@ -1,45 +1,52 @@
 import { defineStore } from 'pinia'
 import { useContract } from './contract-store'
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import Web3 from 'web3/dist/web3.min.js'
+import Moralis from 'moralis'
+import dkABI from 'smart-contracts/build/contracts/DefiKnight.json'
 
 export const useAccount = defineStore('account', {
   state: () => {
     return {
-      address: '',
       totalDK: 0,
-      isConnected: false,
     }
   },
   actions: {
-    async init(address: string) {
-      this.address = address
-      this.isConnected = true
+    async init() {
       await this.getDK()
     },
     async getDK() {
-      const contracts = useContract()
-      this.totalDK = await contracts.dk.methods.balanceOf(this.address).call()
+      const address = this.getAddress
+      const balances = await Moralis.Web3API.account.getTokenBalances({
+        chain: 'bsc',
+        address: address,
+        token_addresses: [
+          dkABI.networks['1337' as keyof typeof dkABI.networks].address,
+        ],
+      })
+      console.log(balances)
     },
   },
   getters: {
-    croppedAddress: (state) => {
-      if (state.address) {
+    croppedAddress: () => {
+      if (Moralis.User.current()) {
+        const address = Moralis.User.current()?.attributes.ethAddress
         return (
-          state.address.substring(0, 5) +
+          address.substring(0, 5) +
           '...' +
-          state.address.substring(
-            state.address.length - 4,
-            state.address.length
-          )
+          address.substring(address.length - 4, address.length)
         )
       }
     },
-    getTotalDK: (state) => {
-      return function (unit: string) {
-        return Web3.utils.fromWei(state.totalDK, unit)
-      }
+    getAddress: () => {
+      return Moralis.User.current()?.attributes.ethAddress
+    },
+    getUser: () => {
+      const user = Moralis.User.current()
+      return user
+    },
+    isConnected() {
+      const user = this.getUser
+      if (user) return true
+      return false
     },
   },
 })
