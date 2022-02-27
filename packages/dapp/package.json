@@ -15,12 +15,12 @@
     "@fortawesome/vue-fontawesome": "3.0.0-4",
     "@headlessui/vue": "^1.4.3",
     "@tailwindcss/forms": "^0.4.0",
+    "ethers": "^5.5.4",
     "numeral": "^2.0.6",
     "pinia": "^2.0.11",
     "smart-contracts": "*",
     "vue": "^3.2.25",
-    "vue-router": "4",
-    "web3": "^1.7.0"
+    "vue-router": "4"
   },
   "devDependencies": {
     "@types/numeral": "^2.0.2",

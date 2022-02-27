@@ -58,10 +58,10 @@
                   {{ item.id }}
                 </td>
                 <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                  {{ Web3.utils.toAscii(item.emblem) }}
+                  {{ ethers.utils.parseBytes32String(item.emblem) }}
                 </td>
                 <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                  {{ Web3.utils.toAscii(item.name) }}
+                  {{ ethers.utils.parseBytes32String(item.name) }}
                 </td>
                 <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
                   {{ item.morale }}
@@ -127,7 +127,7 @@
               leave-to="opacity-0 scale-95"
             >
               <div
-                class="inline-flex justify-center min-w-[500px] p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-gradient-to-r to-[#040a34] from-gray-900 shadow-xl rounded-lg"
+                class="inline-flex justify-center w-full max-w-[500px] p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-gradient-to-r to-[#040a34] from-gray-900 shadow-xl rounded-lg"
               >
                 <div class="flex grow flex-col text-sm gap-4">
                   <input
@@ -164,11 +164,8 @@
   import SecondaryButton from '../components/SecondaryButton.vue'
   import DefiSpinner from '../components/DefiSpinner.vue'
   import { useAccount } from '../stores/account-store'
-  import BN from 'bn.js'
   import { Guild } from '../types/guild'
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  import Web3 from 'web3/dist/web3.min.js'
+  import { ethers } from 'ethers'
   import GridPagination from '../components/GridPagination.vue'
 
   const page = ref(1)
@@ -201,7 +198,8 @@
   const mintGuild = async () => {
     try {
       loading.value = true
-      await guild.mintGuild(name.value)
+      const res = await guild.mintGuild(name.value)
+      await res.wait()
       guilds.value.push(await getGuild())
       // eslint-disable-next-line
     } catch (error: any) {
@@ -219,11 +217,11 @@
     if (account.isConnected) {
       try {
         loading.value = true
-        const tokens: BN[] = await guild.getGuilds()
+        const tokens = await guild.getGuilds()
         guilds.value = await Promise.all(
           tokens.map(async (token) => {
             const id = Number(token.toString())
-            const c = await guild.getGuild(id)
+            const c = (await guild.getGuild(id))[0]
             return { ...c, id: id }
           })
         )
@@ -239,7 +237,7 @@
 
   const getGuild = async () => {
     const tokenId: number = parseInt(await guild.getLastIndexGuild(), 10)
-    const c = await guild.getGuild(tokenId)
+    const c = (await guild.getGuild(tokenId))[0]
     return { ...c, id: tokenId }
   }
 

@@ -26,7 +26,6 @@
   import { useCommander } from '../stores/commander-store'
   import { useAccount } from '../stores/account-store'
   import { Commander } from '../types/commander'
-  import BN from 'bn.js'
   import PrimaryButton from '../components/PrimaryButton.vue'
   import GridPagination from '../components/GridPagination.vue'
   import DefiSpinner from '../components/DefiSpinner.vue'
@@ -51,7 +50,8 @@
   const mintCommander = async () => {
     try {
       loading.value = true
-      await commander.mintCommander()
+      const res = await commander.mintCommander()
+      await res.wait()
       commanders.value.push(await getCommander())
       // eslint-disable-next-line
     } catch (error: any) {
@@ -69,7 +69,7 @@
       await commander.getLastIndexCommander(),
       10
     )
-    const c = await commander.getCommander(tokenId)
+    const c = (await commander.getCommander(tokenId))[0]
     return { ...c, id: tokenId }
   }
 
@@ -77,11 +77,11 @@
     if (account.isConnected) {
       try {
         loading.value = true
-        const tokens: BN[] = await commander.getCommanders()
+        const tokens = await commander.getCommanders()
         commanders.value = await Promise.all(
           tokens.map(async (token) => {
             const id = Number(token.toString())
-            const c = await commander.getCommander(id)
+            const c = (await commander.getCommander(id))[0]
             return { ...c, id: id }
           })
         )

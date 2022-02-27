@@ -1,59 +1,55 @@
 import { defineStore } from 'pinia'
 import { useAccount } from './account-store'
 import { useContract } from './contract-store'
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import Web3 from 'web3/dist/web3.min.js'
-import BN from 'bn.js'
+import { ethers, BigNumberish, providers } from 'ethers'
 
 export const useCommander = defineStore('commander', {
   state: () => {
     return {}
   },
   actions: {
-    mintCommander() {
+    mintCommander(): Promise<providers.TransactionResponse> {
       const contracts = useContract()
-      const account = useAccount()
-      return contracts.game.methods.mintCommanderPresale().send({
-        value: Web3.utils.toWei('0.00001', 'ether').toString(),
-        from: account.address,
+
+      return contracts.game.functions.mintCommanderPresale({
+        value: ethers.utils.parseUnits('0.00001', 'ether'),
+        gasLimit: 300000,
       })
     },
     isPresale() {
       const contracts = useContract()
-      return contracts.commander.methods.isPresale().call()
+      return contracts.commander.functions.isPresale()
     },
     async getCommanders() {
       const contracts = useContract()
       const account = useAccount()
       const balance = parseInt(
-        await contracts.commander.methods.balanceOf(account.address).call(),
+        await contracts.commander.functions.balanceOf(account.address),
         10
       )
-      const tokens: Promise<BN[]> = Promise.all(
+
+      const tokens: Promise<BigNumberish[]> = Promise.all(
         [...Array(balance).keys()].map((_, i) =>
-          contracts.commander.methods
-            .tokenOfOwnerByIndex(account.address, i)
-            .call()
+          contracts.commander.functions.tokenOfOwnerByIndex(account.address, i)
         )
       )
       return tokens
     },
     getCommander(tokenId: number) {
       const contracts = useContract()
-      return contracts.commander.methods.getCommander(tokenId).call()
+      return contracts.commander.functions.getCommander(tokenId)
     },
     async getLastIndexCommander() {
       const contracts = useContract()
       const account = useAccount()
       const balance = parseInt(
-        await contracts.commander.methods.balanceOf(account.address).call(),
+        await contracts.commander.functions.balanceOf(account.address),
         10
       )
-      return contracts.commander.methods
-        .tokenOfOwnerByIndex(account.address, balance - 1)
-        .call()
+      return contracts.commander.functions.tokenOfOwnerByIndex(
+        account.address,
+        balance - 1
+      )
     },
   },
 })

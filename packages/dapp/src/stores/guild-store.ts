@@ -1,56 +1,52 @@
 import { defineStore } from 'pinia'
 import { useAccount } from './account-store'
 import { useContract } from './contract-store'
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import Web3 from 'web3/dist/web3.min.js'
-import BN from 'bn.js'
+import { ethers, BigNumberish, providers } from 'ethers'
 
 export const useGuild = defineStore('guild', {
   state: () => {
     return {}
   },
   actions: {
-    mintGuild(name: string) {
+    mintGuild(name: string): Promise<providers.TransactionResponse> {
       const contracts = useContract()
-      const account = useAccount()
-      return contracts.game.methods.mintGuild(Web3.utils.fromAscii(name)).send({
-        from: account.address,
-      })
+      return contracts.game.functions.mintGuild(
+        ethers.utils.formatBytes32String(name)
+      )
     },
     isPresale() {
       const contracts = useContract()
-      return contracts.guild.methods.isPresale().call()
+      return contracts.guild.functions.isPresale()
     },
     async getGuilds() {
       const contracts = useContract()
       const account = useAccount()
       const balance = parseInt(
-        await contracts.guild.methods.balanceOf(account.address).call(),
+        await contracts.guild.functions.balanceOf(account.address),
         10
       )
-      const tokens: Promise<BN[]> = Promise.all(
+      const tokens: Promise<BigNumberish[]> = Promise.all(
         [...Array(balance).keys()].map((_, i) =>
-          contracts.guild.methods.tokenOfOwnerByIndex(account.address, i).call()
+          contracts.guild.functions.tokenOfOwnerByIndex(account.address, i)
         )
       )
       return tokens
     },
     getGuild(tokenId: number) {
       const contracts = useContract()
-      return contracts.guild.methods.getGuild(tokenId).call()
+      return contracts.guild.functions.getGuild(tokenId)
     },
     async getLastIndexGuild() {
       const contracts = useContract()
       const account = useAccount()
       const balance = parseInt(
-        await contracts.guild.methods.balanceOf(account.address).call(),
+        await contracts.guild.functions.balanceOf(account.address),
         10
       )
-      return contracts.guild.methods
-        .tokenOfOwnerByIndex(account.address, balance - 1)
-        .call()
+      return contracts.guild.functions.tokenOfOwnerByIndex(
+        account.address,
+        balance - 1
+      )
     },
   },
 })

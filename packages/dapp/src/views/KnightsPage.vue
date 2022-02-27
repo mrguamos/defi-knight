@@ -26,7 +26,6 @@
   import { useKnight } from '../stores/knight-store'
   import { useAccount } from '../stores/account-store'
   import { Knight } from '../types/knight'
-  import BN from 'bn.js'
   import PrimaryButton from '../components/PrimaryButton.vue'
   import GridPagination from '../components/GridPagination.vue'
   import DefiSpinner from '../components/DefiSpinner.vue'
@@ -51,8 +50,8 @@
   const mintKnight = async () => {
     try {
       loading.value = true
-      await knight.mintKnight()
-
+      const res = await knight.mintKnight()
+      await res.wait()
       knights.value.push(await getKnight())
       // eslint-disable-next-line
     } catch (error: any) {
@@ -67,7 +66,7 @@
 
   const getKnight = async () => {
     const tokenId: number = parseInt(await knight.getLastIndexKnight(), 10)
-    const c = await knight.getKnight(tokenId)
+    const c = (await knight.getKnight(tokenId))[0]
     return { ...c, id: tokenId }
   }
 
@@ -75,11 +74,11 @@
     if (account.isConnected) {
       try {
         loading.value = true
-        const tokens: BN[] = await knight.getKnights()
+        const tokens = await knight.getKnights()
         knights.value = await Promise.all(
           tokens.map(async (token) => {
             const id = Number(token.toString())
-            const c = await knight.getKnight(id)
+            const c = (await knight.getKnight(id))[0]
             return { ...c, id: id }
           })
         )

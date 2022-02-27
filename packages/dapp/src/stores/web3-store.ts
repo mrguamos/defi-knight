@@ -1,9 +1,8 @@
 import { defineStore } from 'pinia'
 import { useAccount } from './account-store'
 import { useContract } from './contract-store'
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import Web3 from 'web3/dist/web3.min.js'
+import { ethers, providers } from 'ethers'
+import { markRaw } from 'vue'
 
 // eslint-disable-next-line
 declare let window: any
@@ -11,7 +10,8 @@ declare let window: any
 export const useWeb3 = defineStore('web3', {
   state: () => {
     return {
-      web3: undefined as unknown as Web3,
+      signer: undefined as unknown as providers.JsonRpcSigner,
+      provider: undefined as unknown as providers.Web3Provider,
     }
   },
   actions: {
@@ -25,12 +25,16 @@ export const useWeb3 = defineStore('web3', {
         if (chainId !== (Number(import.meta.env.VITE_APP_NETWORK_ID) || 1337)) {
           throw new Error('Wrong network')
         }
-        this.web3 = new Web3(Web3.givenProvider || 'http://localhost:8545')
-        const address = await this.web3.eth.requestAccounts()
+        this.provider = markRaw(
+          new ethers.providers.Web3Provider(window.ethereum)
+        )
+        const address = (await this.provider.send('eth_requestAccounts', []))[0]
+        this.signer = markRaw(this.provider.getSigner())
+        const account = useAccount()
         const contracts = useContract()
         contracts.init()
         registerListeners()
-        await useAccount().init(address[0])
+        await account.init(address)
         return
       }
       alert('Please install metamask')

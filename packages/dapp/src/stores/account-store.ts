@@ -1,8 +1,6 @@
 import { defineStore } from 'pinia'
 import { useContract } from './contract-store'
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import Web3 from 'web3/dist/web3.min.js'
+import { ethers } from 'ethers'
 
 export const useAccount = defineStore('account', {
   state: () => {
@@ -20,7 +18,7 @@ export const useAccount = defineStore('account', {
     },
     async getDK() {
       const contracts = useContract()
-      this.totalDK = await contracts.dk.methods.balanceOf(this.address).call()
+      this.totalDK = await contracts.dk.functions.balanceOf(this.address)
     },
   },
   getters: {
@@ -38,7 +36,7 @@ export const useAccount = defineStore('account', {
     },
     getTotalDK: (state) => {
       return function (unit: string) {
-        return Web3.utils.fromWei(state.totalDK, unit)
+        return ethers.utils.formatUnits(state.totalDK.toString(), unit)
       }
     },
   },

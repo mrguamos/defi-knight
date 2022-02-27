@@ -11,7 +11,7 @@
         TOKEN ID <span>{{ item.id }}</span>
       </div>
       <div class="flex justify-between">
-        RARITY <span>{{ +item.rarity + 1 }}/5</span>
+        RARITY <span>{{ item.rarity + 1 }}/5</span>
       </div>
       <div class="flex justify-between">
         GENDER <span>{{ item.gender == 0 ? 'Male' : 'Female' }}</span>
@@ -20,7 +20,7 @@
         STATS
         <div v-if="nft === 'knights'">
           <span>CP {{ (item as Knight).combatPower }}</span>
-          <span v-if="+(item as Knight).bonusPower > 0 ">
+          <span v-if="(item as Knight).bonusPower > 0 ">
             +
             {{ (item as Knight).bonusPower }}
           </span>
