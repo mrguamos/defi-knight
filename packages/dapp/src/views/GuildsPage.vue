@@ -138,7 +138,7 @@
                   />
                   <div class="flex justify-between text-sm text-white">
                     <PrimaryButton @click="mintGuild()"> SUBMIT</PrimaryButton>
-                    <SecondaryButton @click="closeModal()">
+                    <SecondaryButton c @click="closeModal()">
                       CANCEL</SecondaryButton
                     >
                   </div>
@@ -199,7 +199,8 @@
     try {
       loading.value = true
       const res = await guild.mintGuild(name.value)
-      await res.wait()
+      const receipt = await res.wait()
+      console.log(receipt)
       guilds.value.push(await getGuild())
       // eslint-disable-next-line
     } catch (error: any) {
@@ -249,4 +250,6 @@
     const start = (page.value - 1) * rowsPerPage
     return guilds.value.slice(start, start + rowsPerPage)
   })
+
+  guild.getMintFee()
 </script>

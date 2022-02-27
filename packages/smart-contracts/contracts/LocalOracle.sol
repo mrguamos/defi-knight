@@ -6,7 +6,6 @@ import "./IOracle.sol";
 
 contract LocalOracle is IOracle, AccessControl {
     uint256 price;
-    uint256 usdPrice;
 
     constructor(uint256 _price) {
         price = _price;
@@ -15,7 +14,7 @@ contract LocalOracle is IOracle, AccessControl {
 
     //token per USD
     function getUsdPrice() public view override returns (uint256) {
-        return usdPrice;
+        return price;
     }
 
     function getCurrentPrice() public view override returns (uint256) {
