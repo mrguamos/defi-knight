@@ -11,7 +11,7 @@
     "generate-types": "typechain --target=truffle-v5 'build/contracts/*.json'",
     "compile": "truffle compile",
     "migrate": "truffle migrate",
-    "migrate-local": "truffle migrate --reset --compile-all",
+    "migrate-local": "truffle migrate --reset --compile-all --network development",
     "truffle-exec": "truffle exec"
   },
   "keywords": [],

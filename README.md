@@ -10,5 +10,5 @@ install ganache npm install ganache --global / yarn global add ganache
 install truffle npm install truffle --global / yarn global add truffle  
 run ganache -i 1337 -h 0.0.0.0 //optional -m "your 12 words seed phrase" //IMPORTANT - DO NOT COMMIT OR SHARE ANY SEED PHRASE OR SECRET KEY  
 run yarn install  
-run yarn truffle-migrate-reset --network development  
+run yarn truffle-migrate-local
 run yarn dev
