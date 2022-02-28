@@ -131,9 +131,12 @@
               >
                 <DialogTitle
                   as="h3"
-                  class="text-center text-lg font-bold text-gray-400"
+                  class="text-center text-md font-medium text-yellow-300"
                 >
-                  CREATE GUILD FOR {{ mintFee }} DK
+                  <div class="flex justify-center items-center">
+                    {{ mintFee }} DK
+                    <DKIcon class="w-10 h-10" />
+                  </div>
                 </DialogTitle>
                 <div class="flex grow flex-col text-sm gap-4 mt-5">
                   <input
@@ -174,6 +177,7 @@
   import { Guild } from '../types/guild'
   import { ethers } from 'ethers'
   import GridPagination from '../components/GridPagination.vue'
+  import DKIcon from '../components/DKIcon.vue'
 
   const page = ref(1)
   const totalVisible = 3
@@ -194,7 +198,8 @@
     }
   })
 
-  const guildDialog = () => {
+  const guildDialog = async () => {
+    await getMintFee()
     name.value = ''
     dialog.value = true
   }
@@ -262,6 +267,4 @@
   const getMintFee = async () => {
     mintFee.value = await guild.getMintFee()
   }
-
-  getMintFee()
 </script>

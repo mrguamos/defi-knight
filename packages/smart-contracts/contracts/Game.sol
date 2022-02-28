@@ -34,9 +34,10 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
     uint256 private constant ADD_MEMBER_FEE = 1;
 
     IERC20 private stableCoin;
-    uint256 private presaleFee;
+    uint256 public presaleFee;
     Morale private morale;
     bool isPaused;
+    bool public isPresale;
 
     struct Enemy {
         uint16 combatPower;
@@ -70,6 +71,7 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         stableCoin = _stableCoin;
         morale = _morale;
         isPaused = true;
+        isPresale = true;
     }
 
     function mintKnight() external onlyNonContract {
@@ -91,7 +93,7 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
     }
 
     function mintKnightPresale() external payable onlyNonContract {
-        require(knight.isPresale());
+        require(isPresale);
         require(presaleFee != 0, "Presale Fee Not Set");
         require(msg.value >= presaleFee, "Not Enough Balance");
         counter.increment();
@@ -117,7 +119,7 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
     }
 
     function mintCommanderPresale() external payable onlyNonContract {
-        require(commander.isPresale());
+        require(isPresale);
         require(presaleFee != 0, "Presale Fee Not Set");
         require(msg.value >= presaleFee, "Not Enough Balance");
         counter.increment();
@@ -231,5 +233,9 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
         presaleFee = _presaleFee;
+    }
+
+    function setPresale(bool _isPresale) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        isPresale = _isPresale;
     }
 }

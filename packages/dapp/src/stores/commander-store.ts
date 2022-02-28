@@ -55,5 +55,9 @@ export const useCommander = defineStore('commander', {
       const contracts = useContract()
       return contracts.game.getMintFee()
     },
+    async getPresaleFee() {
+      const contracts = useContract()
+      return contracts.game.presaleFee()
+    },
   },
 })

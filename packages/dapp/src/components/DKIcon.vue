@@ -11,7 +11,6 @@
     viewBox="0 0 80 80"
     enable-background="new 0 0 80 80"
     xml:space="preserve"
-    class="w-10 h-10"
   >
     <image
       id="image0"

@@ -5,7 +5,7 @@ import { ethers, BigNumberish, providers } from 'ethers'
 
 export const useKnight = defineStore('knight', {
   state: () => {
-    return {}
+    return { iKnight: undefined as unknown as ethers.utils.Interface }
   },
   actions: {
     mintKnight(): Promise<providers.TransactionResponse> {
@@ -50,6 +50,14 @@ export const useKnight = defineStore('knight', {
         account.address,
         balance - 1
       )
+    },
+    async getMintFee() {
+      const contracts = useContract()
+      return contracts.game.getMintFee()
+    },
+    async getPresaleFee() {
+      const contracts = useContract()
+      return contracts.game.presaleFee()
     },
   },
 })

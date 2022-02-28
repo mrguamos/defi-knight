@@ -60,17 +60,16 @@
                     class="flex justify-center items-center"
                   >
                     {{ mintFee }} DK
-                    <DKIcon />
+                    <DKIcon class="w-10 h-10" />
 
-                    + 30 BUSD
-                    <BUSDIcon class="ml-2" />
+                    + 30 BUSD <BUSDIcon class="h-6 w-6 ml-2" />
                   </div>
                   <div
                     v-if="isPresale"
                     class="flex justify-center items-center"
                   >
-                    1 BNB
-                    <BNBIcon class="w-6 h-6 ml-1 mr-1" />
+                    {{ presaleFee }} BNB
+                    <BNBIcon class="w-8 h-8 ml-1 mr-1" />
                   </div>
                 </DialogTitle>
                 <div class="flex grow flex-col text-sm gap-4 mt-5">
@@ -109,7 +108,7 @@
   import GridPagination from '../components/GridPagination.vue'
   import DefiSpinner from '../components/DefiSpinner.vue'
   import NFTList from '../components/NFTList.vue'
-  import { BigNumberish } from 'ethers'
+  import { ethers, BigNumberish } from 'ethers'
   import SecondaryButton from '../components/SecondaryButton.vue'
   import DKIcon from '../components/DKIcon.vue'
   import BUSDIcon from '../components/BUSDIcon.vue'
@@ -124,6 +123,7 @@
   const loading = ref(false)
   const commanders = ref<Commander[]>([])
   const mintFee = ref(0)
+  const presaleFee = ref(0)
   const isPresale = ref(false)
 
   account.$subscribe(async (_, state) => {
@@ -134,7 +134,15 @@
     }
   })
 
-  const openDialog = () => {
+  const openDialog = async () => {
+    const res = await Promise.all([
+      commander.getMintFee(),
+      commander.getPresaleFee(),
+    ])
+    mintFee.value = res[0]
+    presaleFee.value = Number(
+      ethers.utils.formatUnits(res[1].toString(), 'ether')
+    )
     dialog.value = true
   }
 
@@ -201,10 +209,6 @@
   const paginatedCommanders = computed(() => {
     const start = (page.value - 1) * rowsPerPage
     return commanders.value.slice(start, start + rowsPerPage)
-  })
-
-  commander.getMintFee().then((res) => {
-    mintFee.value = res
   })
 
   commander.isPresale().then((res) => {

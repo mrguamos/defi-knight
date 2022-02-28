@@ -8,6 +8,7 @@ import { useWeb3 } from './web3-store'
 import { ethers } from 'ethers'
 import { markRaw } from 'vue'
 import { useCommander } from './commander-store'
+import { useKnight } from './knight-store'
 
 export const useContract = defineStore('contracts', {
   state: () => {
@@ -23,6 +24,7 @@ export const useContract = defineStore('contracts', {
     init() {
       const eth = useWeb3()
       const commanderStore = useCommander()
+      const knightStore = useKnight()
       const networkId = import.meta.env.VITE_APP_NETWORK_ID || 1337
 
       this.dk = markRaw(
@@ -55,6 +57,8 @@ export const useContract = defineStore('contracts', {
           eth.signer
         )
       )
+
+      knightStore.iKnight = markRaw(new ethers.utils.Interface(knightABI.abi))
 
       this.guild = markRaw(
         new ethers.Contract(
