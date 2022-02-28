@@ -384,3 +384,4 @@ secret*.json
 
 # OpenZeppelin
 packages/smart-contracts/.openzeppelin/unknown-*.json
+packages/dapp/stats.html

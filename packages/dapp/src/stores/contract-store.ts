@@ -1,9 +1,24 @@
 import { defineStore } from 'pinia'
-import commanderABI from 'smart-contracts/build/contracts/Commander.json'
-import dkABI from 'smart-contracts/build/contracts/DefiKnight.json'
-import gameABI from 'smart-contracts/build/contracts/Game.json'
-import guildABI from 'smart-contracts/build/contracts/Guild.json'
-import knightABI from 'smart-contracts/build/contracts/Knight.json'
+import {
+  abi as commanderABI,
+  networks as commanderNetworks,
+} from 'smart-contracts/build/contracts/Commander.json'
+import {
+  abi as dkABI,
+  networks as dkNetworks,
+} from 'smart-contracts/build/contracts/DefiKnight.json'
+import {
+  abi as gameABI,
+  networks as gameNetworks,
+} from 'smart-contracts/build/contracts/Game.json'
+import {
+  abi as guildABI,
+  networks as guildNetworks,
+} from 'smart-contracts/build/contracts/Guild.json'
+import {
+  abi as knightABI,
+  networks as knightNetworks,
+} from 'smart-contracts/build/contracts/Knight.json'
 import { useWeb3 } from './web3-store'
 import { ethers } from 'ethers'
 import { markRaw } from 'vue'
@@ -29,51 +44,47 @@ export const useContract = defineStore('contracts', {
 
       this.dk = markRaw(
         new ethers.Contract(
-          dkABI.networks[networkId as keyof typeof dkABI.networks].address,
-          dkABI.abi,
+          dkNetworks[networkId as keyof typeof dkNetworks].address,
+          dkABI,
           eth.signer
         )
       )
 
       this.commander = markRaw(
         new ethers.Contract(
-          commanderABI.networks[
-            networkId as keyof typeof commanderABI.networks
+          commanderNetworks[
+            networkId as keyof typeof commanderNetworks
           ].address,
-          commanderABI.abi,
+          commanderABI,
           eth.signer
         )
       )
       commanderStore.iCommander = markRaw(
-        new ethers.utils.Interface(commanderABI.abi)
+        new ethers.utils.Interface(commanderABI)
       )
 
       this.knight = markRaw(
         new ethers.Contract(
-          knightABI.networks[
-            networkId as keyof typeof knightABI.networks
-          ].address,
-          knightABI.abi,
+          knightNetworks[networkId as keyof typeof knightNetworks].address,
+          knightABI,
           eth.signer
         )
       )
 
-      knightStore.iKnight = markRaw(new ethers.utils.Interface(knightABI.abi))
+      knightStore.iKnight = markRaw(new ethers.utils.Interface(knightABI))
 
       this.guild = markRaw(
         new ethers.Contract(
-          guildABI.networks[
-            networkId as keyof typeof guildABI.networks
-          ].address,
-          guildABI.abi,
+          guildNetworks[networkId as keyof typeof guildNetworks].address,
+          guildABI,
           eth.signer
         )
       )
 
       this.game = markRaw(
         new ethers.Contract(
-          gameABI.networks[networkId as keyof typeof gameABI.networks].address,
-          gameABI.abi,
+          gameNetworks[networkId as keyof typeof gameNetworks].address,
+          gameABI,
           eth.signer
         )
       )
