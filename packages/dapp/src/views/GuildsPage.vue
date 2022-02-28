@@ -98,7 +98,7 @@
     >
 
     <TransitionRoot appear :show="dialog" as="template">
-      <Dialog as="div" @close="closeModal">
+      <Dialog as="div" @close="loading ? '' : closeModal()">
         <div class="fixed inset-0 z-10 overflow-y-auto">
           <div class="min-h-screen px-4 text-center">
             <TransitionChild
@@ -110,7 +110,7 @@
               leave-from="opacity-100"
               leave-to="opacity-0"
             >
-              <DialogOverlay class="fixed inset-0" />
+              <DialogOverlay class="fixed inset-0 bg-black opacity-70" />
             </TransitionChild>
 
             <span class="inline-block h-screen align-middle" aria-hidden="true">
@@ -127,16 +127,22 @@
               leave-to="opacity-0 scale-95"
             >
               <div
-                class="inline-flex justify-center w-full max-w-[500px] p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-gradient-to-r to-[#040a34] from-gray-900 shadow-xl rounded-lg"
+                class="inline-block w-auto max-w-[500px] p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-gradient-to-r to-[#040a34] from-gray-900 border-2 border-gray-700 shadow-xl rounded-lg"
               >
-                <div class="flex grow flex-col text-sm gap-4">
+                <DialogTitle
+                  as="h3"
+                  class="text-center text-lg font-bold text-gray-400"
+                >
+                  CREATE GUILD FOR {{ mintFee }} DK
+                </DialogTitle>
+                <div class="flex grow flex-col text-sm gap-4 mt-5">
                   <input
                     v-model="name"
                     class="text-black appearance-none border rounded-lg focus:outline-none focus:border-gray-500"
                     type="text"
                     placeholder="Guild Name"
                   />
-                  <div class="flex justify-between text-sm text-white">
+                  <div class="flex justify-center gap-4 text-sm text-white">
                     <PrimaryButton @click="mintGuild()"> SUBMIT</PrimaryButton>
                     <SecondaryButton c @click="closeModal()">
                       CANCEL</SecondaryButton
@@ -159,6 +165,7 @@
     TransitionChild,
     Dialog,
     DialogOverlay,
+    DialogTitle,
   } from '@headlessui/vue'
   import PrimaryButton from '../components/PrimaryButton.vue'
   import SecondaryButton from '../components/SecondaryButton.vue'
@@ -177,6 +184,7 @@
   const loading = ref(false)
   const guilds = ref<Guild[]>([])
   const account = useAccount()
+  const mintFee = ref(0)
 
   account.$subscribe(async (_, state) => {
     if (state.isConnected) {
@@ -251,5 +259,9 @@
     return guilds.value.slice(start, start + rowsPerPage)
   })
 
-  guild.getMintFee()
+  const getMintFee = async () => {
+    mintFee.value = await guild.getMintFee()
+  }
+
+  getMintFee()
 </script>

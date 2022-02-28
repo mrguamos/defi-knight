@@ -5,13 +5,10 @@ import { ethers, BigNumberish, providers } from 'ethers'
 
 export const useGuild = defineStore('guild', {
   state: () => {
-    return {
-      mintFee: 0,
-    }
+    return {}
   },
   actions: {
     mintGuild(name: string): Promise<providers.TransactionResponse> {
-      this.getMintFee()
       const contracts = useContract()
       return contracts.game.functions.mintGuild(
         ethers.utils.formatBytes32String(name)
@@ -53,8 +50,7 @@ export const useGuild = defineStore('guild', {
     },
     async getMintFee() {
       const contracts = useContract()
-      const res = await contracts.game.getGuildFee()
-      this.mintFee = res
+      return contracts.game.getGuildFee()
     },
   },
 })

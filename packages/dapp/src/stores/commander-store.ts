@@ -5,7 +5,7 @@ import { ethers, BigNumberish, providers } from 'ethers'
 
 export const useCommander = defineStore('commander', {
   state: () => {
-    return {}
+    return { iCommander: undefined as unknown as ethers.utils.Interface }
   },
   actions: {
     mintCommander(): Promise<providers.TransactionResponse> {
@@ -35,9 +35,9 @@ export const useCommander = defineStore('commander', {
       )
       return tokens
     },
-    getCommander(tokenId: number) {
+    getCommander(tokenId: BigNumberish) {
       const contracts = useContract()
-      return contracts.commander.functions.getCommander(tokenId)
+      return contracts.commander.functions.getCommander(tokenId.toString())
     },
     async getLastIndexCommander() {
       const contracts = useContract()
@@ -50,6 +50,10 @@ export const useCommander = defineStore('commander', {
         account.address,
         balance - 1
       )
+    },
+    async getMintFee() {
+      const contracts = useContract()
+      return contracts.game.getMintFee()
     },
   },
 })

@@ -7,6 +7,7 @@ import knightABI from 'smart-contracts/build/contracts/Knight.json'
 import { useWeb3 } from './web3-store'
 import { ethers } from 'ethers'
 import { markRaw } from 'vue'
+import { useCommander } from './commander-store'
 
 export const useContract = defineStore('contracts', {
   state: () => {
@@ -21,6 +22,7 @@ export const useContract = defineStore('contracts', {
   actions: {
     init() {
       const eth = useWeb3()
+      const commanderStore = useCommander()
       const networkId = import.meta.env.VITE_APP_NETWORK_ID || 1337
 
       this.dk = markRaw(
@@ -39,6 +41,9 @@ export const useContract = defineStore('contracts', {
           commanderABI.abi,
           eth.signer
         )
+      )
+      commanderStore.iCommander = markRaw(
+        new ethers.utils.Interface(commanderABI.abi)
       )
 
       this.knight = markRaw(

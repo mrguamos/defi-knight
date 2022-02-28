@@ -10,7 +10,9 @@
     ],
     "nohoist": [
       "**/smart-contracts",
-      "**/smart-contracts/**"
+      "**/smart-contracts/**",
+      "**/dapp",
+      "**/dapp/**"
     ]
   },
   "scripts": {
