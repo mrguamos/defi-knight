@@ -49,7 +49,6 @@ module.exports = {
           `https://data-seed-prebsc-1-s1.binance.org:8545/`
         ),
       network_id: 0x61,
-      confirmations: 10,
       timeoutBlocks: 200,
       skipDryRun: false,
     },
@@ -57,7 +56,6 @@ module.exports = {
       provider: () =>
         new HDWalletProvider(mnemonic, `https://rpc-mumbai.maticvigil.com/`),
       network_id: 80001,
-      confirmations: 10,
       timeoutBlocks: 200,
       gas: 10000000000,
       skipDryRun: false,
