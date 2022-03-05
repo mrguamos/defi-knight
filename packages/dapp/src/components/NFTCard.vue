@@ -11,7 +11,22 @@
         TOKEN ID <span>{{ item.id }}</span>
       </div>
       <div class="flex justify-between">
-        RARITY <span>{{ item.rarity + 1 }}/5</span>
+        RARITY
+        <div class="flex gap-[2px]">
+          <FontAwesomeIcon
+            v-for="r in item.rarity + 1"
+            :key="r"
+            :icon="['fa', 'star']"
+            size="sm"
+            class="text-yellow-300"
+          />
+          <FontAwesomeIcon
+            v-for="r in 4 - item.rarity"
+            :key="r"
+            :icon="['far', 'star']"
+            size="sm"
+          />
+        </div>
       </div>
       <div class="flex justify-between">
         GENDER <span>{{ item.gender == 0 ? 'Male' : 'Female' }}</span>
