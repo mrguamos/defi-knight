@@ -95,6 +95,12 @@ contract Commander is
 
         uint256 rollRarity = (random % 100);
 
+        // • One-star, 44% chance
+        // • Two-star, 35% chance
+        // • Three-star, 15% chance
+        // • Four-star, 5% chance
+        // • Five-star, 1% chance
+
         uint8 rarity;
         if (rollRarity >= 56) rarity = 0;
         else if (rollRarity < 56 && rollRarity >= 21) rarity = 1;

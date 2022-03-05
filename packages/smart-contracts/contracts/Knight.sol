@@ -99,6 +99,12 @@ contract Knight is
         uint16 combatPower;
         uint8 bonusPower = 0;
 
+        // • One-star, 44% chance
+        // • Two-star, 35% chance
+        // • Three-star, 15% chance
+        // • Four-star, 5% chance
+        // • Five-star, 1% chance
+
         if (rollRarity >= 56) {
             rarity = 0;
             combatPower = uint16(random % 50) + 1;
