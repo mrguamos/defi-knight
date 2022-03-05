@@ -163,6 +163,7 @@
 <script lang="ts" setup>
   import { ref, computed } from 'vue'
   import { useGuild } from '../stores/guild-store'
+  import { usePriceManager } from '../stores/price-manager-store'
   import {
     TransitionRoot,
     TransitionChild,
@@ -183,6 +184,7 @@
   const totalVisible = 3
   const rowsPerPage = 10
   const guild = useGuild()
+  const priceManager = usePriceManager()
   const name = ref('')
   const dialog = ref(false)
   const loading = ref(false)
@@ -265,6 +267,6 @@
   })
 
   const getMintFee = async () => {
-    mintFee.value = await guild.getMintFee()
+    mintFee.value = await priceManager.getGuildMintFee()
   }
 </script>

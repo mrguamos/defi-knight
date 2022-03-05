@@ -16,10 +16,6 @@ export const useKnight = defineStore('knight', {
         gasLimit: 300000,
       })
     },
-    isPresale() {
-      const contracts = useContract()
-      return contracts.knight.functions.isPresale()
-    },
     async getKnights() {
       const contracts = useContract()
       const account = useAccount()
@@ -50,14 +46,6 @@ export const useKnight = defineStore('knight', {
         account.address,
         balance - 1
       )
-    },
-    async getMintFee() {
-      const contracts = useContract()
-      return contracts.game.getMintFee()
-    },
-    async getPresaleFee() {
-      const contracts = useContract()
-      return contracts.game.presaleFee()
     },
   },
 })

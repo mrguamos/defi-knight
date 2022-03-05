@@ -9,9 +9,9 @@ import "./Knight.sol";
 import "./Guild.sol";
 import "./DefiKnight.sol";
 import "./IMinter.sol";
-import "./IOracle.sol";
 import "./Morale.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "./PriceManager.sol";
 
 contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
     using Counters for Counters.Counter;
@@ -26,18 +26,9 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
     Guild private guild;
     IMinter private knightMinter;
     IMinter private commanderMinter;
-    IOracle private oracle;
-    uint256 private constant MINT_FEE = 70;
-    uint256 private constant STABLE_FEE = 30;
-    uint256 private constant GUILD_FEE = 10;
-    uint256 private constant MORALE_FEE = 5;
-    uint256 private constant ADD_MEMBER_FEE = 1;
-
     IERC20 private stableCoin;
-    uint256 public presaleFee;
     Morale private morale;
     bool isPaused;
-    bool public isPresale;
 
     struct Enemy {
         uint16 combatPower;
@@ -46,6 +37,8 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
 
     mapping(uint8 => Enemy) enemies;
 
+    PriceManager priceManager;
+
     function initialize(
         DefiKnight _defiKnight,
         Commander _commander,
@@ -53,9 +46,9 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         Guild _guild,
         IMinter _knightMinter,
         IMinter _commanderMinter,
-        IOracle _oracle,
         IERC20 _stableCoin,
-        Morale _morale
+        Morale _morale,
+        PriceManager _priceManager
     ) public initializer {
         __AccessControl_init();
         __UUPSUpgradeable_init();
@@ -67,23 +60,22 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         guild = _guild;
         knightMinter = _knightMinter;
         commanderMinter = _commanderMinter;
-        oracle = _oracle;
         stableCoin = _stableCoin;
         morale = _morale;
         isPaused = true;
-        isPresale = true;
+        priceManager = _priceManager;
     }
 
     function mintKnight() external onlyNonContract {
         require(!isPaused, "Minting disabled");
-        uint256 mintFee = getMintFee();
+        uint256 mintFee = priceManager.getMintFee();
         require(mintFee > 0);
         require(
             defiKnight.balanceOf(msg.sender) >= mintFee,
             "Not Enough Balance"
         );
         require(
-            stableCoin.balanceOf(msg.sender) >= STABLE_FEE,
+            stableCoin.balanceOf(msg.sender) >= priceManager.STABLE_FEE(),
             "Not Enough Balance"
         );
         defiKnight.transferFrom(msg.sender, address(this), mintFee);
@@ -93,7 +85,8 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
     }
 
     function mintKnightPresale() external payable onlyNonContract {
-        require(isPresale);
+        require(priceManager.isPresale());
+        uint256 presaleFee = priceManager.presaleFee();
         require(presaleFee != 0, "Presale Fee Not Set");
         require(msg.value >= presaleFee, "Not Enough Balance");
         counter.increment();
@@ -102,14 +95,14 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
 
     function mintCommander() external onlyNonContract {
         require(!isPaused, "Minting disabled");
-        uint256 mintFee = getMintFee();
+        uint256 mintFee = priceManager.getMintFee();
         require(mintFee > 0);
         require(
             defiKnight.balanceOf(msg.sender) >= mintFee,
             "Not Enough Balance"
         );
         require(
-            stableCoin.balanceOf(msg.sender) >= STABLE_FEE,
+            stableCoin.balanceOf(msg.sender) >= priceManager.STABLE_FEE(),
             "Not Enough Balance"
         );
         defiKnight.transferFrom(msg.sender, address(this), mintFee);
@@ -119,7 +112,8 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
     }
 
     function mintCommanderPresale() external payable onlyNonContract {
-        require(isPresale);
+        require(priceManager.isPresale());
+        uint256 presaleFee = priceManager.presaleFee();
         require(presaleFee != 0, "Presale Fee Not Set");
         require(msg.value >= presaleFee, "Not Enough Balance");
         counter.increment();
@@ -128,7 +122,7 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
 
     function mintGuild(bytes32 name) external onlyNonContract {
         require(!isPaused, "Minting disabled");
-        uint256 guildFee = getGuildFee();
+        uint256 guildFee = priceManager.getGuildFee();
         require(
             defiKnight.balanceOf(msg.sender) >= guildFee,
             "Not Enough Balance"
@@ -140,7 +134,7 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
 
     function buyMorale(uint256 guildId) external payable onlyNonContract {
         require(guild.ownerOf(guildId) == msg.sender);
-        uint256 moraleFee = getMoraleFee();
+        uint256 moraleFee = priceManager.getMoraleFee();
         require(moraleFee > 0);
 
         uint256[] memory knights = guild.getAllKnights(guildId);
@@ -168,12 +162,12 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
     ) external payable onlyNonContract {
         require(guild.ownerOf(guildId) == msg.sender);
 
-        uint256 moraleFee = getMoraleFee();
+        uint256 moraleFee = priceManager.getMoraleFee();
         require(moraleFee > 0);
         uint16 totalMorale = morale.guildMorale(guildId);
         uint256 totalMoraleFee = moraleFee * (knights.length * totalMorale);
 
-        uint256 addMemberFee = getAddMemberFee();
+        uint256 addMemberFee = priceManager.getAddMemberFee();
         require(addMemberFee > 0);
         uint256 totalAddMemberFee = addMemberFee *
             (commanders.length + knights.length);
@@ -193,22 +187,6 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         guild.disband(guildId);
     }
 
-    function getMintFee() public view returns (uint256) {
-        return oracle.getUsdPrice() * MINT_FEE;
-    }
-
-    function getGuildFee() public view returns (uint256) {
-        return oracle.getUsdPrice() * GUILD_FEE;
-    }
-
-    function getMoraleFee() public view returns (uint256) {
-        return oracle.getUsdPrice() * MORALE_FEE;
-    }
-
-    function getAddMemberFee() public view returns (uint256) {
-        return oracle.getUsdPrice() * ADD_MEMBER_FEE;
-    }
-
     function setPaused(bool _isPaused) public onlyRole(DEFAULT_ADMIN_ROLE) {
         isPaused = _isPaused;
     }
@@ -226,16 +204,5 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
 
     function _onlyNonContract() internal view {
         require(tx.origin == msg.sender, "Wallet Only");
-    }
-
-    function setPresaleFee(uint256 _presaleFee)
-        external
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
-        presaleFee = _presaleFee;
-    }
-
-    function setPresale(bool _isPresale) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        isPresale = _isPresale;
     }
 }

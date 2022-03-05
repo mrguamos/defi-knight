@@ -100,6 +100,7 @@
   } from '@headlessui/vue'
   import { ref, computed } from 'vue'
   import { useKnight } from '../stores/knight-store'
+  import { usePriceManager } from '../stores/price-manager-store'
   import { useAccount } from '../stores/account-store'
   import { Knight } from '../types/knight'
   import PrimaryButton from '../components/PrimaryButton.vue'
@@ -117,6 +118,7 @@
   const totalVisible = 3
   const rowsPerPage = 10
   const knight = useKnight()
+  const priceManager = usePriceManager()
   const account = useAccount()
   const loading = ref(false)
   const knights = ref<Knight[]>([])
@@ -133,7 +135,10 @@
   })
 
   const openDialog = async () => {
-    const res = await Promise.all([knight.getMintFee(), knight.getPresaleFee()])
+    const res = await Promise.all([
+      priceManager.getMintFee(),
+      priceManager.getPresaleFee(),
+    ])
     mintFee.value = res[0]
     presaleFee.value = Number(
       ethers.utils.formatUnits(res[1].toString(), 'ether')
@@ -206,7 +211,7 @@
     return knights.value.slice(start, start + rowsPerPage)
   })
 
-  knight.isPresale().then((res) => {
+  priceManager.isPresale().then((res) => {
     isPresale.value = res
   })
 </script>

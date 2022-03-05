@@ -19,6 +19,10 @@ import {
   abi as knightABI,
   networks as knightNetworks,
 } from 'smart-contracts/build/contracts/Knight.json'
+import {
+  abi as priceManagerABI,
+  networks as priceManagerNetworks,
+} from 'smart-contracts/build/contracts/PriceManager.json'
 import { useWeb3 } from './web3-store'
 import { ethers } from 'ethers'
 import { markRaw } from 'vue'
@@ -33,6 +37,7 @@ export const useContract = defineStore('contracts', {
       knight: undefined as unknown as ethers.Contract,
       guild: undefined as unknown as ethers.Contract,
       game: undefined as unknown as ethers.Contract,
+      priceManager: undefined as unknown as ethers.Contract,
     }
   },
   actions: {
@@ -85,6 +90,16 @@ export const useContract = defineStore('contracts', {
         new ethers.Contract(
           gameNetworks[networkId as keyof typeof gameNetworks].address,
           gameABI,
+          eth.signer
+        )
+      )
+
+      this.priceManager = markRaw(
+        new ethers.Contract(
+          priceManagerNetworks[
+            networkId as keyof typeof priceManagerNetworks
+          ].address,
+          priceManagerABI,
           eth.signer
         )
       )

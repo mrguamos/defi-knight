@@ -102,6 +102,7 @@
   } from '@headlessui/vue'
   import { ref, computed } from 'vue'
   import { useCommander } from '../stores/commander-store'
+  import { usePriceManager } from '../stores/price-manager-store'
   import { useAccount } from '../stores/account-store'
   import { Commander } from '../types/commander'
   import PrimaryButton from '../components/PrimaryButton.vue'
@@ -119,6 +120,7 @@
   const totalVisible = 3
   const rowsPerPage = 10
   const commander = useCommander()
+  const priceManager = usePriceManager()
   const account = useAccount()
   const loading = ref(false)
   const commanders = ref<Commander[]>([])
@@ -136,8 +138,8 @@
 
   const openDialog = async () => {
     const res = await Promise.all([
-      commander.getMintFee(),
-      commander.getPresaleFee(),
+      priceManager.getMintFee(),
+      priceManager.getPresaleFee(),
     ])
     mintFee.value = res[0]
     presaleFee.value = Number(
@@ -211,7 +213,7 @@
     return commanders.value.slice(start, start + rowsPerPage)
   })
 
-  commander.isPresale().then((res) => {
+  priceManager.isPresale().then((res) => {
     isPresale.value = res
   })
 </script>

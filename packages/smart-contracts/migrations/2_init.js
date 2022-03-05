@@ -13,6 +13,7 @@ const LocalOracle = artifacts.require("LocalOracle");
 const Oracle = artifacts.require("Oracle");
 const Morale = artifacts.require("Morale");
 const GuildHelper = artifacts.require("GuildHelper");
+const PriceManager = artifacts.require("PriceManager");
 
 module.exports = async (deployer, network, accounts) => {
   let vrf = "";
@@ -44,8 +45,31 @@ module.exports = async (deployer, network, accounts) => {
   }
 
   const defiKnight = await DefiKnight.deployed();
-  const commander = await deployProxy(Commander, { deployer });
-  const knight = await deployProxy(Knight, { deployer });
+  let presaleFee = 0;
+  if (
+    network === "development" ||
+    network === "develop" ||
+    network === "bsctestnet"
+  ) {
+    stableCoin = defiKnight.address;
+    oracle = (await deployer.deploy(LocalOracle, 1)).address;
+    presaleFee = Web3.utils.toWei("0.00001");
+  } else {
+    stableCoin = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56";
+    const priceFeed = "0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee";
+    oracle = (await deployer.deploy(Oracle, priceFeed)).address;
+  }
+
+  const priceManager = await deployProxy(PriceManager, [oracle, presaleFee], {
+    deployer,
+  });
+
+  const commander = await deployProxy(Commander, [priceManager.address], {
+    deployer,
+  });
+  const knight = await deployProxy(Knight, [priceManager.address], {
+    deployer,
+  });
   const guildHelper = await deployProxy(
     GuildHelper,
     [commander.address, knight.address],
@@ -62,19 +86,6 @@ module.exports = async (deployer, network, accounts) => {
   );
   await guildHelper.setGuildAddress(guild.address);
   const morale = await deployProxy(Morale, { deployer });
-
-  if (
-    network === "development" ||
-    network === "develop" ||
-    network === "bsctestnet"
-  ) {
-    stableCoin = defiKnight.address;
-    oracle = (await deployer.deploy(LocalOracle, 1)).address;
-  } else {
-    stableCoin = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56";
-    const priceFeed = "0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee";
-    oracle = (await deployer.deploy(Oracle, priceFeed)).address;
-  }
 
   //   if (network === "bsctestnet") {
   //     vrf = "0xa555fC018435bef5A13C6c6870a9d4C11DEC329C";
@@ -143,9 +154,9 @@ module.exports = async (deployer, network, accounts) => {
       guild.address,
       knightMinter.address,
       commanderMinter.address,
-      oracle,
       stableCoin,
       morale.address,
+      priceManager.address,
     ],
     { deployer }
   );
@@ -169,7 +180,4 @@ module.exports = async (deployer, network, accounts) => {
   await guild.grantRole(GAME_ADMIN_ROLE, game.address);
 
   await defiKnight.setTaxRecipientAddress(game.address);
-  if (network !== "mainnet") {
-    await game.setPresaleFee(Web3.utils.toWei("0.00001"));
-  }
 };

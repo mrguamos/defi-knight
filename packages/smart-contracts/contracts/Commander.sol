@@ -8,6 +8,8 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol"
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "./PriceManager.sol";
 
 contract Commander is
     Initializable,
@@ -43,10 +45,12 @@ contract Commander is
 
     address public guildAddress;
 
+    PriceManager priceManager;
+
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() initializer {}
 
-    function initialize() public initializer {
+    function initialize(PriceManager _priceManager) public initializer {
         __ERC721_init("DefiKnightCommander", "DKC");
         __ERC721Enumerable_init();
         __Pausable_init();
@@ -58,6 +62,7 @@ contract Commander is
         _grantRole(PAUSER_ROLE, msg.sender);
         _grantRole(MINTER_ROLE, msg.sender);
         _grantRole(UPGRADER_ROLE, msg.sender);
+        priceManager = _priceManager;
     }
 
     function _authorizeUpgrade(address newImplementation)
@@ -99,7 +104,7 @@ contract Commander is
         commanders[tokenId] = CommanderState(
             rarity,
             uint8(rollClass),
-            isPresale(),
+            priceManager.isPresale(),
             uint8(rollGender)
         );
         emit NewCommander(tokenId, to);
@@ -177,9 +182,5 @@ contract Commander is
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
         guildAddress = _guildAddress;
-    }
-
-    function isPresale() public view returns (bool) {
-        return counter.current() <= 1000;
     }
 }

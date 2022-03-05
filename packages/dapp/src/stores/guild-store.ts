@@ -14,10 +14,6 @@ export const useGuild = defineStore('guild', {
         ethers.utils.formatBytes32String(name)
       )
     },
-    isPresale() {
-      const contracts = useContract()
-      return contracts.guild.functions.isPresale()
-    },
     async getGuilds() {
       const contracts = useContract()
       const account = useAccount()
@@ -47,10 +43,6 @@ export const useGuild = defineStore('guild', {
         account.address,
         balance - 1
       )
-    },
-    async getMintFee() {
-      const contracts = useContract()
-      return contracts.game.getGuildFee()
     },
   },
 })
