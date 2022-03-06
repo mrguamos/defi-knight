@@ -5,7 +5,7 @@ export const usePriceManager = defineStore('price-manager', {
   actions: {
     isPresale() {
       const contracts = useContract()
-      return contracts.priceManager.functions.isPresale()
+      return contracts.priceManager.isPresale()
     },
     async getMintFee() {
       const contracts = useContract()

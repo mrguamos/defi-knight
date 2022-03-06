@@ -211,7 +211,7 @@
     return knights.value.slice(start, start + rowsPerPage)
   })
 
-  priceManager.isPresale().then((res) => {
+  priceManager.isPresale().then((res: boolean) => {
     isPresale.value = res
   })
 </script>
