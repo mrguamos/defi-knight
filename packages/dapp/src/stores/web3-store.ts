@@ -58,7 +58,9 @@ const handleChainChanged = async (chainId: string) => {
   const _chainId = parseInt(chainId, 16)
   if (_chainId === (Number(import.meta.env.VITE_APP_NETWORK_ID) || 1337)) {
     await useWeb3().connect()
+    return
   }
+  useWeb3().isWrongNetwork = true
 }
 
 const registerListeners = () => {
