@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { useAccount } from './account-store'
+import { usePriceManager } from './price-manager-store'
 import { useContract } from './contract-store'
 import { ethers, BigNumberish, providers } from 'ethers'
 
@@ -8,11 +9,11 @@ export const useKnight = defineStore('knight', {
     return { iKnight: undefined as unknown as ethers.utils.Interface }
   },
   actions: {
-    mintKnight(): Promise<providers.TransactionResponse> {
+    async mintKnight(): Promise<providers.TransactionResponse> {
       const contracts = useContract()
-
+      const mintFee = await usePriceManager().getPresaleFee()
       return contracts.game.functions.mintKnightPresale({
-        value: ethers.utils.parseUnits('0.00001', 'ether'),
+        value: mintFee,
         gasLimit: 300000,
       })
     },
