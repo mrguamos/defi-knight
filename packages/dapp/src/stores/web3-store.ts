@@ -12,10 +12,12 @@ export const useWeb3 = defineStore('web3', {
     return {
       signer: undefined as unknown as providers.JsonRpcSigner,
       provider: undefined as unknown as providers.Web3Provider,
+      isWrongNetwork: false,
     }
   },
   actions: {
     async connect() {
+      this.isWrongNetwork = false
       if (typeof window.ethereum !== 'undefined') {
         const chainId = parseInt(
           await window.ethereum.request({ method: 'eth_chainId' }),
@@ -23,6 +25,7 @@ export const useWeb3 = defineStore('web3', {
         )
 
         if (chainId !== (Number(import.meta.env.VITE_APP_NETWORK_ID) || 1337)) {
+          this.isWrongNetwork = true
           throw new Error('Wrong network')
         }
         this.provider = markRaw(

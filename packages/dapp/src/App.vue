@@ -1,11 +1,20 @@
 <script setup lang="ts">
   import LayoutHeader from './components/LayoutHeader.vue'
+  import { useWeb3 } from './stores/web3-store'
 </script>
 
 <template>
   <LayoutHeader />
   <div class="flex min-h-screen">
     <div class="container mx-auto pt-28">
+      <div v-if="useWeb3().isWrongNetwork" class="flex justify-center">
+        <div
+          class="text-center w-full p-4 mb-4 max-w-sm text-sm text-white bg-[#530002] rounded-lg"
+          role="alert"
+        >
+          <span class="text-md">Wrong Network</span>
+        </div>
+      </div>
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
           <component :is="Component" />
