@@ -15,7 +15,7 @@
           <span class="text-md">Wrong Network</span>
         </div>
       </div>
-      <router-view v-slot="{ Component }">
+      <router-view v-if="!useWeb3().isWrongNetwork" v-slot="{ Component }">
         <transition name="fade" mode="out-in">
           <component :is="Component" />
         </transition>

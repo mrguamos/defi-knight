@@ -93,8 +93,17 @@
       :pages-number="pagesNumber"
       :rows-per-page="rowsPerPage"
     />
-    <PrimaryButton class="self-center mt-2" @click="guildDialog()"
+    <PrimaryButton
+      v-if="hasAllowance"
+      class="self-center mt-2"
+      @click="guildDialog()"
       >CREATE GUILD</PrimaryButton
+    >
+    <PrimaryButton
+      v-if="!hasAllowance"
+      class="self-center mt-2"
+      @click="approveDK()"
+      >APPROVE</PrimaryButton
     >
 
     <TransitionRoot appear :show="dialog" as="template">
@@ -176,7 +185,7 @@
   import DefiSpinner from '../components/DefiSpinner.vue'
   import { useAccount } from '../stores/account-store'
   import { Guild } from '../types/guild'
-  import { ethers } from 'ethers'
+  import { ethers, BigNumber } from 'ethers'
   import GridPagination from '../components/GridPagination.vue'
   import DKIcon from '../components/DKIcon.vue'
 
@@ -191,10 +200,12 @@
   const guilds = ref<Guild[]>([])
   const account = useAccount()
   const mintFee = ref(0)
+  const hasAllowance = ref(false)
 
   account.$subscribe(async (_, state) => {
     if (state.isConnected) {
-      await getGuilds()
+      getGuilds()
+      getAllowance()
     } else {
       guilds.value = []
     }
@@ -268,5 +279,36 @@
 
   const getMintFee = async () => {
     mintFee.value = await priceManager.getGuildMintFee()
+  }
+
+  const getAllowance = async () => {
+    if (account.isConnected) {
+      const allowance: BigNumber = await account.getDKAllowance()
+      if (allowance.isZero()) {
+        hasAllowance.value = false
+        return
+      }
+      hasAllowance.value = true
+    }
+  }
+
+  getAllowance()
+
+  const approveDK = async () => {
+    try {
+      loading.value = true
+      const res = await account.approveDK()
+      const receipt = await res.wait()
+      console.log(receipt)
+      getAllowance()
+      // eslint-disable-next-line
+    } catch (error: any) {
+      console.log(error)
+      if (error.code !== 4001) {
+        //
+      }
+    } finally {
+      loading.value = false
+    }
   }
 </script>

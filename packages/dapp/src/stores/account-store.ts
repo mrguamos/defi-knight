@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { useContract } from './contract-store'
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 
 export const useAccount = defineStore('account', {
   state: () => {
@@ -19,6 +19,19 @@ export const useAccount = defineStore('account', {
     async getDK() {
       const contracts = useContract()
       this.totalDK = await contracts.dk.functions.balanceOf(this.address)
+    },
+    approveDK() {
+      const contracts = useContract()
+      return contracts.dk.functions.approve(
+        contracts.game.address,
+        BigNumber.from(
+          '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+        )
+      )
+    },
+    getDKAllowance() {
+      const contracts = useContract()
+      return contracts.dk.allowance(this.address, contracts.game.address)
     },
   },
   getters: {
