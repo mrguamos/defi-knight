@@ -278,7 +278,9 @@
   })
 
   const getMintFee = async () => {
-    mintFee.value = await priceManager.getGuildMintFee()
+    mintFee.value = Number(
+      ethers.utils.formatUnits(await priceManager.getGuildMintFee(), 'ether')
+    )
   }
 
   const getAllowance = async () => {

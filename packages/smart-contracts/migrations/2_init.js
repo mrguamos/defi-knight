@@ -60,9 +60,13 @@ module.exports = async (deployer, network, accounts) => {
     oracle = (await deployer.deploy(Oracle, priceFeed)).address;
   }
 
-  const priceManager = await deployProxy(PriceManager, [oracle, presaleFee], {
-    deployer,
-  });
+  const priceManager = await deployProxy(
+    PriceManager,
+    [oracle, presaleFee, defiKnight.address],
+    {
+      deployer,
+    }
+  );
 
   const commander = await deployProxy(Commander, [priceManager.address], {
     deployer,

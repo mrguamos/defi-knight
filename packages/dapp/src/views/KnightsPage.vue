@@ -139,7 +139,7 @@
       priceManager.getMintFee(),
       priceManager.getPresaleFee(),
     ])
-    mintFee.value = res[0]
+    mintFee.value = Number(ethers.utils.formatUnits(res[0].toString(), 'ether'))
     presaleFee.value = Number(
       ethers.utils.formatUnits(res[1].toString(), 'ether')
     )

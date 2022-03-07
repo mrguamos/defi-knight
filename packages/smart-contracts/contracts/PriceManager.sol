@@ -5,6 +5,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "./IOracle.sol";
+import "./DefiKnight.sol";
 
 contract PriceManager is
     Initializable,
@@ -21,6 +22,7 @@ contract PriceManager is
     uint256 public presaleFee;
     IOracle private oracle;
     bool public isPresale;
+    DefiKnight private defiKnight;
 
     function _authorizeUpgrade(address newImplementation)
         internal
@@ -28,10 +30,11 @@ contract PriceManager is
         onlyRole(UPGRADER_ROLE)
     {}
 
-    function initialize(IOracle _oracle, uint256 _presaleFee)
-        public
-        initializer
-    {
+    function initialize(
+        IOracle _oracle,
+        uint256 _presaleFee,
+        DefiKnight _defiKnight
+    ) public initializer {
         __AccessControl_init();
         __UUPSUpgradeable_init();
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
@@ -39,6 +42,7 @@ contract PriceManager is
         oracle = _oracle;
         isPresale = true;
         presaleFee = _presaleFee;
+        defiKnight = _defiKnight;
     }
 
     function setPresaleFee(uint256 _presaleFee)
@@ -53,18 +57,19 @@ contract PriceManager is
     }
 
     function getMintFee() public view returns (uint256) {
-        return oracle.getUsdPrice() * MINT_FEE;
+        return (oracle.getUsdPrice() * MINT_FEE) * 10**defiKnight.decimals();
     }
 
     function getGuildFee() public view returns (uint256) {
-        return oracle.getUsdPrice() * GUILD_FEE;
+        return (oracle.getUsdPrice() * GUILD_FEE) * 10**defiKnight.decimals();
     }
 
     function getMoraleFee() public view returns (uint256) {
-        return oracle.getUsdPrice() * MORALE_FEE;
+        return (oracle.getUsdPrice() * MORALE_FEE) * 10**defiKnight.decimals();
     }
 
     function getAddMemberFee() public view returns (uint256) {
-        return oracle.getUsdPrice() * ADD_MEMBER_FEE;
+        return
+            (oracle.getUsdPrice() * ADD_MEMBER_FEE) * 10**defiKnight.decimals();
     }
 }
