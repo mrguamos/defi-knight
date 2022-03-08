@@ -14,11 +14,10 @@ contract PriceManager is
 {
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
 
-    uint256 public constant MINT_FEE = 70;
-    uint256 public constant STABLE_FEE = 30;
-    uint256 public constant GUILD_FEE = 10;
-    uint256 public constant MORALE_FEE = 5;
-    uint256 public constant ADD_MEMBER_FEE = 1;
+    uint256 private mintFee;
+    uint256 public stableFee;
+    uint256 private guildFee;
+    uint256 private moraleFee;
     uint256 public presaleFee;
     IOracle private oracle;
     bool public isPresale;
@@ -43,6 +42,10 @@ contract PriceManager is
         isPresale = true;
         presaleFee = _presaleFee;
         defiKnight = _defiKnight;
+        mintFee = 50;
+        stableFee = 100000000000000000;
+        guildFee = 10;
+        moraleFee = 1;
     }
 
     function setPresaleFee(uint256 _presaleFee)
@@ -57,19 +60,43 @@ contract PriceManager is
     }
 
     function getMintFee() public view returns (uint256) {
-        return (oracle.getUsdPrice() * MINT_FEE) * 10**defiKnight.decimals();
+        return (oracle.getUsdPrice() * mintFee) * 10**defiKnight.decimals();
     }
 
     function getGuildFee() public view returns (uint256) {
-        return (oracle.getUsdPrice() * GUILD_FEE) * 10**defiKnight.decimals();
+        return (oracle.getUsdPrice() * guildFee) * 10**defiKnight.decimals();
     }
 
     function getMoraleFee() public view returns (uint256) {
-        return (oracle.getUsdPrice() * MORALE_FEE) * 10**defiKnight.decimals();
+        return (oracle.getUsdPrice() * moraleFee) * 10**defiKnight.decimals();
     }
 
-    function getAddMemberFee() public view returns (uint256) {
-        return
-            (oracle.getUsdPrice() * ADD_MEMBER_FEE) * 10**defiKnight.decimals();
+    function setMintFee(uint256 _mintFee)
+        external
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        mintFee = _mintFee;
+    }
+
+    function setGuildFee(uint256 _guildFee)
+        external
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        guildFee = _guildFee;
+    }
+
+    function setMoraleFee(uint256 _moraleFee)
+        external
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        moraleFee = _moraleFee;
+    }
+
+    //in wei
+    function setStableFee(uint256 _stableFee)
+        external
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        stableFee = _stableFee;
     }
 }

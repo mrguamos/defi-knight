@@ -75,7 +75,7 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
             "Not Enough Balance"
         );
         require(
-            stableCoin.balanceOf(msg.sender) >= priceManager.STABLE_FEE(),
+            stableCoin.balanceOf(msg.sender) >= priceManager.stableFee(),
             "Not Enough Balance"
         );
         defiKnight.transferFrom(msg.sender, address(this), mintFee);
@@ -102,7 +102,7 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
             "Not Enough Balance"
         );
         require(
-            stableCoin.balanceOf(msg.sender) >= priceManager.STABLE_FEE(),
+            stableCoin.balanceOf(msg.sender) >= priceManager.stableFee(),
             "Not Enough Balance"
         );
         defiKnight.transferFrom(msg.sender, address(this), mintFee);
@@ -167,14 +167,8 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         uint16 totalMorale = morale.guildMorale(guildId);
         uint256 totalMoraleFee = moraleFee * (knights.length * totalMorale);
 
-        uint256 addMemberFee = priceManager.getAddMemberFee();
-        require(addMemberFee > 0);
-        uint256 totalAddMemberFee = addMemberFee *
-            (commanders.length + knights.length);
-
         require(
-            defiKnight.balanceOf(msg.sender) >=
-                totalMoraleFee + totalAddMemberFee,
+            defiKnight.balanceOf(msg.sender) >= totalMoraleFee,
             "Not Enough Balance"
         );
 

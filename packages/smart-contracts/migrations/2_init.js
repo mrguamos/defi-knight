@@ -58,6 +58,7 @@ module.exports = async (deployer, network, accounts) => {
     stableCoin = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56";
     const priceFeed = "0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee";
     oracle = (await deployer.deploy(Oracle, priceFeed)).address;
+    presaleFee = Web3.utils.toWei("0.25");
   }
 
   const priceManager = await deployProxy(
