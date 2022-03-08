@@ -18,6 +18,7 @@ export const useWeb3 = defineStore('web3', {
   actions: {
     async connect() {
       this.isWrongNetwork = false
+      registerListeners()
       if (typeof window.ethereum !== 'undefined') {
         const chainId = parseInt(
           await window.ethereum.request({ method: 'eth_chainId' }),
@@ -26,7 +27,7 @@ export const useWeb3 = defineStore('web3', {
 
         if (chainId !== (Number(import.meta.env.VITE_APP_NETWORK_ID) || 1337)) {
           this.isWrongNetwork = true
-          throw new Error('Wrong network')
+          return
         }
         this.provider = markRaw(
           new ethers.providers.Web3Provider(window.ethereum)
@@ -36,7 +37,7 @@ export const useWeb3 = defineStore('web3', {
         const account = useAccount()
         const contracts = useContract()
         contracts.init()
-        registerListeners()
+
         await account.init(address)
         return
       }
@@ -47,6 +48,14 @@ export const useWeb3 = defineStore('web3', {
 
 const handleAccountsChanged = async (accounts: string[]) => {
   useAccount().$reset()
+  const chainId = parseInt(
+    await window.ethereum.request({ method: 'eth_chainId' }),
+    16
+  )
+  if (chainId !== (Number(import.meta.env.VITE_APP_NETWORK_ID) || 1337)) {
+    useWeb3().isWrongNetwork = true
+    return
+  }
   if (accounts.length > 0) {
     const account = useAccount()
     await account.init(accounts[0])
