@@ -11,6 +11,10 @@ export const usePriceManager = defineStore('price-manager', {
       const contracts = useContract()
       return contracts.priceManager.getMintFee()
     },
+    async getStableFee() {
+      const contracts = useContract()
+      return contracts.priceManager.stableFee()
+    },
     async getPresaleFee() {
       const contracts = useContract()
       return contracts.priceManager.presaleFee()

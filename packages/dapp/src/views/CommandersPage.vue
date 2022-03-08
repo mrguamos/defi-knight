@@ -62,7 +62,9 @@
                     {{ mintFee }} DK
                     <DKIcon class="w-10 h-10" />
 
-                    + 30 BUSD <BUSDIcon class="h-6 w-6 ml-2" />
+                    <span class="mr-1 text-lg font-extrabold">+</span>
+                    {{ stableFee }} BNB
+                    <BNBIcon class="h-8 w-8 ml-1" />
                   </div>
                   <div
                     v-if="isPresale"
@@ -112,7 +114,6 @@
   import { ethers, BigNumberish } from 'ethers'
   import SecondaryButton from '../components/SecondaryButton.vue'
   import DKIcon from '../components/DKIcon.vue'
-  import BUSDIcon from '../components/BUSDIcon.vue'
   import BNBIcon from '../components/BNBIcon.vue'
 
   const dialog = ref(false)
@@ -127,6 +128,7 @@
   const mintFee = ref(0)
   const presaleFee = ref(0)
   const isPresale = ref(false)
+  const stableFee = ref(0)
 
   account.$subscribe(async (_, state) => {
     if (state.isConnected) {
@@ -140,10 +142,14 @@
     const res = await Promise.all([
       priceManager.getMintFee(),
       priceManager.getPresaleFee(),
+      priceManager.getStableFee(),
     ])
     mintFee.value = Number(ethers.utils.formatUnits(res[0].toString(), 'ether'))
     presaleFee.value = Number(
       ethers.utils.formatUnits(res[1].toString(), 'ether')
+    )
+    stableFee.value = Number(
+      ethers.utils.formatUnits(res[2].toString(), 'ether')
     )
     dialog.value = true
   }
