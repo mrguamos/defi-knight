@@ -1,7 +1,7 @@
 <template>
   <div>
     <img
-      :src="`/lo-${nft}/${item.class}-${item.gender}-${item.rarity}.png`"
+      :src="`/${nft}/${item.class}-${item.gender}-${item.rarity}.png`"
       class="rounded-lg"
     />
     <div
