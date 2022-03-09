@@ -57,21 +57,29 @@
                 >
                   <div
                     v-if="!isPresale"
-                    class="flex justify-center items-center"
+                    class="flex justify-center items-center flex-col"
                   >
-                    {{ mintFee }} DK
-                    <DKIcon class="w-10 h-10" />
+                    <div class="flex justify-center text-lg items-center mb-2">
+                      {{ mintFee }} DK
+                      <DKIcon class="w-8 h-8 ml-1" />
+                    </div>
+                    <FontAwesomeIcon
+                      :icon="['fas', 'plus-circle']"
+                      size="lg"
+                      class="text-[#9ba1fd]"
+                    />
 
-                    <span class="mr-1 text-lg font-extrabold">+</span>
-                    {{ stableFee }} BNB
-                    <BNBIcon class="h-8 w-8 ml-1" />
+                    <div class="flex justify-center text-lg items-center mt-2">
+                      {{ stableFee }} BNB
+                      <BNBIcon class="h-8 w-8 ml-1" />
+                    </div>
                   </div>
                   <div
                     v-if="isPresale"
-                    class="flex justify-center items-center"
+                    class="flex text-lg justify-center items-center"
                   >
                     {{ presaleFee }} BNB
-                    <BNBIcon class="w-8 h-8 ml-1 mr-1" />
+                    <BNBIcon class="w-8 h-8 ml-1" />
                   </div>
                 </DialogTitle>
                 <div class="flex grow flex-col text-sm gap-4 mt-5">

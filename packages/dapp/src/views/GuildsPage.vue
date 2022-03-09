@@ -140,11 +140,11 @@
               >
                 <DialogTitle
                   as="h3"
-                  class="text-center text-md font-medium text-yellow-300"
+                  class="text-center text-lg font-medium text-yellow-300"
                 >
                   <div class="flex justify-center items-center">
                     {{ mintFee }} DK
-                    <DKIcon class="w-10 h-10" />
+                    <DKIcon class="w-10 h-10 ml-1" />
                   </div>
                 </DialogTitle>
                 <div class="flex grow flex-col text-sm gap-4 mt-5">
