@@ -14,7 +14,7 @@
               <FontAwesomeIcon :icon="['fas', 'users']" size="2x" />
             </div>
             <div class="mx-4">
-              <h4 class="text-2xl font-semibold">100</h4>
+              <h4 class="text-2xl font-semibold">200,341</h4>
               <div class="">Holders</div>
             </div>
           </div>
@@ -25,7 +25,7 @@
               <FontAwesomeIcon :icon="['fas', 'dollar-sign']" size="2x" />
             </div>
             <div class="mx-4">
-              <h4 class="text-2xl font-semibold">174</h4>
+              <h4 class="text-2xl font-semibold">174.03</h4>
               <div class="">Current Price</div>
             </div>
           </div>
@@ -36,7 +36,7 @@
               <FontAwesomeIcon :icon="['fas', 'users']" size="2x" />
             </div>
             <div class="mx-4">
-              <h4 class="text-2xl font-semibold">100</h4>
+              <h4 class="text-2xl font-semibold">138,019</h4>
               <div class="">Total Commanders</div>
             </div>
           </div>
@@ -47,7 +47,7 @@
               <FontAwesomeIcon :icon="['fas', 'users']" size="2x" />
             </div>
             <div class="mx-4">
-              <h4 class="text-2xl font-semibold">100</h4>
+              <h4 class="text-2xl font-semibold">203,504</h4>
               <div class="">Total Knights</div>
             </div>
           </div>
@@ -58,7 +58,7 @@
               <FontAwesomeIcon :icon="['fas', 'users']" size="2x" />
             </div>
             <div class="mx-4">
-              <h4 class="text-2xl font-semibold">100</h4>
+              <h4 class="text-2xl font-semibold">7301</h4>
               <div class="">Total Guilds</div>
             </div>
           </div>
@@ -69,7 +69,7 @@
               <FontAwesomeIcon :icon="['fas', 'users']" size="2x" />
             </div>
             <div class="mx-4">
-              <h4 class="text-2xl font-semibold">12347917272</h4>
+              <h4 class="text-2xl font-semibold">3,103,187</h4>
               <div class="">Rewards Pool</div>
             </div>
           </div>
