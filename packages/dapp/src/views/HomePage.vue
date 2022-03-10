@@ -21,7 +21,7 @@
           <div
             class="flex items-center px-4 py-6 border-blue-500 bg-transparent border-2 rounded-md shadow-md h-min"
           >
-            <div class="p-3">
+            <div class="py-3 pl-3 pr-8">
               <FontAwesomeIcon :icon="['fas', 'dollar-sign']" size="2x" />
             </div>
             <div class="mx-4">
