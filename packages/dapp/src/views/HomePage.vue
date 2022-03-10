@@ -1,49 +1,81 @@
 <template>
-  <div class="flex justify-center items-center grow h-full pb-10 w-full">
-    <div class="box glowing before:rounded-lg">
-      <img src="/home-image.jpg" class="rounded-lg p-1" />
+  <div class="flex flex-col h-full">
+    <div class="flex justify-center grow">
+      <div>
+        <div class="flex justify-center pb-10">
+          <img src="/src/assets/logo-header.png" />
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div
+            class="flex items-center px-4 py-6 border-blue-500 bg-transparent border-2 rounded-md shadow-md h-min"
+          >
+            <div class="p-3">
+              <FontAwesomeIcon :icon="['fas', 'users']" size="2x" />
+            </div>
+            <div class="mx-4">
+              <h4 class="text-2xl font-semibold">100</h4>
+              <div class="">Holders</div>
+            </div>
+          </div>
+          <div
+            class="flex items-center px-4 py-6 border-blue-500 bg-transparent border-2 rounded-md shadow-md h-min"
+          >
+            <div class="p-3">
+              <FontAwesomeIcon :icon="['fas', 'dollar-sign']" size="2x" />
+            </div>
+            <div class="mx-4">
+              <h4 class="text-2xl font-semibold">174</h4>
+              <div class="">Current Price</div>
+            </div>
+          </div>
+          <div
+            class="flex items-center px-4 py-6 border-blue-500 bg-transparent border-2 rounded-md shadow-md h-min"
+          >
+            <div class="p-3">
+              <FontAwesomeIcon :icon="['fas', 'users']" size="2x" />
+            </div>
+            <div class="mx-4">
+              <h4 class="text-2xl font-semibold">100</h4>
+              <div class="">Total Commanders</div>
+            </div>
+          </div>
+          <div
+            class="flex items-center px-4 py-6 border-blue-500 bg-transparent border-2 rounded-md shadow-md h-min"
+          >
+            <div class="p-3">
+              <FontAwesomeIcon :icon="['fas', 'users']" size="2x" />
+            </div>
+            <div class="mx-4">
+              <h4 class="text-2xl font-semibold">100</h4>
+              <div class="">Total Knights</div>
+            </div>
+          </div>
+          <div
+            class="flex items-center px-4 py-6 border-blue-500 bg-transparent border-2 rounded-md shadow-md h-min"
+          >
+            <div class="p-3">
+              <FontAwesomeIcon :icon="['fas', 'users']" size="2x" />
+            </div>
+            <div class="mx-4">
+              <h4 class="text-2xl font-semibold">100</h4>
+              <div class="">Total Guilds</div>
+            </div>
+          </div>
+          <div
+            class="flex items-center px-4 py-6 border-blue-500 bg-transparent border-2 rounded-md shadow-md h-min"
+          >
+            <div class="p-3">
+              <FontAwesomeIcon :icon="['fas', 'users']" size="2x" />
+            </div>
+            <div class="mx-4">
+              <h4 class="text-2xl font-semibold">12347917272</h4>
+              <div class="">Rewards Pool</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup></script>
-<style scoped>
-  .box {
-    position: relative;
-    display: block;
-    background: linear-gradient(0deg);
-  }
-
-  .glowing::before {
-    content: '';
-    position: absolute;
-    left: -2px;
-    top: -2px;
-    background: linear-gradient(
-      45deg,
-      #292929,
-      #13174a,
-      #104320,
-      #530002,
-      #581852
-    );
-    background-size: 400%;
-    width: calc(100% + 5px);
-    height: calc(100% + 5px);
-    z-index: -1;
-    animation: glower 20s linear infinite;
-  }
-
-  @keyframes glower {
-    0% {
-      background-position: 0 0;
-    }
-
-    50% {
-      background-position: 400% 0;
-    }
-
-    100% {
-      background-position: 0 0;
-    }
-  }
-</style>

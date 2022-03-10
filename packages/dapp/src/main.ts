@@ -17,6 +17,7 @@ import {
   faEdit,
   faStar as fasStar,
   faPlusCircle,
+  faUsers,
 } from '@fortawesome/free-solid-svg-icons'
 import { faStar as farStar } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -33,7 +34,8 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
     faEdit,
     fasStar,
     farStar,
-    faPlusCircle
+    faPlusCircle,
+    faUsers
   )
   const app = createApp(App)
   app.component('FontAwesomeIcon', FontAwesomeIcon)
