@@ -185,7 +185,7 @@
   import DefiSpinner from '../components/DefiSpinner.vue'
   import { useAccount } from '../stores/account-store'
   import { Guild } from '../types/guild'
-  import { ethers, BigNumber } from 'ethers'
+  import { ethers } from 'ethers'
   import GridPagination from '../components/GridPagination.vue'
   import DKIcon from '../components/DKIcon.vue'
 
@@ -285,7 +285,7 @@
 
   const getAllowance = async () => {
     if (account.isConnected) {
-      const allowance: BigNumber = await account.getDKAllowance()
+      const allowance = await account.getDKAllowance()
       if (allowance.isZero()) {
         hasAllowance.value = false
         return

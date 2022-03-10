@@ -18,6 +18,12 @@
     <PrimaryButton class="self-center mt-2" @click="openDialog()"
       >MINT COMMANDER</PrimaryButton
     >
+    <!-- <PrimaryButton
+      v-if="!hasAllowance"
+      class="self-center mt-2"
+      @click="approveDK()"
+      >APPROVE</PrimaryButton
+    > -->
 
     <TransitionRoot appear :show="dialog" as="template">
       <Dialog as="div" @close="loading ? '' : closeModal()">
@@ -137,6 +143,7 @@
   const presaleFee = ref(0)
   const isPresale = ref(false)
   const stableFee = ref(0)
+  const hasAllowance = ref(false)
 
   account.$subscribe(async (_, state) => {
     if (state.isConnected) {
@@ -151,6 +158,7 @@
       priceManager.getMintFee(),
       priceManager.getPresaleFee(),
       priceManager.getStableFee(),
+      priceManager.isPresale(),
     ])
     mintFee.value = Number(ethers.utils.formatUnits(res[0].toString(), 'ether'))
     presaleFee.value = Number(
@@ -159,6 +167,7 @@
     stableFee.value = Number(
       ethers.utils.formatUnits(res[2].toString(), 'ether')
     )
+    isPresale.value = res[3]
     dialog.value = true
   }
 
@@ -227,7 +236,34 @@
     return commanders.value.slice(start, start + rowsPerPage)
   })
 
-  priceManager.isPresale().then((res: boolean) => {
-    isPresale.value = res
-  })
+  const getAllowance = async () => {
+    if (account.isConnected) {
+      const allowance = await account.getDKAllowance()
+      if (allowance.isZero()) {
+        hasAllowance.value = false
+        return
+      }
+      hasAllowance.value = true
+    }
+  }
+
+  getAllowance()
+
+  const approveDK = async () => {
+    try {
+      loading.value = true
+      const res = await account.approveDK()
+      const receipt = await res.wait()
+      console.log(receipt)
+      getAllowance()
+      // eslint-disable-next-line
+    } catch (error: any) {
+      console.log(error)
+      if (error.code !== 4001) {
+        //
+      }
+    } finally {
+      loading.value = false
+    }
+  }
 </script>

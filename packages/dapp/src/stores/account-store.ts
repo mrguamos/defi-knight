@@ -29,7 +29,7 @@ export const useAccount = defineStore('account', {
         )
       )
     },
-    getDKAllowance() {
+    getDKAllowance(): Promise<BigNumber> {
       const contracts = useContract()
       return contracts.dk.allowance(this.address, contracts.game.address)
     },

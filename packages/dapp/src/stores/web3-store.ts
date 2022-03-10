@@ -18,8 +18,9 @@ export const useWeb3 = defineStore('web3', {
   actions: {
     async connect() {
       this.isWrongNetwork = false
-      registerListeners()
+
       if (typeof window.ethereum !== 'undefined') {
+        registerListeners()
         const chainId = parseInt(
           await window.ethereum.request({ method: 'eth_chainId' }),
           16
@@ -41,6 +42,7 @@ export const useWeb3 = defineStore('web3', {
         await account.init(address)
         return
       }
+      this.isWrongNetwork = true
       alert('Please install metamask')
     },
   },

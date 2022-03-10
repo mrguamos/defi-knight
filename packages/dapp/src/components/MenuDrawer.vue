@@ -8,9 +8,9 @@
     class="drawer z-20 flex flex-col h-full fixed w-72 ease-in-out duration-300"
     :class="modelValue ? 'translate-x-0' : '-translate-x-full'"
   >
-    <div class="self-center pt-2 pb-10">
+    <div class="self-center pt-10 pb-10">
       <router-link to="/" @click="emit('update:modelValue', false)">
-        <img src="/src/assets/logo-header.png" class="w-44" />
+        <img src="/src/assets/logo-header.png" class="w-56" />
       </router-link>
     </div>
 

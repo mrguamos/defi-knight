@@ -1,11 +1,11 @@
 <template>
   <MenuDrawer v-model="drawer" />
   <div
-    class="bg-gradient-to-r to-[#040a34] from-gray-900 flex w-full fixed top-0 z-10 items-center bg-transparent h-16 lg:min-h-max"
+    class="bg-gradient-to-r to-[#040a34] from-gray-900 flex w-full fixed top-0 z-10 items-center bg-transparent h-20"
   >
     <div class="ml-5 lg:block hidden">
       <router-link to="/">
-        <img src="/src/assets/logo-header.png" class="w-44" />
+        <img src="/src/assets/logo-header.png" class="w-40" />
       </router-link>
     </div>
     <div class="flex flex-auto justify-between">
