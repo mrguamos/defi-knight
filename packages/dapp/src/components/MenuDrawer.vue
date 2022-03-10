@@ -10,7 +10,7 @@
   >
     <div class="self-center pt-2 pb-10">
       <router-link to="/" @click="emit('update:modelValue', false)">
-        <img src="/src/assets/logo-header.png" class="w-[170px]" />
+        <img src="/src/assets/logo-header.png" class="w-44" />
       </router-link>
     </div>
 
