@@ -1,7 +1,9 @@
 <template>
   <div>
     <img
-      :src="`/${nft}/${item.class}-${item.gender}-${item.rarity}.png`"
+      :src="
+        getImageUrl(`${nft}/${item.class}-${item.gender}-${item.rarity}.png`)
+      "
       class="rounded-lg"
     />
     <div
@@ -64,4 +66,8 @@
       required: true,
     },
   })
+
+  function getImageUrl(name: string) {
+    return new URL(`/src/assets/${name}`, import.meta.url).href
+  }
 </script>
