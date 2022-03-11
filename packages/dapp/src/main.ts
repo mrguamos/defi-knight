@@ -12,13 +12,15 @@ import {
   faAngleRight,
   faAngleLeft,
   faBars,
-  faTag,
   faGift,
   faEdit,
   faStar as fasStar,
   faPlusCircle,
   faUsers,
   faGem,
+  faBan,
+  faShoppingCart,
+  faCoins,
 } from '@fortawesome/free-solid-svg-icons'
 import { faStar as farStar } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -30,14 +32,16 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
     faAngleRight,
     faAngleLeft,
     faBars,
-    faTag,
     faGift,
     faEdit,
     fasStar,
     farStar,
     faPlusCircle,
     faUsers,
-    faGem
+    faGem,
+    faBan,
+    faShoppingCart,
+    faCoins
   )
   const app = createApp(App)
   app.component('FontAwesomeIcon', FontAwesomeIcon)

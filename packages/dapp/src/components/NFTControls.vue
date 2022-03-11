@@ -4,7 +4,15 @@
       <FontAwesomeIcon :icon="['fas', 'gift']" size="lg" />
     </button>
     <button class="text-[#9ba1fd] inline-flex items-center">
-      <FontAwesomeIcon :icon="['fas', 'tag']" size="lg" />
+      <FontAwesomeIcon :icon="['fas', 'coins']" size="lg" />
+    </button>
+  </div>
+  <div v-if="mode === 'market'" class="flex justify-between">
+    <button class="text-[#9ba1fd] inline-flex items-center">
+      <FontAwesomeIcon :icon="['fas', 'ban']" size="lg" />
+    </button>
+    <button class="text-[#9ba1fd] inline-flex items-center">
+      <FontAwesomeIcon :icon="['fas', 'shopping-cart']" size="lg" />
     </button>
   </div>
 </template>

@@ -25,6 +25,10 @@
   @apply shadow-border;
 }
 
+.router-link-active > .tabs {
+  @apply bg-opacity-50;
+}
+
 body {
   @apply font-lato text-white;
   background-color: #141416;

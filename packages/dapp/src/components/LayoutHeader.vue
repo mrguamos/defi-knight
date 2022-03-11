@@ -31,17 +31,20 @@
         <router-link to="/marketplace">
           <HeaderButton>MARKETPLACE</HeaderButton>
         </router-link>
+        <router-link to="/shop">
+          <HeaderButton>SHOP</HeaderButton>
+        </router-link>
       </div>
       <div class="flex items-center">
         <a href="https://pancakeswap.finance/swap" target="_blank">
-          <HeaderButton class="inline-flex items-center mr-2">
-            <FontAwesomeIcon :icon="['fas', 'dollar-sign']" class="mr-3" />
-            <span>BUY DK</span>
-            <FontAwesomeIcon
-              :icon="['fas', 'external-link-alt']"
-              class="ml-3"
-            />
-          </HeaderButton>
+          <div class="relative">
+            <HeaderButton class="inline-flex items-center">
+              <DKIcon class="w-9 h-9" />
+              <div class="absolute right-2 bottom-6">
+                <span class="text-2xl font-extrabold text-red-600">+</span>
+              </div>
+            </HeaderButton>
+          </div>
         </a>
 
         <button
@@ -111,6 +114,7 @@
   import { useWeb3 } from '../stores/web3-store'
   import { ref } from 'vue'
   import MenuDrawer from './MenuDrawer.vue'
+  import DKIcon from './DKIcon.vue'
 
   const account = useAccount()
   const eth = useWeb3()

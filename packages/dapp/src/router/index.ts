@@ -29,6 +29,24 @@ const router = createRouter({
       component: () =>
         import(/* webpackChunkName: "guilds" */ '../views/GuildsPage.vue'),
     },
+    {
+      path: '/marketplace',
+      children: [
+        {
+          path: 'commanders',
+          name: 'MarketCommanders',
+          component: () =>
+            import(
+              /* webpackChunkName: "commanders" */ '../views/MarketCommanders.vue'
+            ),
+        },
+      ],
+      name: 'MarketplacePage',
+      component: () =>
+        import(
+          /* webpackChunkName: "marketplace" */ '../views/MarketplacePage.vue'
+        ),
+    },
   ],
 })
 
