@@ -6,7 +6,10 @@ import { ethers, BigNumberish, providers } from 'ethers'
 
 export const useCommander = defineStore('commander', {
   state: () => {
-    return { iCommander: undefined as unknown as ethers.utils.Interface }
+    return {
+      iCommander: undefined as unknown as ethers.utils.Interface,
+      loading: false,
+    }
   },
   actions: {
     async mintCommander(): Promise<providers.TransactionResponse> {
@@ -47,6 +50,25 @@ export const useCommander = defineStore('commander', {
         account.address,
         balance - 1
       )
+    },
+    isApprovedForAll() {
+      const contracts = useContract()
+      const account = useAccount()
+      return contracts.commander.isApprovedForAll(
+        account.address,
+        contracts.market.address
+      )
+    },
+    setApprovalForAll() {
+      const contracts = useContract()
+      return contracts.commander.functions.setApprovalForAll(
+        contracts.market.address,
+        true
+      )
+    },
+    safeTransferFrom(to: string, tokenId: number) {
+      const contracts = useContract()
+      return contracts.commander.transferFrom(useAccount().address, to, tokenId)
     },
   },
 })

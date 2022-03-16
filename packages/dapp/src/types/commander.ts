@@ -1,5 +1,5 @@
-import { Common } from './common'
+import { CharacterCommon } from './common'
 
-export type Commander = Common & {
+export type Commander = CharacterCommon & {
   isGenesis: boolean
 }

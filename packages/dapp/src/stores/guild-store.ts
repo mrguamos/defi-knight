@@ -5,7 +5,9 @@ import { ethers, BigNumberish, providers } from 'ethers'
 
 export const useGuild = defineStore('guild', {
   state: () => {
-    return {}
+    return {
+      iGuild: undefined as unknown as ethers.utils.Interface,
+    }
   },
   actions: {
     mintGuild(name: string): Promise<providers.TransactionResponse> {
@@ -42,6 +44,29 @@ export const useGuild = defineStore('guild', {
       return contracts.guild.functions.tokenOfOwnerByIndex(
         account.address,
         balance - 1
+      )
+    },
+    isApprovedForAll() {
+      const contracts = useContract()
+      const account = useAccount()
+      return contracts.guild.isApprovedForAll(
+        account.address,
+        contracts.market.address
+      )
+    },
+    setApprovalForAll() {
+      const contracts = useContract()
+      return contracts.guild.functions.setApprovalForAll(
+        contracts.market.address,
+        true
+      )
+    },
+    safeTransferFrom(to: string, tokenId: number) {
+      const contracts = useContract()
+      return contracts.knight.safeTransferFrom(
+        useAccount().address,
+        to,
+        tokenId
       )
     },
   },

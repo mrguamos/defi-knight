@@ -1,9 +1,12 @@
 <script setup lang="ts">
   import LayoutHeader from './components/LayoutHeader.vue'
   import { useWeb3 } from './stores/web3-store'
+  import { useMain } from './stores/main-store'
+  import DefiSpinner from './components/DefiSpinner.vue'
 </script>
 
 <template>
+  <DefiSpinner v-if="useMain().loading" />
   <LayoutHeader />
   <div class="flex min-h-screen">
     <div class="container mx-auto pt-28">

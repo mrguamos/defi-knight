@@ -1,15 +1,15 @@
 <template>
   <div class="flex flex-col h-full pb-10">
     <NFTList
-      :items="paginatedCommanders"
-      nft="commanders"
+      :items="paginatedKnights"
+      nft="knights"
       class="mb-10"
       mode="market"
     />
     <div class="grow"></div>
     <GridPagination
       v-model="page"
-      :length="commanders.length"
+      :length="knights.length"
       :total-visible="totalVisible"
       :pages-number="pagesNumber"
       :rows-per-page="rowsPerPage"
@@ -106,7 +106,7 @@
   } from '@headlessui/vue'
   import { ref, computed } from 'vue'
   import { useAccount } from '../stores/account-store'
-  import { Commander } from '../types/commander'
+  import { Knight } from '../types/knight'
   import PrimaryButton from '../components/PrimaryButton.vue'
   import GridPagination from '../components/GridPagination.vue'
   import NFTList from '../components/NFTList.vue'
@@ -121,7 +121,7 @@
   const totalVisible = 3
   const rowsPerPage = 10
   const account = useAccount()
-  const commanders = ref<Commander[]>([])
+  const knights = ref<Knight[]>([])
   const mintFee = ref(0)
   const presaleFee = ref(0)
   const isPresale = ref(false)
@@ -132,7 +132,7 @@
 
   main.$subscribe(async (_, state) => {
     if (state.refresh) {
-      getCommanders()
+      getKnights()
     }
 
     main.loading = state.loading
@@ -140,9 +140,9 @@
 
   account.$subscribe(async (_, state) => {
     if (state.isConnected) {
-      await getCommanders()
+      await getKnights()
     } else {
-      commanders.value = []
+      knights.value = []
     }
   })
 
@@ -150,16 +150,14 @@
     dialog.value = false
   }
 
-  const getCommanders = async () => {
+  const getKnights = async () => {
     if (account.isConnected) {
       try {
         main.loading = true
-        const queryParams = {}
-        const data = (
-          await market.getCommanders(page.value - 1, rowsPerPage, queryParams)
-        ).data
-        commanders.value = data.rows
+        const data = (await market.getKnights(page.value - 1, rowsPerPage)).data
+        knights.value = data.rows
         count.value = data.count
+
         // eslint-disable-next-line
       } catch (e: any) {
       } finally {
@@ -167,12 +165,12 @@
       }
     }
   }
-  getCommanders()
+  getKnights()
 
   const pagesNumber = computed(() => Math.ceil(count.value / rowsPerPage))
 
-  const paginatedCommanders = computed(() => {
+  const paginatedKnights = computed(() => {
     const start = (page.value - 1) * rowsPerPage
-    return commanders.value.slice(start, start + rowsPerPage)
+    return knights.value.slice(start, start + rowsPerPage)
   })
 </script>

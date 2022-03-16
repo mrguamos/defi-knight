@@ -1,6 +1,6 @@
-import { Common } from './common'
+import { CharacterCommon } from './common'
 
-export type Knight = Common & {
+export type Knight = CharacterCommon & {
   combatPower: number
   bonusPower: number
 }

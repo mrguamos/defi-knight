@@ -1,6 +1,5 @@
 <template>
   <div class="flex flex-col h-full pb-10">
-    <DefiSpinner v-if="loading" />
     <NFTList
       :items="paginatedKnights"
       nft="knights"
@@ -26,7 +25,7 @@
     > -->
 
     <TransitionRoot appear :show="dialog" as="template">
-      <Dialog as="div" @close="loading ? '' : closeModal()">
+      <Dialog as="div" @close="main.loading ? '' : closeModal()">
         <div class="fixed inset-0 z-10 overflow-y-auto">
           <div class="min-h-screen px-4 text-center">
             <TransitionChild
@@ -69,11 +68,7 @@
                       {{ mintFee }} DK
                       <DKIcon class="w-8 h-8 ml-1" />
                     </div>
-                    <FontAwesomeIcon
-                      :icon="['fas', 'plus-circle']"
-                      size="lg"
-                      class="text-[#9ba1fd]"
-                    />
+                    <span class="text-red-500 text-2xl font-bold">+</span>
 
                     <div class="flex text-lg items-center mt-2">
                       {{ stableFee }} BNB
@@ -121,12 +116,13 @@
   import { Knight } from '../types/knight'
   import PrimaryButton from '../components/PrimaryButton.vue'
   import GridPagination from '../components/GridPagination.vue'
-  import DefiSpinner from '../components/DefiSpinner.vue'
   import NFTList from '../components/NFTList.vue'
   import { ethers, BigNumberish } from 'ethers'
   import SecondaryButton from '../components/SecondaryButton.vue'
   import DKIcon from '../components/DKIcon.vue'
   import BNBIcon from '../components/BNBIcon.vue'
+  import { useContract } from '../stores/contract-store'
+  import { useMain } from '../stores/main-store'
 
   const dialog = ref(false)
   const page = ref(1)
@@ -135,19 +131,26 @@
   const knight = useKnight()
   const priceManager = usePriceManager()
   const account = useAccount()
-  const loading = ref(false)
   const knights = ref<Knight[]>([])
   const mintFee = ref(0)
   const presaleFee = ref(0)
   const isPresale = ref(false)
   const stableFee = ref(0)
   const hasAllowance = ref(false)
+  const main = useMain()
 
   account.$subscribe(async (_, state) => {
     if (state.isConnected) {
-      await getKnights()
+      getKnights()
     } else {
       knights.value = []
+    }
+  })
+
+  main.$subscribe(async (_, state) => {
+    if (state.refresh) {
+      getKnights()
+      state.refresh = false
     }
   })
 
@@ -174,7 +177,7 @@
   }
   const mintKnight = async () => {
     try {
-      loading.value = true
+      main.loading = true
       const res = await knight.mintKnight()
       const receipt = await res.wait()
       for (const log of receipt.logs) {
@@ -198,7 +201,7 @@
         //
       }
     } finally {
-      loading.value = false
+      main.loading = false
       closeModal()
     }
   }
@@ -206,7 +209,7 @@
   const getKnights = async () => {
     if (account.isConnected) {
       try {
-        loading.value = true
+        main.loading = true
         const tokens = await knight.getKnights()
         knights.value = await Promise.all(
           tokens.map(async (token) => {
@@ -219,7 +222,7 @@
         // eslint-disable-next-line
       } catch (e: any) {
       } finally {
-        loading.value = false
+        main.loading = false
       }
     }
   }
@@ -236,7 +239,7 @@
 
   const getAllowance = async () => {
     if (account.isConnected) {
-      const allowance = await account.getDKAllowance()
+      const allowance = await account.getDKAllowance(useContract().game.address)
       if (allowance.isZero()) {
         hasAllowance.value = false
         return
@@ -249,8 +252,8 @@
 
   const approveDK = async () => {
     try {
-      loading.value = true
-      const res = await account.approveDK()
+      main.loading = true
+      const res = await account.approveDK(useContract().market.address)
       const receipt = await res.wait()
       console.log(receipt)
       getAllowance()
@@ -261,7 +264,7 @@
         //
       }
     } finally {
-      loading.value = false
+      main.loading = false
     }
   }
 </script>

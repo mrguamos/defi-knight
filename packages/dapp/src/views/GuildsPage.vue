@@ -1,6 +1,5 @@
 <template>
   <div class="flex flex-col h-full pb-10">
-    <DefiSpinner v-if="loading" />
     <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
       <div class="inline-block py-2 min-w-full sm:px-6 lg:px-8">
         <div class="overflow-hidden shadow-md sm:rounded-lg">
@@ -107,7 +106,7 @@
     >
 
     <TransitionRoot appear :show="dialog" as="template">
-      <Dialog as="div" @close="loading ? '' : closeModal()">
+      <Dialog as="div" @close="main.loading ? '' : closeModal()">
         <div class="fixed inset-0 z-10 overflow-y-auto">
           <div class="min-h-screen px-4 text-center">
             <TransitionChild
@@ -182,12 +181,13 @@
   } from '@headlessui/vue'
   import PrimaryButton from '../components/PrimaryButton.vue'
   import SecondaryButton from '../components/SecondaryButton.vue'
-  import DefiSpinner from '../components/DefiSpinner.vue'
   import { useAccount } from '../stores/account-store'
   import { Guild } from '../types/guild'
   import { ethers } from 'ethers'
   import GridPagination from '../components/GridPagination.vue'
   import DKIcon from '../components/DKIcon.vue'
+  import { useContract } from '../stores/contract-store'
+  import { useMain } from '../stores/main-store'
 
   const page = ref(1)
   const totalVisible = 3
@@ -196,11 +196,11 @@
   const priceManager = usePriceManager()
   const name = ref('')
   const dialog = ref(false)
-  const loading = ref(false)
   const guilds = ref<Guild[]>([])
   const account = useAccount()
   const mintFee = ref(0)
   const hasAllowance = ref(false)
+  const main = useMain()
 
   account.$subscribe(async (_, state) => {
     if (state.isConnected) {
@@ -208,6 +208,13 @@
       getAllowance()
     } else {
       guilds.value = []
+    }
+  })
+
+  main.$subscribe(async (_, state) => {
+    if (state.refresh) {
+      getGuilds()
+      state.refresh = false
     }
   })
 
@@ -223,7 +230,7 @@
 
   const mintGuild = async () => {
     try {
-      loading.value = true
+      main.loading = true
       const res = await guild.mintGuild(name.value)
       const receipt = await res.wait()
       console.log(receipt)
@@ -235,7 +242,7 @@
         //
       }
     } finally {
-      loading.value = false
+      main.loading = false
       closeModal()
     }
   }
@@ -243,7 +250,7 @@
   const getGuilds = async () => {
     if (account.isConnected) {
       try {
-        loading.value = true
+        main.loading = true
         const tokens = await guild.getGuilds()
         guilds.value = await Promise.all(
           tokens.map(async (token) => {
@@ -256,7 +263,7 @@
         // eslint-disable-next-line
       } catch (e: any) {
       } finally {
-        loading.value = false
+        main.loading = false
       }
     }
   }
@@ -285,7 +292,7 @@
 
   const getAllowance = async () => {
     if (account.isConnected) {
-      const allowance = await account.getDKAllowance()
+      const allowance = await account.getDKAllowance(useContract().game.address)
       if (allowance.isZero()) {
         hasAllowance.value = false
         return
@@ -298,8 +305,8 @@
 
   const approveDK = async () => {
     try {
-      loading.value = true
-      const res = await account.approveDK()
+      main.loading = true
+      const res = await account.approveDK(useContract().game.address)
       const receipt = await res.wait()
       console.log(receipt)
       getAllowance()
@@ -310,7 +317,7 @@
         //
       }
     } finally {
-      loading.value = false
+      main.loading = false
     }
   }
 </script>

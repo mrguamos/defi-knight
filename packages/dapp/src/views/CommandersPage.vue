@@ -1,6 +1,5 @@
 <template>
   <div class="flex flex-col h-full pb-10">
-    <DefiSpinner v-if="loading" />
     <NFTList
       :items="paginatedCommanders"
       nft="commanders"
@@ -26,7 +25,7 @@
     > -->
 
     <TransitionRoot appear :show="dialog" as="template">
-      <Dialog as="div" @close="loading ? '' : closeModal()">
+      <Dialog as="div" @close="main.loading ? '' : closeModal()">
         <div class="fixed inset-0 z-10 overflow-y-auto">
           <div class="min-h-screen px-4 text-center">
             <TransitionChild
@@ -65,17 +64,13 @@
                     v-if="!isPresale"
                     class="flex justify-center items-center flex-col"
                   >
-                    <div class="flex justify-center text-lg items-center mb-2">
+                    <div class="flex justify-center text-lg items-center mb-1">
                       {{ mintFee }} DK
                       <DKIcon class="w-8 h-8 ml-1" />
                     </div>
-                    <FontAwesomeIcon
-                      :icon="['fas', 'plus-circle']"
-                      size="lg"
-                      class="text-[#9ba1fd]"
-                    />
+                    <span class="text-red-500 text-2xl font-bold">+</span>
 
-                    <div class="flex justify-center text-lg items-center mt-2">
+                    <div class="flex justify-center text-lg items-center mt-1">
                       {{ stableFee }} BNB
                       <BNBIcon class="h-8 w-8 ml-1" />
                     </div>
@@ -123,12 +118,13 @@
   import { Commander } from '../types/commander'
   import PrimaryButton from '../components/PrimaryButton.vue'
   import GridPagination from '../components/GridPagination.vue'
-  import DefiSpinner from '../components/DefiSpinner.vue'
   import NFTList from '../components/NFTList.vue'
   import { ethers, BigNumberish } from 'ethers'
   import SecondaryButton from '../components/SecondaryButton.vue'
   import DKIcon from '../components/DKIcon.vue'
   import BNBIcon from '../components/BNBIcon.vue'
+  import { useContract } from '../stores/contract-store'
+  import { useMain } from '../stores/main-store'
 
   const dialog = ref(false)
   const page = ref(1)
@@ -137,19 +133,26 @@
   const commander = useCommander()
   const priceManager = usePriceManager()
   const account = useAccount()
-  const loading = ref(false)
   const commanders = ref<Commander[]>([])
   const mintFee = ref(0)
   const presaleFee = ref(0)
   const isPresale = ref(false)
   const stableFee = ref(0)
   const hasAllowance = ref(false)
+  const main = useMain()
 
   account.$subscribe(async (_, state) => {
     if (state.isConnected) {
-      await getCommanders()
+      getCommanders()
     } else {
       commanders.value = []
+    }
+  })
+
+  main.$subscribe(async (_, state) => {
+    if (state.refresh) {
+      getCommanders()
+      state.refresh = false
     }
   })
 
@@ -176,7 +179,7 @@
   }
   const mintCommander = async () => {
     try {
-      loading.value = true
+      main.loading = true
       const res = await commander.mintCommander()
       const receipt = await res.wait()
       for (const log of receipt.logs) {
@@ -200,7 +203,7 @@
         //
       }
     } finally {
-      loading.value = false
+      main.loading = false
       closeModal()
     }
   }
@@ -208,7 +211,7 @@
   const getCommanders = async () => {
     if (account.isConnected) {
       try {
-        loading.value = true
+        main.loading = true
         const tokens = await commander.getCommanders()
         commanders.value = await Promise.all(
           tokens.map(async (token) => {
@@ -221,7 +224,7 @@
         // eslint-disable-next-line
       } catch (e: any) {
       } finally {
-        loading.value = false
+        main.loading = false
       }
     }
   }
@@ -238,7 +241,9 @@
 
   const getAllowance = async () => {
     if (account.isConnected) {
-      const allowance = await account.getDKAllowance()
+      const allowance = await account.getDKAllowance(
+        useContract().market.address
+      )
       if (allowance.isZero()) {
         hasAllowance.value = false
         return
@@ -251,8 +256,8 @@
 
   const approveDK = async () => {
     try {
-      loading.value = true
-      const res = await account.approveDK()
+      main.loading = true
+      const res = await account.approveDK(useContract().market.address)
       const receipt = await res.wait()
       console.log(receipt)
       getAllowance()
@@ -263,7 +268,7 @@
         //
       }
     } finally {
-      loading.value = false
+      main.loading = false
     }
   }
 </script>

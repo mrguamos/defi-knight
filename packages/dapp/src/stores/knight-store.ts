@@ -6,7 +6,9 @@ import { ethers, BigNumberish, providers } from 'ethers'
 
 export const useKnight = defineStore('knight', {
   state: () => {
-    return { iKnight: undefined as unknown as ethers.utils.Interface }
+    return {
+      iKnight: undefined as unknown as ethers.utils.Interface,
+    }
   },
   actions: {
     async mintKnight(): Promise<providers.TransactionResponse> {
@@ -47,6 +49,25 @@ export const useKnight = defineStore('knight', {
         account.address,
         balance - 1
       )
+    },
+    isApprovedForAll() {
+      const contracts = useContract()
+      const account = useAccount()
+      return contracts.knight.isApprovedForAll(
+        account.address,
+        contracts.market.address
+      )
+    },
+    setApprovalForAll() {
+      const contracts = useContract()
+      return contracts.knight.functions.setApprovalForAll(
+        contracts.market.address,
+        true
+      )
+    },
+    safeTransferFrom(to: string, tokenId: number) {
+      const contracts = useContract()
+      return contracts.knight.transferFrom(useAccount().address, to, tokenId)
     },
   },
 })

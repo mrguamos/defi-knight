@@ -12,7 +12,9 @@
       "**/smart-contracts",
       "**/smart-contracts/**",
       "**/dapp",
-      "**/dapp/**"
+      "**/dapp/**",
+      "**/market",
+      "**/market/**"
     ]
   },
   "scripts": {

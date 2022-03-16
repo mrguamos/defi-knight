@@ -23,11 +23,16 @@ import {
   abi as priceManagerABI,
   networks as priceManagerNetworks,
 } from 'smart-contracts/build/contracts/PriceManager.json'
+import {
+  abi as marketABI,
+  networks as marketNetworks,
+} from 'smart-contracts/build/contracts/Market.json'
 import { useWeb3 } from './web3-store'
 import { ethers } from 'ethers'
 import { markRaw } from 'vue'
 import { useCommander } from './commander-store'
 import { useKnight } from './knight-store'
+import { useGuild } from './guild-store'
 
 export const useContract = defineStore('contracts', {
   state: () => {
@@ -38,6 +43,7 @@ export const useContract = defineStore('contracts', {
       guild: undefined as unknown as ethers.Contract,
       game: undefined as unknown as ethers.Contract,
       priceManager: undefined as unknown as ethers.Contract,
+      market: undefined as unknown as ethers.Contract,
     }
   },
   actions: {
@@ -45,6 +51,7 @@ export const useContract = defineStore('contracts', {
       const eth = useWeb3()
       const commanderStore = useCommander()
       const knightStore = useKnight()
+      const guildStore = useGuild()
       const networkId = import.meta.env.VITE_APP_NETWORK_ID || 1337
 
       this.dk = markRaw(
@@ -86,6 +93,8 @@ export const useContract = defineStore('contracts', {
         )
       )
 
+      guildStore.iGuild = markRaw(new ethers.utils.Interface(guildABI))
+
       this.game = markRaw(
         new ethers.Contract(
           gameNetworks[networkId as keyof typeof gameNetworks].address,
@@ -100,6 +109,14 @@ export const useContract = defineStore('contracts', {
             networkId as keyof typeof priceManagerNetworks
           ].address,
           priceManagerABI,
+          eth.signer
+        )
+      )
+
+      this.market = markRaw(
+        new ethers.Contract(
+          marketNetworks[networkId as keyof typeof marketNetworks].address,
+          marketABI,
           eth.signer
         )
       )

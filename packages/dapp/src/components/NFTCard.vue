@@ -2,7 +2,7 @@
   <div>
     <img
       :src="
-        getImageUrl(`${nft}/${item.class}-${item.gender}-${item.rarity}.png`)
+        getImageUrl(`${nft}/${(item as CharacterCommon).class}-${(item as CharacterCommon).gender}-${(item as CharacterCommon).rarity}.png`)
       "
       class="rounded-lg"
     />
@@ -10,33 +10,32 @@
       class="text-sm font-medium flex flex-col p-2 rounded-lg shadow-lg h-min"
     >
       <div class="flex justify-between">
-        TOKEN ID <span>{{ item.id }}</span>
+        ID <span>{{ item.id }}</span>
       </div>
       <div class="flex justify-between">
         RARITY
         <div class="flex gap-[2px]">
           <FontAwesomeIcon
-            v-for="r in item.rarity + 1"
+            v-for="r in (item as CharacterCommon).rarity + 1"
             :key="r"
             :icon="['fa', 'star']"
             size="sm"
             class="text-yellow-300"
           />
           <FontAwesomeIcon
-            v-for="r in 4 - item.rarity"
+            v-for="r in 4 - (item as CharacterCommon).rarity"
             :key="r"
             :icon="['far', 'star']"
             size="sm"
           />
         </div>
       </div>
+
       <div class="flex justify-between">
-        GENDER <span>{{ item.gender == 0 ? 'Male' : 'Female' }}</span>
-      </div>
-      <div class="flex justify-between">
-        STATS
+        <span v-if="nft === 'commanders'">BONUS</span>
+        <span v-if="nft === 'knights'">CP</span>
         <div v-if="nft === 'knights'">
-          <span>CP {{ (item as Knight).combatPower }}</span>
+          <span>{{ (item as Knight).combatPower }}</span>
           <span v-if="(item as Knight).bonusPower > 0 ">
             +
             {{ (item as Knight).bonusPower }}
@@ -45,6 +44,12 @@
         <div v-if="(item as Commander).isGenesis && nft === 'commanders'">
           MAX WR + 1
         </div>
+      </div>
+      <div
+        v-if="mode === 'market'"
+        class="flex justify-between mt-2 border-t pt-2"
+      >
+        AMOUNT <span>{{ main.getEthAmount((item as Market).amount) }}</span>
       </div>
     </div>
   </div>
@@ -55,6 +60,9 @@
   import type { Commander } from '../types/commander'
   import type { Knight } from '../types/knight'
   import type { Common } from '../types/common'
+  import type { CharacterCommon } from '../types/common'
+  import type { Market } from '../types/market'
+  import { useMain } from '../stores/main-store'
 
   defineProps({
     nft: {
@@ -65,7 +73,13 @@
       type: Object as PropType<Common>,
       required: true,
     },
+    mode: {
+      type: String,
+      required: true,
+    },
   })
+
+  const main = useMain()
 
   function getImageUrl(name: string) {
     return new URL(`/src/assets/${name}`, import.meta.url).href

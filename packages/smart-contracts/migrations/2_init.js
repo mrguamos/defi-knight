@@ -14,6 +14,7 @@ const Oracle = artifacts.require("Oracle");
 const Morale = artifacts.require("Morale");
 const GuildHelper = artifacts.require("GuildHelper");
 const PriceManager = artifacts.require("PriceManager");
+const Market = artifacts.require("Market");
 
 module.exports = async (deployer, network, accounts) => {
   let vrf = "";
@@ -185,4 +186,10 @@ module.exports = async (deployer, network, accounts) => {
   await guild.grantRole(GAME_ADMIN_ROLE, game.address);
 
   await defiKnight.setTaxRecipientAddress(game.address);
+
+  const market = await deployProxy(
+    Market,
+    [defiKnight.address, commander.address, knight.address, guild.address],
+    { deployer }
+  );
 };

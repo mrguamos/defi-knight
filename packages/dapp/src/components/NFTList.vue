@@ -15,8 +15,8 @@
           'border-r4': +item.rarity === 4,
         }"
       >
-        <NFTCard :item="item" :nft="nft" />
-        <NFTControls :item="item" :mode="mode" />
+        <NFTCard :item="item" :nft="nft" :mode="mode" />
+        <NFTControls :item="item" :mode="mode" :nft="nft" />
       </div>
     </div>
   </div>

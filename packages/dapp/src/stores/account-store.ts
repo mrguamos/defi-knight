@@ -20,18 +20,18 @@ export const useAccount = defineStore('account', {
       const contracts = useContract()
       this.totalDK = await contracts.dk.functions.balanceOf(this.address)
     },
-    approveDK() {
+    approveDK(address: string) {
       const contracts = useContract()
       return contracts.dk.functions.approve(
-        contracts.game.address,
+        address,
         BigNumber.from(
           '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
         )
       )
     },
-    getDKAllowance(): Promise<BigNumber> {
+    getDKAllowance(address: string): Promise<BigNumber> {
       const contracts = useContract()
-      return contracts.dk.allowance(this.address, contracts.game.address)
+      return contracts.dk.allowance(this.address, address)
     },
   },
   getters: {
