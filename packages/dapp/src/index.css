@@ -15,14 +15,13 @@
   }
 
   .shadow-text {
-    text-shadow: 0 0 5px #1d28b8, 0 0 10px #1d28b8, 0 0 15px #1d28b8,
-      0 0 20px #1d28b8, 0 0 35px #1d28b8, 0 0 40px #1d28b8;
+    text-shadow: 0 0 5px blue, 0 0 10px blue, 0 0 15px blue, 0 0 20px blue,
+      0 0 35px blue, 0 0 40px blue;
   }
 }
 
 .router-link-active > .menu {
   @apply shadow-text;
-  @apply shadow-border;
 }
 
 .router-link-active > .tabs {

@@ -1,7 +1,7 @@
 <template>
   <MenuDrawer v-model="drawer" />
   <div
-    class="bg-gradient-to-r to-[#040a34] from-gray-900 flex w-full fixed top-0 z-10 items-center bg-transparent h-20"
+    class="flex w-full fixed top-0 z-10 items-center bg-black bg-opacity-50 h-20"
   >
     <div class="ml-5 lg:block hidden">
       <router-link to="/">
@@ -119,6 +119,7 @@
   const account = useAccount()
   const eth = useWeb3()
   const drawer = ref(false)
+  console.log(window.scrollY)
 
   const connect = async () => {
     try {
