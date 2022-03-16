@@ -134,8 +134,6 @@
     if (state.refresh) {
       getKnights()
     }
-
-    main.loading = state.loading
   })
 
   account.$subscribe(async (_, state) => {

@@ -133,9 +133,8 @@
   main.$subscribe(async (_, state) => {
     if (state.refresh) {
       getCommanders()
+      state.refresh = false
     }
-
-    main.loading = state.loading
   })
 
   account.$subscribe(async (_, state) => {
@@ -153,6 +152,7 @@
   const getCommanders = async () => {
     if (account.isConnected) {
       try {
+        console.log('REFRESHING')
         main.loading = true
         const queryParams = {}
         const data = (

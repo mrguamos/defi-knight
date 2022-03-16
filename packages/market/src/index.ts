@@ -16,7 +16,7 @@ import {
   networks as guildNetworks,
 } from 'smart-contracts/build/contracts/Guild.json'
 
-import { Sequelize, ModelStatic, Model } from 'sequelize'
+import { Sequelize, ModelStatic, Op } from 'sequelize'
 
 import express from 'express'
 
@@ -154,10 +154,13 @@ const app = express()
 app.use(cors())
 
 app.get('/commanders', async (req: express.Request, res: express.Response) => {
-  const { offset, limit, rarity } = req.query
+  const { offset, limit, rarity, address } = req.query
   const commanders = await Commander.findAndCountAll({
     where: {
       status: 1,
+      owner: {
+        [Op.notILike]: address as string,
+      },
     },
     offset: Number(offset),
     limit: Number(limit),
@@ -166,15 +169,18 @@ app.get('/commanders', async (req: express.Request, res: express.Response) => {
 })
 
 app.get('/knights', async (req: express.Request, res: express.Response) => {
-  const { offset, limit } = req.query
-  const commanders = await Knight.findAndCountAll({
+  const { offset, limit, address } = req.query
+  const knights = await Knight.findAndCountAll({
     where: {
       status: 1,
+      owner: {
+        [Op.notILike]: address as string,
+      },
     },
     offset: Number(offset),
     limit: Number(limit),
   })
-  res.send(commanders)
+  res.send(knights)
 })
 
 const port = 8080
