@@ -5,33 +5,21 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/',
+      path: '',
       name: 'HomePage',
       component: HomePage,
     },
     {
-      path: '/commanders',
-      name: 'CommandersPage',
-      component: () =>
-        import(
-          /* webpackChunkName: "commanders" */ '../views/CommandersPage.vue'
-        ),
-    },
-    {
-      path: '/knights',
-      name: 'KnightsPage',
-      component: () =>
-        import(/* webpackChunkName: "knights" */ '../views/KnightsPage.vue'),
-    },
-    {
-      path: '/guilds',
-      name: 'GuildsPage',
-      component: () =>
-        import(/* webpackChunkName: "guilds" */ '../views/GuildsPage.vue'),
-    },
-    {
       path: '/marketplace',
       children: [
+        {
+          path: '',
+          name: 'MarketHome',
+          component: () =>
+            import(
+              /* webpackChunkName: "market-home" */ '../views/MarketHome.vue'
+            ),
+        },
         {
           path: 'commanders',
           name: 'MarketCommanders',
@@ -48,11 +36,59 @@ const router = createRouter({
               /* webpackChunkName: "market-knights" */ '../views/MarketKnights.vue'
             ),
         },
+        // {
+        //   path: 'guilds',
+        //   name: 'MarketGuilds',
+        //   component: () =>
+        //     import(
+        //       /* webpackChunkName: "market-guilds" */ '../views/MarketGuilds.vue'
+        //     ),
+        // },
       ],
       name: 'MarketplacePage',
       component: () =>
         import(
           /* webpackChunkName: "marketplace" */ '../views/MarketplacePage.vue'
+        ),
+    },
+    {
+      path: '/inventory',
+      children: [
+        {
+          path: '',
+          name: 'InventoryHome',
+          component: () =>
+            import(
+              /* webpackChunkName: "inventory-home" */ '../views/InventoryHome.vue'
+            ),
+        },
+        {
+          path: 'commanders',
+          name: 'Commanders',
+          component: () =>
+            import(
+              /* webpackChunkName: "commanders" */ '../views/CommandersPage.vue'
+            ),
+        },
+        {
+          path: 'knights',
+          name: 'Knights',
+          component: () =>
+            import(
+              /* webpackChunkName: "knights" */ '../views/KnightsPage.vue'
+            ),
+        },
+        {
+          path: 'guilds',
+          name: 'Guilds',
+          component: () =>
+            import(/* webpackChunkName: "guilds" */ '../views/GuildsPage.vue'),
+        },
+      ],
+      name: 'InventoryPage',
+      component: () =>
+        import(
+          /* webpackChunkName: "inventory" */ '../views/InventoryPage.vue'
         ),
     },
   ],

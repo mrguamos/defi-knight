@@ -15,21 +15,17 @@
     </div>
 
     <div class="flex flex-col space-y-2 ml-2">
-      <router-link to="/commanders" @click="emit('update:modelValue', false)">
-        <HeaderButton>COMMANDERS</HeaderButton>
-      </router-link>
-
-      <router-link to="/knights" @click="emit('update:modelValue', false)">
-        <HeaderButton>KNIGHTS</HeaderButton>
-      </router-link>
-      <router-link to="/guilds" @click="emit('update:modelValue', false)">
-        <HeaderButton>GUILDS</HeaderButton>
+      <router-link to="/inventory" @click="emit('update:modelValue', false)">
+        <HeaderButton>INVENTORY</HeaderButton>
       </router-link>
       <router-link to="/conquer" @click="emit('update:modelValue', false)">
         <HeaderButton>CONQUER</HeaderButton>
       </router-link>
       <router-link to="/marketplace" @click="emit('update:modelValue', false)">
         <HeaderButton>MARKETPLACE</HeaderButton>
+      </router-link>
+      <router-link to="/shop" @click="emit('update:modelValue', false)">
+        <HeaderButton>SHOP</HeaderButton>
       </router-link>
     </div>
   </div>

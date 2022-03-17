@@ -1,7 +1,8 @@
 <template>
   <MenuDrawer v-model="drawer" />
   <div
-    class="flex w-full fixed top-0 z-10 items-center bg-black bg-opacity-50 h-20"
+    class="flex w-full fixed top-0 z-10 items-center h-20 transition-all duration-700"
+    :class="scroll ? 'bg-[#040a34] bg-opacity-90' : 'bg-transparent'"
   >
     <div class="ml-5 lg:block hidden">
       <router-link to="/">
@@ -15,15 +16,8 @@
         </button>
       </div>
       <div class="lg:flex hidden items-center">
-        <router-link to="/commanders">
-          <HeaderButton class="ml-5">COMMANDERS</HeaderButton>
-        </router-link>
-
-        <router-link to="/knights">
-          <HeaderButton>KNIGHTS </HeaderButton>
-        </router-link>
-        <router-link to="/guilds">
-          <HeaderButton>GUILDS</HeaderButton>
+        <router-link to="/inventory">
+          <HeaderButton class="ml-5">INVENTORY</HeaderButton>
         </router-link>
         <router-link to="/conquer">
           <HeaderButton>CONQUER</HeaderButton>
@@ -48,7 +42,7 @@
         </a>
 
         <button
-          class="mr-5 px-4 py-2 text-sm xl:text-md border-2 border-[#1d28b8] ] rounded-lg hover:mix-blend-screen font-medium text-white"
+          class="mr-5 px-4 py-2 text-sm xl:text-sm border-2 border-[#1d28b8] ] rounded-lg hover:mix-blend-screen font-medium text-white"
           :class="{ hidden: account.isConnected }"
           @click="connect()"
         >
@@ -62,7 +56,7 @@
         >
           <div class="flex items-center">
             <MenuButton
-              class="flex justify-center items-center w-full px-4 py-2 text-sm xl:text-md font-medium border-2 border-[#1d28b8] rounded-lg hover:mix-blend-screen"
+              class="flex justify-center items-center w-full px-4 py-2 text-sm xl:text-sm font-medium border-2 border-[#1d28b8] rounded-lg hover:bg-blue-900/30"
               ><span>
                 {{ account.croppedAddress }}
               </span>
@@ -82,7 +76,7 @@
             leave-to-class="transform scale-95 opacity-0"
           >
             <MenuItems
-              class="text-white text-sm mt-2 p-2 font-medium shadow-border focus:outline-none absolute right-0 bg-gradient-to-r to-[#040a34] from-gray-900 rounded-lg shadow-lg w-48"
+              class="text-white text-sm mt-2 p-2 font-medium border border-[#1d28b8] bg-[#040a34] bg-opacity-90 absolute right-0 rounded-lg shadow-lg w-48"
             >
               <MenuItem>
                 <span
@@ -119,7 +113,15 @@
   const account = useAccount()
   const eth = useWeb3()
   const drawer = ref(false)
-  console.log(window.scrollY)
+  const scroll = ref(false)
+
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 34) {
+      scroll.value = true
+      return
+    }
+    scroll.value = false
+  })
 
   const connect = async () => {
     try {

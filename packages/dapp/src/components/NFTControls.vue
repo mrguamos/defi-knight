@@ -71,13 +71,14 @@
             leave-to="opacity-0 scale-95"
           >
             <div
-              class="inline-block w-auto max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-gradient-to-r to-[#040a34] from-gray-900 border-2 border-gray-700 shadow-xl rounded-lg"
+              class="inline-block w-auto max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-gradient-to-r to-[#040a34] from-gray-900 rounded-md"
+              style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
             >
               <DialogTitle
                 as="h3"
-                class="text-center text-md font-medium text-yellow-300"
+                class="text-center text-sm font-medium text-yellow-300"
               >
-                LIST NFT
+                SELL NFT
               </DialogTitle>
               <div class="flex grow flex-col text-sm gap-4 mt-5">
                 <DKIcon class="w-8 h-8 self-center" />
@@ -109,11 +110,12 @@
             leave-to="opacity-0 scale-95"
           >
             <div
-              class="inline-block w-auto max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-gradient-to-r to-[#040a34] from-gray-900 border-2 border-gray-700 shadow-xl rounded-lg"
+              class="inline-block w-auto max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-gradient-to-r to-[#040a34] from-gray-900 rounded-md"
+              style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
             >
               <DialogTitle
                 as="h3"
-                class="text-center text-md font-medium text-yellow-300"
+                class="text-center text-sm font-medium text-yellow-300"
               >
                 BUY NFT
               </DialogTitle>
@@ -145,18 +147,19 @@
             leave-to="opacity-0 scale-95"
           >
             <div
-              class="inline-block w-auto max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-gradient-to-r to-[#040a34] from-gray-900 border-2 border-gray-700 shadow-xl rounded-lg"
+              class="w-full inline-block max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-gradient-to-r to-[#040a34] from-gray-900 rounded-md"
+              style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
             >
               <DialogTitle
                 as="h3"
-                class="text-center text-md font-medium text-yellow-300"
+                class="text-center text-sm font-medium text-yellow-300"
               >
                 TRANSFER NFT
               </DialogTitle>
               <div class="flex grow flex-col text-sm gap-4 mt-5">
                 <input
                   v-model="to"
-                  class="text-black appearance-none border rounded-lg focus:outline-none focus:border-gray-500 w-[28rem]"
+                  class="text-black appearance-none border rounded-lg focus:outline-none focus:border-gray-500 w-full"
                   type="text"
                   placeholder="Address"
                 />
@@ -183,11 +186,12 @@
             leave-to="opacity-0 scale-95"
           >
             <div
-              class="inline-block w-auto max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-gradient-to-r to-[#040a34] from-gray-900 border-2 border-gray-700 shadow-xl rounded-lg"
+              class="inline-block w-auto max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-gradient-to-r to-[#040a34] from-gray-900 rounded-md"
+              style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
             >
               <DialogTitle
                 as="h3"
-                class="text-center text-md font-medium text-yellow-300"
+                class="text-center text-sm font-medium text-yellow-300"
               >
                 CANCEL LISTING
               </DialogTitle>

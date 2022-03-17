@@ -1,13 +1,14 @@
 <template>
-  <div>
+  <div class="flex flex-col max-w-md w-full">
     <img
       :src="
         getImageUrl(`${nft}/${(item as CharacterCommon).class}-${(item as CharacterCommon).gender}-${(item as CharacterCommon).rarity}.png`)
       "
-      class="rounded-lg"
+      class="max-w-[10rem] self-center"
     />
     <div
-      class="text-sm font-medium flex flex-col p-2 rounded-lg shadow-lg h-min"
+      class="text-sm font-medium flex flex-col p-6 rounded-md h-min w-full"
+      style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
     >
       <div class="flex justify-between">
         ID <span>{{ item.id }}</span>
@@ -51,6 +52,9 @@
       >
         AMOUNT <span>{{ main.getEthAmount((item as Market).amount) }}</span>
       </div>
+      <div class="pt-3">
+        <NFTControls :item="item" :mode="mode" :nft="nft" />
+      </div>
     </div>
   </div>
 </template>
@@ -63,6 +67,7 @@
   import type { CharacterCommon } from '../types/common'
   import type { Market } from '../types/market'
   import { useMain } from '../stores/main-store'
+  import NFTControls from './NFTControls.vue'
 
   defineProps({
     nft: {

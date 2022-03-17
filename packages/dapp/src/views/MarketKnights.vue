@@ -49,7 +49,7 @@
               >
                 <DialogTitle
                   as="h3"
-                  class="text-center text-md font-medium text-yellow-300"
+                  class="text-center text-sm font-medium text-yellow-300"
                 >
                   <div
                     v-if="!isPresale"

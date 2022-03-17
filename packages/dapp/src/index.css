@@ -20,12 +20,9 @@
   }
 }
 
-.router-link-active > .menu {
-  @apply shadow-text;
-}
-
+.router-link-active > .menu,
 .router-link-active > .tabs {
-  @apply bg-opacity-50;
+  @apply shadow-text;
 }
 
 body {

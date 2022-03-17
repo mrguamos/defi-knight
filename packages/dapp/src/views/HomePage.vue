@@ -6,9 +6,10 @@
           <img src="/src/assets/logo-header.png" />
         </div>
         <div class="flex justify-center w-full">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-7">
             <div
-              class="flex justify-between items-center px-4 py-6 border-blue-500 bg-transparent border-2 rounded-md shadow-md h-min min-w-[20rem]"
+              class="flex justify-between items-center px-4 py-6 bg-transparent rounded-md h-min min-w-[20rem]"
+              style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
             >
               <div class="">
                 <FontAwesomeIcon :icon="['fas', 'users']" size="2x" />
@@ -19,7 +20,8 @@
               </div>
             </div>
             <div
-              class="flex justify-between items-center px-4 py-6 border-blue-500 bg-transparent border-2 rounded-md shadow-md h-min min-w-[20rem]"
+              class="flex justify-between items-center px-4 py-6 bg-transparent rounded-md h-min min-w-[20rem]"
+              style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
             >
               <div class="">
                 <FontAwesomeIcon :icon="['fas', 'dollar-sign']" size="2x" />
@@ -30,7 +32,8 @@
               </div>
             </div>
             <div
-              class="flex justify-between items-center px-4 py-6 border-blue-500 bg-transparent border-2 rounded-md shadow-md h-min min-w-[20rem]"
+              class="flex justify-between items-center px-4 py-6 bg-transparent rounded-md h-min min-w-[20rem]"
+              style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
             >
               <div class="">
                 <FontAwesomeIcon :icon="['fas', 'users']" size="2x" />
@@ -41,7 +44,8 @@
               </div>
             </div>
             <div
-              class="flex justify-between items-center px-4 py-6 border-blue-500 bg-transparent border-2 rounded-md shadow-md h-min min-w-[20rem]"
+              class="flex justify-between items-center px-4 py-6 bg-transparent rounded-md h-min min-w-[20rem]"
+              style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
             >
               <div class="">
                 <FontAwesomeIcon :icon="['fas', 'users']" size="2x" />
@@ -52,7 +56,8 @@
               </div>
             </div>
             <div
-              class="flex justify-between items-center px-4 py-6 border-blue-500 bg-transparent border-2 rounded-md shadow-md h-min min-w-[20rem]"
+              class="flex justify-between items-center px-4 py-6 bg-transparent rounded-md h-min min-w-[20rem]"
+              style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
             >
               <div class="">
                 <FontAwesomeIcon :icon="['fas', 'users']" size="2x" />
@@ -63,7 +68,8 @@
               </div>
             </div>
             <div
-              class="flex justify-between items-center px-4 py-6 border-blue-500 bg-transparent border-2 rounded-md shadow-md h-min min-w-[20rem]"
+              class="flex justify-between items-center px-4 py-6 bg-transparent rounded-md h-min min-w-[20rem]"
+              style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
             >
               <div class="">
                 <FontAwesomeIcon :icon="['fas', 'gem']" size="2x" />

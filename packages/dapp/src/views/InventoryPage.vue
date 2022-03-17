@@ -2,13 +2,15 @@
   <div class="flex flex-col h-full pb-10">
     <div class="flex justify-center">
       <div class="grid grid-cols-3 gap-2">
-        <router-link to="/marketplace/commanders">
+        <router-link to="/inventory/commanders">
           <PrimaryButton class="w-full tabs">COMMANDERS</PrimaryButton>
         </router-link>
-        <router-link to="/marketplace/knights">
+        <router-link to="/inventory/knights">
           <PrimaryButton class="w-full tabs">KNIGHTS</PrimaryButton>
         </router-link>
-        <PrimaryButton class="w-full tabs">GUILDS</PrimaryButton>
+        <router-link to="/inventory/guilds">
+          <PrimaryButton class="w-full tabs">GUILDS</PrimaryButton>
+        </router-link>
       </div>
     </div>
     <div class="pt-10 h-full">

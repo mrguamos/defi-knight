@@ -135,7 +135,8 @@
               leave-to="opacity-0 scale-95"
             >
               <div
-                class="inline-block w-auto max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-gradient-to-r to-[#040a34] from-gray-900 border-2 border-gray-700 shadow-xl rounded-lg"
+                class="inline-block w-auto max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-gradient-to-r to-[#040a34] from-gray-900 rounded-md"
+                style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
               >
                 <DialogTitle
                   as="h3"

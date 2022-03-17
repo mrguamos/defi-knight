@@ -49,7 +49,7 @@
               >
                 <DialogTitle
                   as="h3"
-                  class="text-center text-md font-medium text-yellow-300"
+                  class="text-center text-sm font-medium text-yellow-300"
                 >
                   <div
                     v-if="!isPresale"
@@ -152,7 +152,6 @@
   const getCommanders = async () => {
     if (account.isConnected) {
       try {
-        console.log('REFRESHING')
         main.loading = true
         const queryParams = {}
         const data = (
