@@ -89,7 +89,7 @@ contract Commander is
 
         uint256 rollClass = (seed % 4);
 
-        uint256 rollGender = (seed % 2);
+        uint256 rollGender = (tokenId % 2);
 
         uint256 random = uint256(keccak256(abi.encodePacked(seed, gasleft())));
 
