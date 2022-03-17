@@ -6,7 +6,7 @@
       <div
         v-for="item of items"
         :key="item.id"
-        class="h-min text-white flex justify-center"
+        class="h-min text-white flex justify-center px-5 md:px-0"
       >
         <NFTCard :item="item" :nft="nft" :mode="mode" />
       </div>
