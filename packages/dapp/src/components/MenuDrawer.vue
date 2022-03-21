@@ -45,10 +45,6 @@
 
 <style scoped>
   .drawer {
-    background-color: #141416;
-    background-image: url('/src/assets/bg-main.png');
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    background-position: center;
+    @apply bg-slate-900 bg-opacity-90;
   }
 </style>

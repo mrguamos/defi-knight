@@ -2,7 +2,7 @@
   <MenuDrawer v-model="drawer" />
   <div
     class="flex w-full fixed top-0 z-10 items-center h-20 transition-all duration-700"
-    :class="scroll ? 'bg-[#040a34] bg-opacity-90' : 'bg-transparent'"
+    :class="scroll ? 'bg-slate-900 bg-opacity-90' : 'bg-transparent'"
   >
     <div class="ml-5 lg:block hidden">
       <router-link to="/">
@@ -42,7 +42,7 @@
         </a>
 
         <button
-          class="mr-5 px-4 py-2 text-sm xl:text-sm border-2 border-[#1d28b8] ] rounded-lg hover:mix-blend-screen font-medium text-white"
+          class="mr-5 px-4 py-2 text-sm xl:text-sm border-2 border-teal-700 rounded-lg hover:mix-blend-screen font-medium text-white"
           :class="{ hidden: account.isConnected }"
           @click="connect()"
         >
@@ -56,7 +56,7 @@
         >
           <div class="flex items-center">
             <MenuButton
-              class="flex justify-center items-center w-full px-4 py-2 text-sm xl:text-sm font-medium border-2 border-[#1d28b8] rounded-lg hover:bg-blue-900/30"
+              class="flex justify-center items-center w-full px-4 py-2 text-sm xl:text-sm font-medium border-2 border-teal-700 rounded-lg hover:bg-blue-900/30"
               ><span>
                 {{ account.croppedAddress }}
               </span>
@@ -76,7 +76,7 @@
             leave-to-class="transform scale-95 opacity-0"
           >
             <MenuItems
-              class="text-white text-sm mt-2 p-2 font-medium border border-[#1d28b8] bg-[#040a34] bg-opacity-90 absolute right-0 rounded-lg shadow-lg w-48"
+              class="text-white text-sm mt-2 p-2 font-medium border border-teal-700 bg-slate-900 bg-opacity-90 absolute right-0 rounded-lg shadow-lg w-48"
             >
               <MenuItem>
                 <span

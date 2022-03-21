@@ -15,8 +15,8 @@
   }
 
   .shadow-text {
-    text-shadow: 0 0 5px blue, 0 0 10px blue, 0 0 15px blue, 0 0 20px blue,
-      0 0 35px blue, 0 0 40px blue;
+    text-shadow: 0 0 5px #0f766e, 0 0 10px #0f766e, 0 0 15px #0f766e,
+      0 0 20px #0f766e, 0 0 35px #0f766e, 0 0 40px #0f766e;
   }
 }
 
@@ -26,10 +26,10 @@
 }
 
 body {
-  @apply font-lato text-white;
+  @apply font-serif text-white bg-cover;
   background-color: #141416;
   background-image: url('/src/assets/bg-main.png');
-  background-size: 100% 100%;
+  /* background-size: 100% 100%; */
   background-repeat: no-repeat;
   background-position: center;
   background-attachment: fixed;

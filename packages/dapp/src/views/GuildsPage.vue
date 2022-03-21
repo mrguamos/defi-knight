@@ -135,12 +135,12 @@
               leave-to="opacity-0 scale-95"
             >
               <div
-                class="inline-block w-auto max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-gradient-to-r to-[#040a34] from-gray-900 rounded-md"
+                class="inline-block w-auto max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-slate-900 bg-opacity-90 rounded-md"
                 style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
               >
                 <DialogTitle
                   as="h3"
-                  class="text-center text-lg font-medium text-yellow-300"
+                  class="text-center text-lg font-medium text-teal-700"
                 >
                   <div class="flex justify-center items-center">
                     {{ mintFee }} DK

@@ -15,8 +15,8 @@
                 <FontAwesomeIcon :icon="['fas', 'users']" size="2x" />
               </div>
               <div class="text-right">
-                <h4 class="text-2xl font-semibold text-slate-400">200,341</h4>
-                <div class="text-slate-400">Total Holders</div>
+                <h4 class="text-2xl font-semibold text-teal-700">200,341</h4>
+                <div class="text-white">Total Holders</div>
               </div>
             </div>
             <div
@@ -27,8 +27,8 @@
                 <FontAwesomeIcon :icon="['fas', 'dollar-sign']" size="2x" />
               </div>
               <div class="text-right">
-                <h4 class="text-2xl font-semibold text-slate-400">174.03</h4>
-                <div class="text-slate-500">Current Price</div>
+                <h4 class="text-2xl font-semibold text-teal-700">174.03</h4>
+                <div class="text-white">Current Price</div>
               </div>
             </div>
             <div
@@ -39,8 +39,8 @@
                 <FontAwesomeIcon :icon="['fas', 'users']" size="2x" />
               </div>
               <div class="text-right">
-                <h4 class="text-2xl font-semibold text-slate-400">138,019</h4>
-                <div class="text-slate-500">Total Commanders</div>
+                <h4 class="text-2xl font-semibold text-teal-700">138,019</h4>
+                <div class="text-white">Total Commanders</div>
               </div>
             </div>
             <div
@@ -51,8 +51,8 @@
                 <FontAwesomeIcon :icon="['fas', 'users']" size="2x" />
               </div>
               <div class="text-right">
-                <h4 class="text-2xl font-semibold text-slate-400">203,504</h4>
-                <div class="text-slate-500">Total Knights</div>
+                <h4 class="text-2xl font-semibold text-teal-700">203,504</h4>
+                <div class="text-white">Total Knights</div>
               </div>
             </div>
             <div
@@ -63,8 +63,8 @@
                 <FontAwesomeIcon :icon="['fas', 'users']" size="2x" />
               </div>
               <div class="text-right">
-                <h4 class="text-2xl font-semibold text-slate-400">7301</h4>
-                <div class="text-slate-500">Total Guilds</div>
+                <h4 class="text-2xl font-semibold text-teal-700">7301</h4>
+                <div class="text-white">Total Guilds</div>
               </div>
             </div>
             <div
@@ -75,8 +75,8 @@
                 <FontAwesomeIcon :icon="['fas', 'gem']" size="2x" />
               </div>
               <div class="text-right">
-                <h4 class="text-2xl font-semibold text-slate-400">3,103,187</h4>
-                <div class="text-slate-500">Rewards Pool</div>
+                <h4 class="text-2xl font-semibold text-teal-700">3,103,187</h4>
+                <div class="text-white">Rewards Pool</div>
               </div>
             </div>
           </div>

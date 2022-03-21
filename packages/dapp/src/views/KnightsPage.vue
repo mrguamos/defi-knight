@@ -54,31 +54,31 @@
               leave-to="opacity-0 scale-95"
             >
               <div
-                class="inline-block w-auto max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-gradient-to-r to-[#040a34] from-gray-900 rounded-md"
+                class="inline-block w-auto max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-slate-900 bg-opacity-90 rounded-md"
                 style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
               >
                 <DialogTitle
                   as="h3"
-                  class="text-center text-sm font-medium text-yellow-300"
+                  class="text-center text-sm font-medium text-teal-700"
                 >
                   <div
                     v-if="!isPresale"
                     class="flex justify-center items-center flex-col"
                   >
-                    <div class="flex text-lg items-center mb-2">
+                    <div class="flex text-lg items-center mb-2 text-white">
                       {{ mintFee }} DK
                       <DKIcon class="w-8 h-8 ml-1" />
                     </div>
                     <span class="text-red-500 text-2xl font-bold">+</span>
 
-                    <div class="flex text-lg items-center mt-2">
+                    <div class="flex text-lg items-center mt-2 text-white">
                       {{ stableFee }} BNB
                       <BNBIcon class="h-8 w-8 ml-1" />
                     </div>
                   </div>
                   <div
                     v-if="isPresale"
-                    class="flex text-lg justify-center items-center"
+                    class="flex text-lg justify-center items-center text-white"
                   >
                     {{ presaleFee }} BNB
                     <BNBIcon class="w-8 h-8 ml-1" />
