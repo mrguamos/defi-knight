@@ -155,25 +155,100 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         counter.increment();
     }
 
+    //guild => commanders
+    mapping(uint256 => uint256[]) private guildCommander;
+    //guild => knights
+    mapping(uint256 => uint256[]) private guildKnight;
+
+    //mapping guild/commander and guild/knight for validation on assignment
+    mapping(uint256 => uint256) private commanderGuild;
+    mapping(uint256 => uint256) private knightGuild;
+
+    //commander not related to knights, commander for knight slots only
     function addGuildMembers(
         uint256 guildId,
-        uint256[] calldata commanders,
-        uint256[] calldata knights
-    ) external payable onlyNonContract {
-        require(guild.ownerOf(guildId) == msg.sender);
+        uint256[] calldata newCommanderTokens, //calldata used for array or struct parameters, and external
+        uint256[] calldata newKnightTokens
+    ) external {
+        //validate if member is already assigned to a guild
+        validateGuildAssignment(newCommanderTokens, newKnightTokens);
 
-        uint256 moraleFee = priceManager.getMoraleFee();
-        require(moraleFee > 0);
-        uint16 totalMorale = morale.guildMorale(guildId);
-        uint256 totalMoraleFee = moraleFee * (knights.length * totalMorale);
+        // build commander
+        //require(commander.ownerOf(commanderToken) == msg.sender);
+        require(
+            (guildCommander[guildId].length + newCommanderTokens.length) <= 5,
+            "Invalid number of assigned commanders."
+        ); //validate commander, guild limit 5
+
+        //get knight slot cap + wr
+        uint16 guildKnightCap = 0;
+        uint16 guildWinRate = 0;
+        Commander.CommanderState memory cs;
+        if (guildCommander[guildId].length != 0) {
+            //get knight slot + wr current assigned commanders
+            for (uint16 f = 0; f < guildCommander[guildId].length; f++) {
+                cs = commander.getCommander(guildCommander[guildId][f]);
+                guildKnightCap += cs.rarity + 1;
+                if (cs.isGenesis) {
+                    guildWinRate + 1;
+                }
+            }
+        }
+
+        if (newCommanderTokens.length != 0) {
+            //get knight slot + wr  "for assignment" commanders
+            for (uint16 f = 0; f < newCommanderTokens.length; f++) {
+                cs = commander.getCommander(newCommanderTokens[f]);
+                guildKnightCap += cs.rarity + 1;
+                if (cs.isGenesis) {
+                    guildWinRate + 1;
+                }
+                guildCommander[guildId].push(newCommanderTokens[f]);
+            }
+        }
 
         require(
-            defiKnight.balanceOf(msg.sender) >= totalMoraleFee,
-            "Not Enough Balance"
-        );
+            (guildKnight[guildId].length + newKnightTokens.length) <=
+                guildKnightCap
+        ); //validate knights, knight limit <=25
+    }
 
-        defiKnight.transferFrom(msg.sender, address(this), totalMoraleFee);
-        guild.addMembers(msg.sender, guildId, commanders, knights);
+    function validateGuildAssignment(
+        uint256[] calldata commanderTokens,
+        uint256[] calldata knightTokens
+    ) private view {
+        //validate if member is already assigned to a guild
+        for (uint16 c = 0; c < commanderTokens.length; c++) {
+            require(
+                commanderGuild[commanderTokens[c]] != 0,
+                string(
+                    abi.encodePacked(
+                        "Commander already assigned to a guild: ",
+                        commanderGuild[commanderTokens[c]]
+                    )
+                )
+            );
+        }
+
+        for (uint16 c = 0; c < knightTokens.length; c++) {
+            require(
+                knightGuild[knightTokens[c]] != 0,
+                string(
+                    abi.encodePacked(
+                        "Knight already assigned to a guild: ",
+                        knightGuild[knightTokens[c]]
+                    )
+                )
+            );
+        }
+    }
+
+    function getMyGuild(uint256 guildId)
+        public
+        view
+        returns (uint256[] memory)
+    {
+        return guildCommander[guildId];
     }
 
     function disbandGuild(uint256 guildId) external payable onlyNonContract {

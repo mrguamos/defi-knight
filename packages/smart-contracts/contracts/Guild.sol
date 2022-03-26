@@ -241,4 +241,20 @@ contract Guild is
     {
         lastFight[tokenId] = timestamp;
     }
+
+    function updateGuildStats(
+        uint256 guildId,
+        bytes32 emblem,
+        uint8 morale,
+        uint16 combatPower,
+        uint8 winRate,
+        bytes32 name
+    ) public onlyRole(GAME_ADMIN_ROLE) whenNotPaused {
+        GuildState storage gs = guilds[guildId];
+        if (gs.emblem != emblem) gs.emblem = emblem;
+        if (gs.morale != morale) gs.morale = morale;
+        if (gs.combatPower != combatPower) gs.combatPower = combatPower;
+        if (gs.winRate != winRate) gs.winRate = winRate;
+        if (gs.name != name) gs.name = name;
+    }
 }
