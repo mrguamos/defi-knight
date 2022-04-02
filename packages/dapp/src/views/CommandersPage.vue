@@ -119,6 +119,7 @@
   import { useCommander } from '../stores/commander-store'
   import { usePriceManager } from '../stores/price-manager-store'
   import { useAccount } from '../stores/account-store'
+  import { useMarket } from '../stores/market-store'
   import { Commander } from '../types/commander'
   import PrimaryButton from '../components/PrimaryButton.vue'
   import GridPagination from '../components/GridPagination.vue'
@@ -142,6 +143,7 @@
   const stableFee = ref(0)
   const hasAllowance = ref(false)
   const main = useMain()
+  const market = useMarket()
 
   account.$subscribe(async (_, state) => {
     if (state.isConnected) {
@@ -273,9 +275,12 @@
 
   const getApproved = async () => {
     if (account.isConnected) {
-      account.isApproved = false
-      account.isApproved = await commander.isApprovedForAll()
+      market.isApproved = false
+      market.isApproved = await commander.isApprovedForAll(
+        useContract().market.address
+      )
     }
   }
+
   getApproved()
 </script>

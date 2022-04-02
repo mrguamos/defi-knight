@@ -51,20 +51,14 @@ export const useCommander = defineStore('commander', {
         balance - 1
       )
     },
-    isApprovedForAll() {
+    isApprovedForAll(address: string) {
       const contracts = useContract()
       const account = useAccount()
-      return contracts.commander.isApprovedForAll(
-        account.address,
-        contracts.market.address
-      )
+      return contracts.commander.isApprovedForAll(account.address, address)
     },
-    setApprovalForAll() {
+    setApprovalForAll(address: string) {
       const contracts = useContract()
-      return contracts.commander.functions.setApprovalForAll(
-        contracts.market.address,
-        true
-      )
+      return contracts.commander.functions.setApprovalForAll(address, true)
     },
     safeTransferFrom(to: string, tokenId: number) {
       const contracts = useContract()

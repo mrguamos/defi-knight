@@ -8,7 +8,6 @@ export const useAccount = defineStore('account', {
       address: '',
       totalDK: 0,
       isConnected: false,
-      isApproved: false,
     }
   },
   actions: {

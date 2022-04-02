@@ -1,6 +1,6 @@
 <template>
   <div v-if="mode === 'inventory'">
-    <div v-if="account.isApproved" class="flex justify-between">
+    <div v-if="market.isApproved" class="flex justify-between">
       <button
         class="text-[#9ba1fd] inline-flex items-center"
         @click="openDialog(1)"
@@ -14,7 +14,7 @@
         <FontAwesomeIcon :icon="['fas', 'coins']" size="lg" />
       </button>
     </div>
-    <div v-if="!account.isApproved" class="flex justify-center">
+    <div v-if="!market.isApproved" class="flex justify-center">
       <PrimaryButton @click="approveForAll()">APPROVE</PrimaryButton>
     </div>
   </div>
@@ -346,11 +346,14 @@
     try {
       main.loading = true
       let res
-      if (props.nft === 'commanders') res = await commander.setApprovalForAll()
-      else if (props.nft === 'knights') res = await knight.setApprovalForAll()
-      else if (props.nft === 'guilds') res = await guild.setApprovalForAll()
+      if (props.nft === 'commanders')
+        res = await commander.setApprovalForAll(useContract().market.address)
+      else if (props.nft === 'knights')
+        res = await knight.setApprovalForAll(useContract().market.address)
+      else if (props.nft === 'guilds')
+        res = await guild.setApprovalForAll(useContract().market.address)
       const receipt = await res.wait()
-      account.isApproved = true
+      market.isApproved = true
       console.log(receipt)
     } finally {
       main.loading = false

@@ -4,6 +4,11 @@ import { ethers } from 'ethers'
 import axios from 'axios'
 import { useAccount } from './account-store'
 export const useMarket = defineStore('market', {
+  state: () => {
+    return {
+      isApproved: false,
+    }
+  },
   actions: {
     async sell(nftType: number, tokenId: number, amount: number) {
       const contracts = useContract()
