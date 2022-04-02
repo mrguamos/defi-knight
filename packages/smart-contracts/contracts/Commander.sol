@@ -87,7 +87,7 @@ contract Commander is
         counter.increment();
         uint256 tokenId = counter.current();
 
-        uint256 rollClass = (seed % 4);
+        uint256 rollClass = (seed % 3);
 
         uint256 rollGender = (tokenId % 2);
 
