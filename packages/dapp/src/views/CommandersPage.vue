@@ -270,4 +270,12 @@
       main.loading = false
     }
   }
+
+  const getApproved = async () => {
+    if (account.isConnected) {
+      account.isApproved = false
+      account.isApproved = await commander.isApprovedForAll()
+    }
+  }
+  getApproved()
 </script>

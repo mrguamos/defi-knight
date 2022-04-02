@@ -1,6 +1,6 @@
 <template>
   <div v-if="mode === 'inventory'">
-    <div v-if="isApproved" class="flex justify-between">
+    <div v-if="account.isApproved" class="flex justify-between">
       <button
         class="text-[#9ba1fd] inline-flex items-center"
         @click="openDialog(1)"
@@ -14,7 +14,7 @@
         <FontAwesomeIcon :icon="['fas', 'coins']" size="lg" />
       </button>
     </div>
-    <div v-if="!isApproved" class="flex justify-center">
+    <div v-if="!account.isApproved" class="flex justify-center">
       <PrimaryButton @click="approveForAll()">APPROVE</PrimaryButton>
     </div>
   </div>
@@ -238,7 +238,6 @@
   const market = useMarket()
   const dialog = ref(false)
   const amount = ref()
-  const isApproved = ref(false)
   const commander = useCommander()
   const knight = useKnight()
   const guild = useGuild()
@@ -351,24 +350,12 @@
       else if (props.nft === 'knights') res = await knight.setApprovalForAll()
       else if (props.nft === 'guilds') res = await guild.setApprovalForAll()
       const receipt = await res.wait()
+      account.isApproved = true
       console.log(receipt)
-      getApproved()
     } finally {
       main.loading = false
     }
   }
-
-  const getApproved = async () => {
-    if (account.isConnected) {
-      if (props.nft === 'commanders')
-        isApproved.value = await commander.isApprovedForAll()
-      else if (props.nft === 'knights')
-        isApproved.value = await knight.isApprovedForAll()
-      else if (props.nft === 'guilds')
-        isApproved.value = await guild.isApprovedForAll()
-    }
-  }
-  getApproved()
 
   const approveDK = async () => {
     try {
