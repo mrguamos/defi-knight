@@ -2,6 +2,10 @@ import { defineStore } from 'pinia'
 import { useContract } from './contract-store'
 import { BigNumber, ethers } from 'ethers'
 
+export type AccountStore = {
+  isConnected: boolean
+}
+
 export const useAccount = defineStore('account', {
   state: () => {
     return {
@@ -13,7 +17,9 @@ export const useAccount = defineStore('account', {
   actions: {
     async init(address: string) {
       this.address = address
-      this.isConnected = true
+      this.$patch({
+        isConnected: true,
+      })
       await this.getDK()
     },
     async getDK() {

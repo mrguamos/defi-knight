@@ -112,7 +112,7 @@
   import { ref, computed } from 'vue'
   import { useKnight } from '../stores/knight-store'
   import { usePriceManager } from '../stores/price-manager-store'
-  import { useAccount } from '../stores/account-store'
+  import { useAccount, AccountStore } from '../stores/account-store'
   import { useMarket } from '../stores/market-store'
   import { Knight } from '../types/knight'
   import PrimaryButton from '../components/PrimaryButton.vue'
@@ -123,7 +123,8 @@
   import DKIcon from '../components/DKIcon.vue'
   import BNBIcon from '../components/BNBIcon.vue'
   import { useContract } from '../stores/contract-store'
-  import { useMain } from '../stores/main-store'
+  import { useMain, MainStore } from '../stores/main-store'
+  import { SubscriptionCallbackMutationPatchObject } from 'pinia'
 
   const dialog = ref(false)
   const page = ref(1)
@@ -139,16 +140,24 @@
   const main = useMain()
   const market = useMarket()
 
-  account.$subscribe(async (_, state) => {
-    if (state.isConnected) {
+  account.$subscribe(async (mutation) => {
+    const { isConnected } =
+      (mutation as SubscriptionCallbackMutationPatchObject<AccountStore>)
+        .payload || false
+    if (isConnected) {
       getKnights()
+      getApproved()
+      getAllowance()
     } else {
       knights.value = []
     }
   })
 
-  main.$subscribe(async (_, state) => {
-    if (state.refresh) {
+  main.$subscribe(async (mutation, state) => {
+    const { refresh } =
+      (mutation as SubscriptionCallbackMutationPatchObject<MainStore>)
+        .payload || false
+    if (refresh) {
       getKnights()
       state.refresh = false
     }
@@ -194,7 +203,7 @@
 
       // eslint-disable-next-line
     } catch (error: any) {
-      console.log(error.toString())
+      console.log(error)
       if (error.code !== 4001) {
         //
       }
@@ -268,7 +277,6 @@
 
   const getApproved = async () => {
     if (account.isConnected) {
-      market.isApproved = false
       market.isApproved = await knight.isApprovedForAll(
         useContract().market.address
       )

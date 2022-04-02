@@ -19,7 +19,7 @@
     </div>
   </div>
   <div v-if="mode === 'market'">
-    <div v-if="hasAllowance" class="flex justify-between">
+    <div v-if="market.hasAllowance" class="flex justify-between">
       <button class="text-[#9ba1fd] inline-flex items-center">
         <FontAwesomeIcon
           :icon="['fas', 'ban']"
@@ -35,7 +35,7 @@
         />
       </button>
     </div>
-    <div v-if="!hasAllowance" class="flex justify-center">
+    <div v-if="!market.hasAllowance" class="flex justify-center">
       <PrimaryButton @click="approveDK()">APPROVE</PrimaryButton>
     </div>
   </div>
@@ -242,7 +242,6 @@
   const knight = useKnight()
   const guild = useGuild()
   const account = useAccount()
-  const hasAllowance = ref(false)
   const main = useMain()
   const to = ref('')
   const action = ref(0)
@@ -366,7 +365,7 @@
       const res = await account.approveDK(useContract().market.address)
       const receipt = await res.wait()
       console.log(receipt)
-      getAllowance()
+      market.hasAllowance = true
       // eslint-disable-next-line
     } catch (error: any) {
       console.log(error)
@@ -377,21 +376,6 @@
       main.loading = false
     }
   }
-
-  const getAllowance = async () => {
-    if (account.isConnected) {
-      const allowance = await account.getDKAllowance(
-        useContract().market.address
-      )
-      if (allowance.isZero()) {
-        hasAllowance.value = false
-        return
-      }
-      hasAllowance.value = true
-    }
-  }
-
-  getAllowance()
 
   const transfer = async (address: string, tokenId: number) => {
     try {

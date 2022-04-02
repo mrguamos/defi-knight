@@ -7,6 +7,7 @@ export const useMarket = defineStore('market', {
   state: () => {
     return {
       isApproved: false,
+      hasAllowance: false,
     }
   },
   actions: {

@@ -14,15 +14,16 @@
 
 <script lang="ts" setup>
   import { ref, computed } from 'vue'
-  import { useAccount } from '../stores/account-store'
+  import { useAccount, AccountStore } from '../stores/account-store'
   import { Knight } from '../types/knight'
   import GridPagination from '../components/GridPagination.vue'
   import NFTList from '../components/NFTList.vue'
 
   import { useMarket } from '../stores/market-store'
-  import { useMain } from '../stores/main-store'
+  import { useMain, MainStore } from '../stores/main-store'
+  import { useContract } from '../stores/contract-store'
+  import { SubscriptionCallbackMutationPatchObject } from 'pinia'
 
-  const dialog = ref(false)
   const page = ref(1)
   const totalVisible = 3
   const rowsPerPage = 10
@@ -32,23 +33,27 @@
   const main = useMain()
   const count = ref(0)
 
-  main.$subscribe(async (_, state) => {
-    if (state.refresh) {
+  main.$subscribe(async (mutation, state) => {
+    const { refresh } =
+      (mutation as SubscriptionCallbackMutationPatchObject<MainStore>)
+        .payload || false
+    if (refresh) {
       getKnights()
+      state.refresh = false
     }
   })
 
-  account.$subscribe(async (_, state) => {
-    if (state.isConnected) {
-      await getKnights()
+  account.$subscribe(async (mutation) => {
+    const { isConnected } =
+      (mutation as SubscriptionCallbackMutationPatchObject<AccountStore>)
+        .payload || false
+    if (isConnected) {
+      getKnights()
+      getAllowance()
     } else {
       knights.value = []
     }
   })
-
-  const closeModal = () => {
-    dialog.value = false
-  }
 
   const getKnights = async () => {
     if (account.isConnected) {
@@ -68,4 +73,19 @@
   getKnights()
 
   const pagesNumber = computed(() => Math.ceil(count.value / rowsPerPage))
+
+  const getAllowance = async () => {
+    if (account.isConnected) {
+      const allowance = await account.getDKAllowance(
+        useContract().market.address
+      )
+      if (allowance.isZero()) {
+        market.hasAllowance = false
+        return
+      }
+      market.hasAllowance = true
+    }
+  }
+
+  getAllowance()
 </script>
