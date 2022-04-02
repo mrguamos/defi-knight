@@ -288,7 +288,9 @@
       const res = await market.sell(nftType as number, tokenId, amount)
       const receipt = await res.wait()
       console.log(receipt)
-      main.refresh = true
+      main.$patch({
+        refresh: true,
+      })
     } finally {
       main.loading = false
       closeModal()
@@ -311,7 +313,9 @@
       const res = await market.cancel(nftType as number, tokenId)
       const receipt = await res.wait()
       console.log(receipt)
-      main.refresh = true
+      main.$patch({
+        refresh: true,
+      })
     } finally {
       main.loading = false
       closeModal()
@@ -334,7 +338,9 @@
       const res = await market.buy(nftType as number, tokenId, amount)
       const receipt = await res.wait()
       console.log(receipt)
-      main.refresh = true
+      main.$patch({
+        refresh: true,
+      })
     } finally {
       main.loading = false
       closeModal()
@@ -392,7 +398,9 @@
 
       const receipt = await res.wait()
       console.log(receipt)
-      main.refresh = true
+      main.$patch({
+        refresh: true,
+      })
     } finally {
       main.loading = false
       closeModal()
