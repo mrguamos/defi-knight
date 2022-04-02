@@ -110,7 +110,7 @@ contract Commander is
         commanders[tokenId] = CommanderState(
             rarity,
             uint8(rollClass),
-            priceManager.isPresale(),
+            tokenId <= 1000,
             uint8(rollGender)
         );
         emit NewCommander(tokenId, to);

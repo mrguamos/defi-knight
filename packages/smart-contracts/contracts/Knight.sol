@@ -122,7 +122,7 @@ contract Knight is
             rarity = 4;
         }
 
-        if (priceManager.isPresale()) {
+        if (tokenId <= 1000) {
             bonusPower = 20;
         }
 

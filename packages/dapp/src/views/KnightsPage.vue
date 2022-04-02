@@ -14,8 +14,17 @@
       :pages-number="pagesNumber"
       :rows-per-page="rowsPerPage"
     />
-    <PrimaryButton class="self-center mt-2" @click="openDialog()"
+    <PrimaryButton
+      v-if="hasAllowance"
+      class="self-center mt-2"
+      @click="openDialog()"
       >MINT KNIGHT</PrimaryButton
+    >
+    <PrimaryButton
+      v-if="!hasAllowance"
+      class="self-center mt-2"
+      @click="approveDK()"
+      >APPROVE</PrimaryButton
     >
     <!-- <PrimaryButton
       v-if="!hasAllowance"
@@ -61,10 +70,7 @@
                   as="h3"
                   class="text-center text-sm font-medium text-teal-700"
                 >
-                  <div
-                    v-if="!isPresale"
-                    class="flex justify-center items-center flex-col"
-                  >
+                  <div class="flex justify-center items-center flex-col">
                     <div class="flex text-lg items-center mb-2 text-white">
                       {{ mintFee }} DK
                       <DKIcon class="w-8 h-8 ml-1" />
@@ -75,13 +81,6 @@
                       {{ stableFee }} BNB
                       <BNBIcon class="h-8 w-8 ml-1" />
                     </div>
-                  </div>
-                  <div
-                    v-if="isPresale"
-                    class="flex text-lg justify-center items-center text-white"
-                  >
-                    {{ presaleFee }} BNB
-                    <BNBIcon class="w-8 h-8 ml-1" />
                   </div>
                 </DialogTitle>
                 <div class="flex grow flex-col text-sm gap-4 mt-5">
@@ -134,8 +133,6 @@
   const account = useAccount()
   const knights = ref<Knight[]>([])
   const mintFee = ref(0)
-  const presaleFee = ref(0)
-  const isPresale = ref(false)
   const stableFee = ref(0)
   const hasAllowance = ref(false)
   const main = useMain()
@@ -158,18 +155,12 @@
   const openDialog = async () => {
     const res = await Promise.all([
       priceManager.getMintFee(),
-      priceManager.getPresaleFee(),
       priceManager.getStableFee(),
-      priceManager.isPresale(),
     ])
     mintFee.value = Number(ethers.utils.formatUnits(res[0].toString(), 'ether'))
-    presaleFee.value = Number(
+    stableFee.value = Number(
       ethers.utils.formatUnits(res[1].toString(), 'ether')
     )
-    stableFee.value = Number(
-      ethers.utils.formatUnits(res[2].toString(), 'ether')
-    )
-    isPresale.value = res[3]
     dialog.value = true
   }
 
@@ -182,22 +173,26 @@
       const res = await knight.mintKnight()
       const receipt = await res.wait()
       for (const log of receipt.logs) {
-        const data = knight.iKnight.parseLog(log)
-        if (data.name === 'NewKnight') {
-          const item = (await knight.getKnight(data.args[0]))[0]
-          if (item) {
-            knights.value.push({
-              ...item,
-              id: (data.args[0] as BigNumberish).toString(),
-            })
-            return
+        try {
+          const data = knight.iKnight.parseLog(log)
+          if (data.name === 'NewKnight') {
+            const item = (await knight.getKnight(data.args[0]))[0]
+            if (item) {
+              knights.value.push({
+                ...item,
+                id: (data.args[0] as BigNumberish).toString(),
+              })
+              return
+            }
           }
+        } catch (error) {
+          //
         }
       }
 
       // eslint-disable-next-line
     } catch (error: any) {
-      console.log(error)
+      console.log(error.toString())
       if (error.code !== 4001) {
         //
       }
@@ -254,7 +249,7 @@
   const approveDK = async () => {
     try {
       main.loading = true
-      const res = await account.approveDK(useContract().market.address)
+      const res = await account.approveDK(useContract().game.address)
       const receipt = await res.wait()
       console.log(receipt)
       getAllowance()

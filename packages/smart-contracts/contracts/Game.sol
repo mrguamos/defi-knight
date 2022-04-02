@@ -26,7 +26,6 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
     Guild private guild;
     IMinter private knightMinter;
     IMinter private commanderMinter;
-    IERC20 private stableCoin;
     Morale private morale;
     bool isPaused;
 
@@ -46,7 +45,6 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         Guild _guild,
         IMinter _knightMinter,
         IMinter _commanderMinter,
-        IERC20 _stableCoin,
         Morale _morale,
         PriceManager _priceManager
     ) public initializer {
@@ -60,62 +58,37 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         guild = _guild;
         knightMinter = _knightMinter;
         commanderMinter = _commanderMinter;
-        stableCoin = _stableCoin;
         morale = _morale;
-        isPaused = true;
+        isPaused = false;
         priceManager = _priceManager;
     }
 
-    function mintKnight() external onlyNonContract {
+    function mintKnight() external payable onlyNonContract {
         require(!isPaused, "Minting disabled");
         uint256 mintFee = priceManager.getMintFee();
+        uint256 stableFee = priceManager.getStableFee();
         require(mintFee > 0);
         require(
             defiKnight.balanceOf(msg.sender) >= mintFee,
             "Not Enough Balance"
         );
-        require(
-            stableCoin.balanceOf(msg.sender) >= priceManager.stableFee(),
-            "Not Enough Balance"
-        );
+        require(msg.value >= stableFee, "Not Enough Balance");
         defiKnight.transferFrom(msg.sender, address(this), mintFee);
-        stableCoin.transferFrom(msg.sender, address(this), mintFee);
         counter.increment();
         knightMinter.mint(msg.sender, counter.current());
     }
 
-    function mintKnightPresale() external payable onlyNonContract {
-        require(priceManager.isPresale());
-        uint256 presaleFee = priceManager.presaleFee();
-        require(presaleFee != 0, "Presale Fee Not Set");
-        require(msg.value >= presaleFee, "Not Enough Balance");
-        counter.increment();
-        knightMinter.mint(msg.sender, counter.current());
-    }
-
-    function mintCommander() external onlyNonContract {
+    function mintCommander() external payable onlyNonContract {
         require(!isPaused, "Minting disabled");
         uint256 mintFee = priceManager.getMintFee();
+        uint256 stableFee = priceManager.getStableFee();
         require(mintFee > 0);
         require(
             defiKnight.balanceOf(msg.sender) >= mintFee,
             "Not Enough Balance"
         );
-        require(
-            stableCoin.balanceOf(msg.sender) >= priceManager.stableFee(),
-            "Not Enough Balance"
-        );
+        require(msg.value >= stableFee, "Not Enough Balance");
         defiKnight.transferFrom(msg.sender, address(this), mintFee);
-        stableCoin.transferFrom(msg.sender, address(this), mintFee);
-        counter.increment();
-        commanderMinter.mint(msg.sender, counter.current());
-    }
-
-    function mintCommanderPresale() external payable onlyNonContract {
-        require(priceManager.isPresale());
-        uint256 presaleFee = priceManager.presaleFee();
-        require(presaleFee != 0, "Presale Fee Not Set");
-        require(msg.value >= presaleFee, "Not Enough Balance");
         counter.increment();
         commanderMinter.mint(msg.sender, counter.current());
     }

@@ -13,10 +13,10 @@ export const useKnight = defineStore('knight', {
   actions: {
     async mintKnight(): Promise<providers.TransactionResponse> {
       const contracts = useContract()
-      const mintFee = await usePriceManager().getPresaleFee()
-      return contracts.game.functions.mintKnightPresale({
+      const mintFee = await usePriceManager().getStableFee()
+      return contracts.game.functions.mintKnight({
         value: mintFee,
-        gasLimit: 300000,
+        gasLimit: 400000,
       })
     },
     async getKnights() {
