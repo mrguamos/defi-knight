@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center items-center flex-col bg-black bg-opacity-20">
+  <div class="flex justify-center items-center flex-col">
     <img
       :src="getImageUrl(`inventory.png`)"
       class="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl"
