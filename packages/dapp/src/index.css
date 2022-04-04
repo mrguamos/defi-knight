@@ -53,3 +53,10 @@ body {
   fill: #f0b90b;
   stroke: #f0b90b;
 }
+
+.neon {
+  text-shadow: 0px 0px 10px rgb(15 118 110), 0px 0px 20px rgb(15 118 110),
+    0px 0px 30px rgb(15 118 110), 0px 0px 40px rgb(15 118 110),
+    0px 0px 50px rgb(15 118 110), 0px 0px 60px rgb(15 118 110),
+    0px 0px 70px rgb(15 118 110);
+}

@@ -14,8 +14,17 @@
       :pages-number="pagesNumber"
       :rows-per-page="rowsPerPage"
     />
-    <PrimaryButton class="self-center mt-2" @click="openDialog()"
+    <PrimaryButton
+      v-if="hasAllowance"
+      class="self-center mt-2"
+      @click="openDialog()"
       >MINT COMMANDER</PrimaryButton
+    >
+    <PrimaryButton
+      v-if="!hasAllowance"
+      class="self-center mt-2"
+      @click="approveDK()"
+      >APPROVE</PrimaryButton
     >
     <!-- <PrimaryButton
       v-if="!hasAllowance"
@@ -61,10 +70,7 @@
                   as="h3"
                   class="text-center text-sm font-medium text-teal-700"
                 >
-                  <div
-                    v-if="!isPresale"
-                    class="flex justify-center items-center flex-col"
-                  >
+                  <div class="flex justify-center items-center flex-col">
                     <div
                       class="flex justify-center text-lg items-center mb-1 text-white"
                     >
@@ -79,13 +85,6 @@
                       {{ stableFee }} BNB
                       <BNBIcon class="h-8 w-8 ml-1" />
                     </div>
-                  </div>
-                  <div
-                    v-if="isPresale"
-                    class="flex text-lg justify-center items-center text-white"
-                  >
-                    {{ presaleFee }} BNB
-                    <BNBIcon class="w-8 h-8 ml-1" />
                   </div>
                 </DialogTitle>
                 <div class="flex grow flex-col text-sm gap-4 mt-5">
@@ -119,7 +118,8 @@
   import { ref, computed } from 'vue'
   import { useCommander } from '../stores/commander-store'
   import { usePriceManager } from '../stores/price-manager-store'
-  import { useAccount } from '../stores/account-store'
+  import { useAccount, AccountStore } from '../stores/account-store'
+  import { useMarket } from '../stores/market-store'
   import { Commander } from '../types/commander'
   import PrimaryButton from '../components/PrimaryButton.vue'
   import GridPagination from '../components/GridPagination.vue'
@@ -129,7 +129,8 @@
   import DKIcon from '../components/DKIcon.vue'
   import BNBIcon from '../components/BNBIcon.vue'
   import { useContract } from '../stores/contract-store'
-  import { useMain } from '../stores/main-store'
+  import { useMain, MainStore } from '../stores/main-store'
+  import { SubscriptionCallbackMutationPatchObject } from 'pinia'
 
   const dialog = ref(false)
   const page = ref(1)
@@ -140,22 +141,29 @@
   const account = useAccount()
   const commanders = ref<Commander[]>([])
   const mintFee = ref(0)
-  const presaleFee = ref(0)
-  const isPresale = ref(false)
   const stableFee = ref(0)
   const hasAllowance = ref(false)
   const main = useMain()
+  const market = useMarket()
 
-  account.$subscribe(async (_, state) => {
-    if (state.isConnected) {
+  account.$subscribe(async (mutation) => {
+    const { isConnected } =
+      (mutation as SubscriptionCallbackMutationPatchObject<AccountStore>)
+        .payload || false
+    if (isConnected) {
       getCommanders()
+      getApproved()
+      getAllowance()
     } else {
       commanders.value = []
     }
   })
 
-  main.$subscribe(async (_, state) => {
-    if (state.refresh) {
+  main.$subscribe(async (mutation, state) => {
+    const { refresh } =
+      (mutation as SubscriptionCallbackMutationPatchObject<MainStore>)
+        .payload || false
+    if (refresh) {
       getCommanders()
       state.refresh = false
     }
@@ -164,18 +172,13 @@
   const openDialog = async () => {
     const res = await Promise.all([
       priceManager.getMintFee(),
-      priceManager.getPresaleFee(),
       priceManager.getStableFee(),
-      priceManager.isPresale(),
     ])
     mintFee.value = Number(ethers.utils.formatUnits(res[0].toString(), 'ether'))
-    presaleFee.value = Number(
+
+    stableFee.value = Number(
       ethers.utils.formatUnits(res[1].toString(), 'ether')
     )
-    stableFee.value = Number(
-      ethers.utils.formatUnits(res[2].toString(), 'ether')
-    )
-    isPresale.value = res[3]
     dialog.value = true
   }
 
@@ -188,16 +191,20 @@
       const res = await commander.mintCommander()
       const receipt = await res.wait()
       for (const log of receipt.logs) {
-        const data = commander.iCommander.parseLog(log)
-        if (data.name === 'NewCommander') {
-          const item = (await commander.getCommander(data.args[0]))[0]
-          if (item) {
-            commanders.value.push({
-              ...item,
-              id: (data.args[0] as BigNumberish).toString(),
-            })
-            return
+        try {
+          const data = commander.iCommander.parseLog(log)
+          if (data.name === 'NewCommander') {
+            const item = (await commander.getCommander(data.args[0]))[0]
+            if (item) {
+              commanders.value.push({
+                ...item,
+                id: (data.args[0] as BigNumberish).toString(),
+              })
+              return
+            }
           }
+        } catch (error) {
+          //
         }
       }
 
@@ -246,9 +253,7 @@
 
   const getAllowance = async () => {
     if (account.isConnected) {
-      const allowance = await account.getDKAllowance(
-        useContract().market.address
-      )
+      const allowance = await account.getDKAllowance(useContract().game.address)
       if (allowance.isZero()) {
         hasAllowance.value = false
         return
@@ -262,7 +267,7 @@
   const approveDK = async () => {
     try {
       main.loading = true
-      const res = await account.approveDK(useContract().market.address)
+      const res = await account.approveDK(useContract().game.address)
       const receipt = await res.wait()
       console.log(receipt)
       getAllowance()
@@ -276,4 +281,14 @@
       main.loading = false
     }
   }
+
+  const getApproved = async () => {
+    if (account.isConnected) {
+      market.isApproved = await commander.isApprovedForAll(
+        useContract().market.address
+      )
+    }
+  }
+
+  getApproved()
 </script>

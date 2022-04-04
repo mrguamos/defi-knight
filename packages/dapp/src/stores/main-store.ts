@@ -1,5 +1,10 @@
 import { defineStore } from 'pinia'
 import { ethers } from 'ethers'
+
+export type MainStore = {
+  refresh: boolean
+}
+
 export const useMain = defineStore('main', {
   state: () => {
     return {

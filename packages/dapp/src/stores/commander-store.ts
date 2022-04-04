@@ -14,10 +14,9 @@ export const useCommander = defineStore('commander', {
   actions: {
     async mintCommander(): Promise<providers.TransactionResponse> {
       const contracts = useContract()
-      const mintFee = await usePriceManager().getPresaleFee()
-      return contracts.game.functions.mintCommanderPresale({
+      const mintFee = await usePriceManager().getStableFee()
+      return contracts.game.functions.mintCommander({
         value: mintFee,
-        gasLimit: 300000,
       })
     },
     async getCommanders() {
@@ -51,20 +50,14 @@ export const useCommander = defineStore('commander', {
         balance - 1
       )
     },
-    isApprovedForAll() {
+    isApprovedForAll(address: string) {
       const contracts = useContract()
       const account = useAccount()
-      return contracts.commander.isApprovedForAll(
-        account.address,
-        contracts.market.address
-      )
+      return contracts.commander.isApprovedForAll(account.address, address)
     },
-    setApprovalForAll() {
+    setApprovalForAll(address: string) {
       const contracts = useContract()
-      return contracts.commander.functions.setApprovalForAll(
-        contracts.market.address,
-        true
-      )
+      return contracts.commander.functions.setApprovalForAll(address, true)
     },
     safeTransferFrom(to: string, tokenId: number) {
       const contracts = useContract()

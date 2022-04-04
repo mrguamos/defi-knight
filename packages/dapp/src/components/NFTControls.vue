@@ -1,6 +1,6 @@
 <template>
   <div v-if="mode === 'inventory'">
-    <div v-if="isApproved" class="flex justify-between">
+    <div v-if="market.isApproved" class="flex justify-between">
       <button
         class="text-[#9ba1fd] inline-flex items-center"
         @click="openDialog(1)"
@@ -14,12 +14,12 @@
         <FontAwesomeIcon :icon="['fas', 'coins']" size="lg" />
       </button>
     </div>
-    <div v-if="!isApproved" class="flex justify-center">
+    <div v-if="!market.isApproved" class="flex justify-center">
       <PrimaryButton @click="approveForAll()">APPROVE</PrimaryButton>
     </div>
   </div>
   <div v-if="mode === 'market'">
-    <div v-if="hasAllowance" class="flex justify-between">
+    <div v-if="market.hasAllowance" class="flex justify-between">
       <button class="text-[#9ba1fd] inline-flex items-center">
         <FontAwesomeIcon
           :icon="['fas', 'ban']"
@@ -35,7 +35,7 @@
         />
       </button>
     </div>
-    <div v-if="!hasAllowance" class="flex justify-center">
+    <div v-if="!market.hasAllowance" class="flex justify-center">
       <PrimaryButton @click="approveDK()">APPROVE</PrimaryButton>
     </div>
   </div>
@@ -238,12 +238,10 @@
   const market = useMarket()
   const dialog = ref(false)
   const amount = ref()
-  const isApproved = ref(false)
   const commander = useCommander()
   const knight = useKnight()
   const guild = useGuild()
   const account = useAccount()
-  const hasAllowance = ref(false)
   const main = useMain()
   const to = ref('')
   const action = ref(0)
@@ -290,7 +288,9 @@
       const res = await market.sell(nftType as number, tokenId, amount)
       const receipt = await res.wait()
       console.log(receipt)
-      main.refresh = true
+      main.$patch({
+        refresh: true,
+      })
     } finally {
       main.loading = false
       closeModal()
@@ -313,7 +313,9 @@
       const res = await market.cancel(nftType as number, tokenId)
       const receipt = await res.wait()
       console.log(receipt)
-      main.refresh = true
+      main.$patch({
+        refresh: true,
+      })
     } finally {
       main.loading = false
       closeModal()
@@ -336,7 +338,9 @@
       const res = await market.buy(nftType as number, tokenId, amount)
       const receipt = await res.wait()
       console.log(receipt)
-      main.refresh = true
+      main.$patch({
+        refresh: true,
+      })
     } finally {
       main.loading = false
       closeModal()
@@ -347,28 +351,19 @@
     try {
       main.loading = true
       let res
-      if (props.nft === 'commanders') res = await commander.setApprovalForAll()
-      else if (props.nft === 'knights') res = await knight.setApprovalForAll()
-      else if (props.nft === 'guilds') res = await guild.setApprovalForAll()
+      if (props.nft === 'commanders')
+        res = await commander.setApprovalForAll(useContract().market.address)
+      else if (props.nft === 'knights')
+        res = await knight.setApprovalForAll(useContract().market.address)
+      else if (props.nft === 'guilds')
+        res = await guild.setApprovalForAll(useContract().market.address)
       const receipt = await res.wait()
+      market.isApproved = true
       console.log(receipt)
-      getApproved()
     } finally {
       main.loading = false
     }
   }
-
-  const getApproved = async () => {
-    if (account.isConnected) {
-      if (props.nft === 'commanders')
-        isApproved.value = await commander.isApprovedForAll()
-      else if (props.nft === 'knights')
-        isApproved.value = await knight.isApprovedForAll()
-      else if (props.nft === 'guilds')
-        isApproved.value = await guild.isApprovedForAll()
-    }
-  }
-  getApproved()
 
   const approveDK = async () => {
     try {
@@ -376,7 +371,7 @@
       const res = await account.approveDK(useContract().market.address)
       const receipt = await res.wait()
       console.log(receipt)
-      getAllowance()
+      market.hasAllowance = true
       // eslint-disable-next-line
     } catch (error: any) {
       console.log(error)
@@ -387,21 +382,6 @@
       main.loading = false
     }
   }
-
-  const getAllowance = async () => {
-    if (account.isConnected) {
-      const allowance = await account.getDKAllowance(
-        useContract().market.address
-      )
-      if (allowance.isZero()) {
-        hasAllowance.value = false
-        return
-      }
-      hasAllowance.value = true
-    }
-  }
-
-  getAllowance()
 
   const transfer = async (address: string, tokenId: number) => {
     try {
@@ -418,7 +398,9 @@
 
       const receipt = await res.wait()
       console.log(receipt)
-      main.refresh = true
+      main.$patch({
+        refresh: true,
+      })
     } finally {
       main.loading = false
       closeModal()

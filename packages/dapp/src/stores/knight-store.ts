@@ -13,10 +13,9 @@ export const useKnight = defineStore('knight', {
   actions: {
     async mintKnight(): Promise<providers.TransactionResponse> {
       const contracts = useContract()
-      const mintFee = await usePriceManager().getPresaleFee()
-      return contracts.game.functions.mintKnightPresale({
+      const mintFee = await usePriceManager().getStableFee()
+      return contracts.game.functions.mintKnight({
         value: mintFee,
-        gasLimit: 300000,
       })
     },
     async getKnights() {
@@ -50,20 +49,14 @@ export const useKnight = defineStore('knight', {
         balance - 1
       )
     },
-    isApprovedForAll() {
+    isApprovedForAll(address: string) {
       const contracts = useContract()
       const account = useAccount()
-      return contracts.knight.isApprovedForAll(
-        account.address,
-        contracts.market.address
-      )
+      return contracts.knight.isApprovedForAll(account.address, address)
     },
-    setApprovalForAll() {
+    setApprovalForAll(address: string) {
       const contracts = useContract()
-      return contracts.knight.functions.setApprovalForAll(
-        contracts.market.address,
-        true
-      )
+      return contracts.knight.functions.setApprovalForAll(address, true)
     },
     safeTransferFrom(to: string, tokenId: number) {
       const contracts = useContract()

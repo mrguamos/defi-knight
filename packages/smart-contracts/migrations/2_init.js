@@ -25,7 +25,6 @@ module.exports = async (deployer, network, accounts) => {
   let commanderMinter;
   let knightMinter;
   let oracle;
-  let stableCoin;
 
   if (
     network === "development" ||
@@ -46,25 +45,20 @@ module.exports = async (deployer, network, accounts) => {
   }
 
   const defiKnight = await DefiKnight.deployed();
-  let presaleFee = 0;
   if (
     network === "development" ||
     network === "develop" ||
     network === "bsctestnet"
   ) {
-    stableCoin = defiKnight.address;
     oracle = (await deployer.deploy(LocalOracle, 1)).address;
-    presaleFee = Web3.utils.toWei("0.00001");
   } else {
-    stableCoin = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56";
     const priceFeed = "0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee";
     oracle = (await deployer.deploy(Oracle, priceFeed)).address;
-    presaleFee = Web3.utils.toWei("0.25");
   }
 
   const priceManager = await deployProxy(
     PriceManager,
-    [oracle, presaleFee, defiKnight.address],
+    [oracle, defiKnight.address],
     {
       deployer,
     }
@@ -160,7 +154,6 @@ module.exports = async (deployer, network, accounts) => {
       guild.address,
       knightMinter.address,
       commanderMinter.address,
-      stableCoin,
       morale.address,
       priceManager.address,
     ],

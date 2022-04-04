@@ -87,7 +87,7 @@ contract Knight is
         counter.increment();
         uint256 tokenId = counter.current();
 
-        uint256 rollClass = (seed % 4);
+        uint256 rollClass = (seed % 3);
 
         uint256 rollGender = (tokenId % 2);
 
@@ -107,22 +107,22 @@ contract Knight is
 
         if (rollRarity >= 56) {
             rarity = 0;
-            combatPower = uint16(random % 50) + 1;
+            combatPower = uint16(random % 26) + 25;
         } else if (rollRarity < 56 && rollRarity >= 21) {
             rarity = 1;
-            combatPower = uint16(random % 50) + 51;
+            combatPower = uint16(random % 26) + 75;
         } else if (rollRarity < 21 && rollRarity >= 6) {
             rarity = 2;
-            combatPower = uint16(random % 50) + 101;
+            combatPower = uint16(random % 26) + 125;
         } else if (rollRarity < 6 && rollRarity >= 1) {
             rarity = 3;
-            combatPower = uint16(random % 50) + 151;
+            combatPower = uint16(random % 26) + 175;
         } else {
-            combatPower = uint16(random % 50) + 201;
+            combatPower = uint16(random % 26) + 225;
             rarity = 4;
         }
 
-        if (priceManager.isPresale()) {
+        if (tokenId <= 1000) {
             bonusPower = 20;
         }
 

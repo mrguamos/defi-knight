@@ -87,7 +87,7 @@ contract Commander is
         counter.increment();
         uint256 tokenId = counter.current();
 
-        uint256 rollClass = (seed % 4);
+        uint256 rollClass = (seed % 3);
 
         uint256 rollGender = (tokenId % 2);
 
@@ -110,7 +110,7 @@ contract Commander is
         commanders[tokenId] = CommanderState(
             rarity,
             uint8(rollClass),
-            priceManager.isPresale(),
+            tokenId <= 1000,
             uint8(rollGender)
         );
         emit NewCommander(tokenId, to);

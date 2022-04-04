@@ -15,12 +15,10 @@ contract PriceManager is
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
 
     uint256 private mintFee;
-    uint256 public stableFee;
+    uint256 private stableFee;
     uint256 private guildFee;
     uint256 private moraleFee;
-    uint256 public presaleFee;
     IOracle private oracle;
-    bool public isPresale;
     DefiKnight private defiKnight;
 
     function _authorizeUpgrade(address newImplementation)
@@ -29,18 +27,15 @@ contract PriceManager is
         onlyRole(UPGRADER_ROLE)
     {}
 
-    function initialize(
-        IOracle _oracle,
-        uint256 _presaleFee,
-        DefiKnight _defiKnight
-    ) public initializer {
+    function initialize(IOracle _oracle, DefiKnight _defiKnight)
+        public
+        initializer
+    {
         __AccessControl_init();
         __UUPSUpgradeable_init();
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(UPGRADER_ROLE, msg.sender);
         oracle = _oracle;
-        isPresale = true;
-        presaleFee = _presaleFee;
         defiKnight = _defiKnight;
         mintFee = 50;
         stableFee = 100000000000000000;
@@ -48,19 +43,12 @@ contract PriceManager is
         moraleFee = 1;
     }
 
-    function setPresaleFee(uint256 _presaleFee)
-        external
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
-        presaleFee = _presaleFee;
-    }
-
-    function setPresale(bool _isPresale) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        isPresale = _isPresale;
-    }
-
     function getMintFee() public view returns (uint256) {
         return (oracle.getUsdPrice() * mintFee) * 10**defiKnight.decimals();
+    }
+
+    function getStableFee() public view returns (uint256) {
+        return stableFee;
     }
 
     function getGuildFee() public view returns (uint256) {
