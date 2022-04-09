@@ -7,6 +7,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "./Commander.sol";
 import "./Knight.sol";
 import "./Guild.sol";
+import "./GuildMember.sol";
 import "./DefiKnight.sol";
 import "./IMinter.sol";
 import "./Morale.sol";
@@ -24,6 +25,7 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
     Commander private commander;
     Knight private knight;
     Guild private guild;
+    GuildMember private guildMember;
     IMinter private knightMinter;
     IMinter private commanderMinter;
     Morale private morale;
@@ -43,6 +45,7 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         Commander _commander,
         Knight _knight,
         Guild _guild,
+        GuildMember _guildMember,
         IMinter _knightMinter,
         IMinter _commanderMinter,
         Morale _morale,
@@ -56,6 +59,7 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         commander = _commander;
         knight = _knight;
         guild = _guild;
+        guildMember = _guildMember;
         knightMinter = _knightMinter;
         commanderMinter = _commanderMinter;
         morale = _morale;
@@ -133,6 +137,14 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
     //guild => knights
     mapping(uint256 => uint256[]) private guildKnight;
 
+    // function disband(uint256 guildtoken) {
+    //     address owner = guild.ownerOf(guildToken);
+
+    //     guildCommander[guildToken].length
+    //     loop
+    //         transfer commanderToken(holder contract) to owner
+    // }
+
     //mapping guild/commander and guild/knight for validation on assignment
     mapping(uint256 => uint256) private commanderGuild;
     mapping(uint256 => uint256) private knightGuild;
@@ -155,7 +167,7 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
 
         //get knight slot cap + wr
         uint16 guildKnightCap = 0;
-        uint16 guildWinRate = 0;
+        uint8 guildWinRate = 0;
         Commander.CommanderState memory cs;
         if (guildCommander[guildId].length != 0) {
             //get knight slot + wr current assigned commanders
@@ -163,7 +175,7 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
                 cs = commander.getCommander(guildCommander[guildId][f]);
                 guildKnightCap += cs.rarity + 1;
                 if (cs.isGenesis) {
-                    guildWinRate + 1;
+                    guildWinRate += 1;
                 }
             }
         }
@@ -174,16 +186,52 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
                 cs = commander.getCommander(newCommanderTokens[f]);
                 guildKnightCap += cs.rarity + 1;
                 if (cs.isGenesis) {
-                    guildWinRate + 1;
+                    guildWinRate += 1;
                 }
                 guildCommander[guildId].push(newCommanderTokens[f]);
+                commanderGuild[newCommanderTokens[f]] = guildId;
+                commander.safeTransferFrom(
+                    msg.sender,
+                    address(guildMember),
+                    newCommanderTokens[f]
+                );
             }
         }
 
+        //build knights
         require(
             (guildKnight[guildId].length + newKnightTokens.length) <=
                 guildKnightCap
         ); //validate knights, knight limit <=25
+
+        //get total combatpower
+        uint16 combatPower;
+
+        Knight.KnightState memory ks;
+        if (guildKnight[guildId].length != 0) {
+            //get knight slot + wr current assigned commanders
+            for (uint16 f = 0; f < guildKnight[guildId].length; f++) {
+                ks = knight.getKnight(guildKnight[guildId][f]);
+                combatPower += ks.combatPower + ks.bonusPower;
+            }
+        }
+
+        if (newKnightTokens.length != 0) {
+            //get knight slot + wr  "for assignment" commanders
+            for (uint16 f = 0; f < newKnightTokens.length; f++) {
+                ks = knight.getKnight(newKnightTokens[f]);
+                combatPower += ks.combatPower + ks.bonusPower;
+                knightGuild[newKnightTokens[f]] = guildId; // mapping for validation
+                knight.safeTransferFrom(
+                    msg.sender,
+                    address(guildMember),
+                    newKnightTokens[f]
+                );
+            }
+        }
+
+        guild.updateCombatPower(guildId, combatPower);
+        guild.updateWinRate(guildId, guildWinRate);
     }
 
     function validateGuildAssignment(
@@ -193,7 +241,7 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         //validate if member is already assigned to a guild
         for (uint16 c = 0; c < commanderTokens.length; c++) {
             require(
-                commanderGuild[commanderTokens[c]] != 0,
+                commanderGuild[commanderTokens[c]] == 0,
                 string(
                     abi.encodePacked(
                         "Commander already assigned to a guild: ",
@@ -205,7 +253,7 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
 
         for (uint16 c = 0; c < knightTokens.length; c++) {
             require(
-                knightGuild[knightTokens[c]] != 0,
+                knightGuild[knightTokens[c]] == 0,
                 string(
                     abi.encodePacked(
                         "Knight already assigned to a guild: ",
@@ -216,12 +264,44 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         }
     }
 
-    function getMyGuild(uint256 guildId)
+    function getMyGuildCommanders(uint256 guildId)
         public
         view
         returns (uint256[] memory)
     {
         return guildCommander[guildId];
+    }
+
+    function getMyGuildKnights(uint256 guildId)
+        public
+        view
+        returns (uint256[] memory)
+    {
+        return guildKnight[guildId];
+    }
+
+    function getCommanderValidation(uint256 commanderToken)
+        public
+        view
+        returns (uint256)
+    {
+        return commanderGuild[commanderToken];
+    }
+
+    function getKnightValidation(uint256 knightToken)
+        public
+        view
+        returns (uint256)
+    {
+        return knightGuild[knightToken];
+    }
+
+    function getMyGuildStats(uint256 guildId)
+        public
+        view
+        returns (Guild.GuildState memory)
+    {
+        return guild.getGuild(guildId);
     }
 
     function disbandGuild(uint256 guildId) external payable onlyNonContract {

@@ -242,6 +242,22 @@ contract Guild is
         lastFight[tokenId] = timestamp;
     }
 
+    function updateCombatPower(uint256 guildId, uint16 combatPower)
+        public
+        onlyRole(GAME_ADMIN_ROLE)
+        whenNotPaused
+    {
+        guilds[guildId].combatPower = combatPower;
+    }
+
+    function updateWinRate(uint256 guildId, uint8 winRate)
+        public
+        onlyRole(GAME_ADMIN_ROLE)
+        whenNotPaused
+    {
+        guilds[guildId].winRate = winRate;
+    }
+
     function updateGuildStats(
         uint256 guildId,
         bytes32 emblem,

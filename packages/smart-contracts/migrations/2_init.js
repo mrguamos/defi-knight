@@ -4,6 +4,7 @@ const DefiKnight = artifacts.require("DefiKnight");
 const Commander = artifacts.require("Commander");
 const Knight = artifacts.require("Knight");
 const Guild = artifacts.require("Guild");
+const GuildMember = artifacts.require("GuildMember");
 const CommanderMinter = artifacts.require("CommanderMinter");
 const KnightMinter = artifacts.require("KnightMinter");
 const LocalCommanderMinter = artifacts.require("LocalCommanderMinter");
@@ -84,6 +85,11 @@ module.exports = async (deployer, network, accounts) => {
       deployer,
     }
   );
+
+  const guildMember = await deployProxy(GuildMember, [], {
+    deployer,
+  });
+
   await guildHelper.setGuildAddress(guild.address);
   const morale = await deployProxy(Morale, { deployer });
 
@@ -152,6 +158,7 @@ module.exports = async (deployer, network, accounts) => {
       commander.address,
       knight.address,
       guild.address,
+      guildMember.address,
       knightMinter.address,
       commanderMinter.address,
       morale.address,
