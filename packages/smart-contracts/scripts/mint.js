@@ -32,8 +32,6 @@ module.exports = async (callback, deployer, network, accounts) => {
 
       knightCap +=
         parseInt((await commander.getCommander(commanderToken)).rarity) + 1;
-
-      console.log("Commander Token: " + commanderToken);
       commanderTokens[i] = commanderToken;
     }
 
@@ -48,7 +46,6 @@ module.exports = async (callback, deployer, network, accounts) => {
       const knightToken = (
         await knight.tokenOfOwnerByIndex(config.from, i)
       ).toString();
-      console.log("Knight Token: " + knightToken);
       knightTokens[i] = knightToken;
     }
     console.log("CL: " + commanderTokens.length);

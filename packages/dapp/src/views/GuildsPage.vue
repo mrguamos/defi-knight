@@ -104,6 +104,12 @@
       @click="approveDK()"
       >APPROVE</PrimaryButton
     >
+    <PrimaryButton class="self-center mt-2" @click="approveGuildMember('C')"
+      >APPROVE COMMANDER</PrimaryButton
+    >
+    <PrimaryButton class="self-center mt-2" @click="approveGuildMember('K')"
+      >APPROVE KNIGHT</PrimaryButton
+    >
 
     <TransitionRoot appear :show="dialog" as="template">
       <Dialog as="div" @close="main.loading ? '' : closeModal()">
@@ -308,6 +314,36 @@
     try {
       main.loading = true
       const res = await account.approveDK(useContract().game.address)
+      const receipt = await res.wait()
+      console.log(receipt)
+      getAllowance()
+      // eslint-disable-next-line
+    } catch (error: any) {
+      console.log(error)
+      if (error.code !== 4001) {
+        //
+      }
+    } finally {
+      main.loading = false
+    }
+  }
+
+  const approveGuildMember = async (member: string) => {
+    try {
+      main.loading = true
+      let res
+      if (member == 'C') {
+        res = await useContract().commander.functions.setApprovalForAll(
+          useContract().game.address,
+          true
+        )
+      } else {
+        res = await useContract().knight.functions.setApprovalForAll(
+          useContract().game.address,
+          true
+        )
+      }
+
       const receipt = await res.wait()
       console.log(receipt)
       getAllowance()

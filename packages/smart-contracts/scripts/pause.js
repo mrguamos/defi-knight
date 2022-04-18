@@ -7,6 +7,7 @@ let knightCap = 0;
 module.exports = async (callback, deployer, network, accounts) => {
   try {
     const Game = artifacts.require("Game");
+
     const game = await Game.deployed();
     const Guild = artifacts.require("Guild");
     const guild = await Guild.deployed();
@@ -28,9 +29,6 @@ module.exports = async (callback, deployer, network, accounts) => {
         await commander.tokenOfOwnerByIndex(config.from, i)
       ).toString();
       commanderTokens[i] = commanderToken;
-      console.log(
-        (await game.getCommanderValidation(commanderToken)).toString()
-      );
     }
 
     //collect knights
@@ -43,15 +41,15 @@ module.exports = async (callback, deployer, network, accounts) => {
     }
 
     //add guild members
-    //await game.addGuildMembers(guildToken, commanderTokens, knightTokens);
+    await game.addGuildMembers(guildToken, commanderTokens, knightTokens);
 
     // check balances, tokens, guild stats here
     const myGuildCommanders = await game.getMyGuildCommanders(
       guildToken.toString()
     );
-    console.log(myGuildCommanders);
+    console.log(myGuildCommanders.toString());
     const myGuildKnights = await game.getMyGuildKnights(guildToken.toString());
-    console.log(myGuildKnights);
+    console.log(myGuildKnights.toString());
   } catch (error) {
     console.log(error);
   } finally {

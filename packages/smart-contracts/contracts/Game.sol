@@ -154,7 +154,7 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         uint256 guildId,
         uint256[] calldata newCommanderTokens, //calldata used for array or struct parameters, and external
         uint256[] calldata newKnightTokens
-    ) external {
+    ) external onlyNonContract {
         //validate if member is already assigned to a guild
         validateGuildAssignment(newCommanderTokens, newKnightTokens);
 
@@ -221,6 +221,7 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
             for (uint16 f = 0; f < newKnightTokens.length; f++) {
                 ks = knight.getKnight(newKnightTokens[f]);
                 combatPower += ks.combatPower + ks.bonusPower;
+                guildKnight[guildId].push(newKnightTokens[f]);
                 knightGuild[newKnightTokens[f]] = guildId; // mapping for validation
                 knight.safeTransferFrom(
                     msg.sender,
@@ -232,6 +233,36 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
 
         guild.updateCombatPower(guildId, combatPower);
         guild.updateWinRate(guildId, guildWinRate);
+    }
+
+    function disbandGuild(uint256 guildId) external onlyNonContract {
+        require(guild.ownerOf(guildId) == msg.sender);
+
+        if (guildCommander[guildId].length != 0) {
+            //get knight slot + wr current assigned commanders
+            for (uint16 f = 0; f < guildCommander[guildId].length; f++) {
+                commander.safeTransferFrom(
+                    address(guildMember),
+                    msg.sender,
+                    guildCommander[guildId][f]
+                );
+                delete commanderGuild[guildCommander[guildId][f]];
+            }
+            delete guildCommander[guildId];
+        }
+
+        if (guildKnight[guildId].length != 0) {
+            //get knight slot + wr current assigned commanders
+            for (uint16 f = 0; f < guildKnight[guildId].length; f++) {
+                knight.safeTransferFrom(
+                    address(guildMember),
+                    msg.sender,
+                    guildKnight[guildId][f]
+                );
+                delete knightGuild[guildKnight[guildId][f]];
+            }
+            delete guildCommander[guildId];
+        }
     }
 
     function validateGuildAssignment(
@@ -302,11 +333,6 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         returns (Guild.GuildState memory)
     {
         return guild.getGuild(guildId);
-    }
-
-    function disbandGuild(uint256 guildId) external payable onlyNonContract {
-        require(guild.ownerOf(guildId) == msg.sender);
-        guild.disband(guildId);
     }
 
     function setPaused(bool _isPaused) public onlyRole(DEFAULT_ADMIN_ROLE) {
