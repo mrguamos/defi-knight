@@ -187,6 +187,12 @@ module.exports = async (deployer, network, accounts) => {
 
   await defiKnight.setTaxRecipientAddress(game.address);
 
+  await guildMember.grantRole(
+    await guildMember.GAME_ADMIN_ROLE(),
+    game.address
+  );
+  await guildMember.approveGameContract(game.address);
+
   const market = await deployProxy(
     Market,
     [defiKnight.address, commander.address, knight.address, guild.address],

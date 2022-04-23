@@ -31,6 +31,9 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
     Morale private morale;
     bool isPaused;
 
+    uint8 private constant TYPE_COMMANDER = 0;
+    uint8 private constant TYPE_KNIGHT = 1;
+
     struct Enemy {
         uint16 combatPower;
         uint256 rewards;
@@ -236,14 +239,12 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
     }
 
     function disbandGuild(uint256 guildId) external onlyNonContract {
-        require(guild.ownerOf(guildId) == msg.sender);
+        require(guild.ownerOf(guildId) == msg.sender, "NOT OWNER");
 
         if (guildCommander[guildId].length != 0) {
-            //get knight slot + wr current assigned commanders
             for (uint16 f = 0; f < guildCommander[guildId].length; f++) {
-                commander.safeTransferFrom(
-                    address(guildMember),
-                    msg.sender,
+                guildMember.transferToOwner(
+                    TYPE_COMMANDER,
                     guildCommander[guildId][f]
                 );
                 delete commanderGuild[guildCommander[guildId][f]];
@@ -252,11 +253,9 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         }
 
         if (guildKnight[guildId].length != 0) {
-            //get knight slot + wr current assigned commanders
             for (uint16 f = 0; f < guildKnight[guildId].length; f++) {
-                knight.safeTransferFrom(
-                    address(guildMember),
-                    msg.sender,
+                guildMember.transferToOwner(
+                    TYPE_KNIGHT,
                     guildKnight[guildId][f]
                 );
                 delete knightGuild[guildKnight[guildId][f]];

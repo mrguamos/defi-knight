@@ -111,6 +111,13 @@
       >APPROVE KNIGHT</PrimaryButton
     >
 
+    <PrimaryButton class="self-center mt-2" @click="approveDisband('C')"
+      >APPROVE DISBANDC</PrimaryButton
+    >
+    <PrimaryButton class="self-center mt-2" @click="approveDisband('K')"
+      >APPROVE DISBANDK</PrimaryButton
+    >
+
     <TransitionRoot appear :show="dialog" as="template">
       <Dialog as="div" @close="main.loading ? '' : closeModal()">
         <div class="fixed inset-0 z-10 overflow-y-auto">
@@ -314,6 +321,36 @@
     try {
       main.loading = true
       const res = await account.approveDK(useContract().game.address)
+      const receipt = await res.wait()
+      console.log(receipt)
+      getAllowance()
+      // eslint-disable-next-line
+    } catch (error: any) {
+      console.log(error)
+      if (error.code !== 4001) {
+        //
+      }
+    } finally {
+      main.loading = false
+    }
+  }
+
+  const approveDisband = async (member: string) => {
+    try {
+      main.loading = true
+      let res
+      if (member == 'C') {
+        res = await useContract().commander.functions.setApprovalForAll(
+          useContract().guildMember.address,
+          true
+        )
+      } else {
+        res = await useContract().knight.functions.setApprovalForAll(
+          useContract().guildMember.address,
+          true
+        )
+      }
+
       const receipt = await res.wait()
       console.log(receipt)
       getAllowance()

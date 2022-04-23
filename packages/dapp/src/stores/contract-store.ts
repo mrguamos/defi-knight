@@ -27,6 +27,10 @@ import {
   abi as marketABI,
   networks as marketNetworks,
 } from 'smart-contracts/build/contracts/Market.json'
+import {
+  abi as guildMemberABI,
+  networks as guildMemberNetworks,
+} from 'smart-contracts/build/contracts/GuildMember.json'
 import { useWeb3 } from './web3-store'
 import { ethers } from 'ethers'
 import { markRaw } from 'vue'
@@ -44,6 +48,7 @@ export const useContract = defineStore('contracts', {
       game: undefined as unknown as ethers.Contract,
       priceManager: undefined as unknown as ethers.Contract,
       market: undefined as unknown as ethers.Contract,
+      guildMember: undefined as unknown as ethers.Contract,
     }
   },
   actions: {
@@ -117,6 +122,16 @@ export const useContract = defineStore('contracts', {
         new ethers.Contract(
           marketNetworks[networkId as keyof typeof marketNetworks].address,
           marketABI,
+          eth.signer
+        )
+      )
+
+      this.guildMember = markRaw(
+        new ethers.Contract(
+          guildMemberNetworks[
+            networkId as keyof typeof guildMemberNetworks
+          ].address,
+          guildMemberABI,
           eth.signer
         )
       )
