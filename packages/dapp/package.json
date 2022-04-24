@@ -20,6 +20,7 @@
     "numeral": "^2.0.6",
     "pinia": "^2.0.11",
     "vue": "^3.2.25",
+    "vue-gtag": "^2.0.1",
     "vue-router": "4"
   },
   "devDependencies": {

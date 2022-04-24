@@ -23,6 +23,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { faStar as farStar } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import VueGtag from 'vue-gtag'
 ;(async () => {
   library.add(
     faAngleDown,
@@ -42,6 +43,9 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
     faCoins
   )
   const app = createApp(App)
+  app.use(VueGtag, {
+    config: { id: 'G-9JVRHW9TRZ' },
+  })
   app.component('FontAwesomeIcon', FontAwesomeIcon)
   app.use(createPinia())
   app.use(router)
