@@ -1,6 +1,4 @@
-import { Market } from './market'
-
-export type Common = Market & {
+export type Common = {
   id: number
 }
 

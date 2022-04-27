@@ -17,6 +17,7 @@ export const useCommander = defineStore('commander', {
       const mintFee = await usePriceManager().getStableFee()
       return contracts.game.functions.mintCommander({
         value: mintFee,
+        gasLimit: 400000,
       })
     },
     async getCommanders() {
