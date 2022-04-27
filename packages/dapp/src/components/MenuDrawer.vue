@@ -40,9 +40,6 @@
             class="ml-2"
         /></HeaderButton>
       </a>
-      <router-link to="/shop" @click="emit('update:modelValue', false)">
-        <HeaderButton>SHOP</HeaderButton>
-      </router-link>
     </div>
   </div>
 </template>
