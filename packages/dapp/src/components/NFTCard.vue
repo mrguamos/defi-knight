@@ -56,7 +56,6 @@
   import type { Knight } from '../types/knight'
   import type { Common } from '../types/common'
   import type { CharacterCommon } from '../types/common'
-  import { useMain } from '../stores/main-store'
 
   defineProps({
     nft: {
@@ -72,8 +71,6 @@
       required: true,
     },
   })
-
-  const main = useMain()
 
   function getImageUrl(name: string) {
     return new URL(`/src/assets/${name}`, import.meta.url).href
