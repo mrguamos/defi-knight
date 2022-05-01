@@ -14,7 +14,9 @@
       "**/dapp",
       "**/dapp/**",
       "**/market",
-      "**/market/**"
+      "**/market/**",
+      "**/marketplace",
+      "**/marketplace/**"
     ]
   },
   "scripts": {
