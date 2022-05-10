@@ -46,15 +46,6 @@
           MAX WR + 1
         </div>
       </div>
-      <div
-        v-if="mode === 'market'"
-        class="flex justify-between mt-2 border-t pt-2"
-      >
-        AMOUNT <span>{{ main.getEthAmount((item as Market).amount) }}</span>
-      </div>
-      <div class="pt-3">
-        <NFTControls :item="item" :mode="mode" :nft="nft" />
-      </div>
     </div>
   </div>
 </template>
@@ -65,9 +56,6 @@
   import type { Knight } from '../types/knight'
   import type { Common } from '../types/common'
   import type { CharacterCommon } from '../types/common'
-  import type { Market } from '../types/market'
-  import { useMain } from '../stores/main-store'
-  import NFTControls from './NFTControls.vue'
 
   defineProps({
     nft: {
@@ -83,8 +71,6 @@
       required: true,
     },
   })
-
-  const main = useMain()
 
   function getImageUrl(name: string) {
     return new URL(`/src/assets/${name}`, import.meta.url).href

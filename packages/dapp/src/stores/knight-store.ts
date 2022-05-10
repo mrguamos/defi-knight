@@ -16,6 +16,7 @@ export const useKnight = defineStore('knight', {
       const mintFee = await usePriceManager().getStableFee()
       return contracts.game.functions.mintKnight({
         value: mintFee,
+        gasLimit: 400000,
       })
     },
     async getKnights() {

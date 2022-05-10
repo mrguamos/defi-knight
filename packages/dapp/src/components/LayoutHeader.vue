@@ -16,18 +16,27 @@
         </button>
       </div>
       <div class="lg:flex hidden items-center">
-        <router-link to="/inventory">
-          <HeaderButton class="ml-5">INVENTORY</HeaderButton>
+        <router-link to="/commanders">
+          <HeaderButton>COMMANDERS</HeaderButton>
+        </router-link>
+        <router-link to="/knights">
+          <HeaderButton>KNIGHTS</HeaderButton>
+        </router-link>
+        <router-link to="/guilds">
+          <HeaderButton>GUILDS</HeaderButton>
         </router-link>
         <router-link to="/conquer">
           <HeaderButton>CONQUER</HeaderButton>
         </router-link>
-        <router-link to="/marketplace">
-          <HeaderButton>MARKETPLACE</HeaderButton>
-        </router-link>
-        <router-link to="/shop">
-          <HeaderButton>SHOP</HeaderButton>
-        </router-link>
+        <a href="https://marketplace.defiknight.io" target="_blank">
+          <HeaderButton
+            >MARKETPLACE
+            <FontAwesomeIcon
+              :icon="['fas', 'external-link-alt']"
+              size="lg"
+              class="ml-2"
+          /></HeaderButton>
+        </a>
       </div>
       <div class="flex items-center">
         <a href="https://pancakeswap.finance/swap" target="_blank">
