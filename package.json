@@ -15,8 +15,8 @@
       "**/dapp/**",
       "**/market",
       "**/market/**",
-      "**/marketplace",
-      "**/marketplace/**"
+      "**/marketplace-ui",
+      "**/marketplace-ui/**"
     ]
   },
   "scripts": {

@@ -24,9 +24,11 @@ import cors from 'cors'
 
 const networkId = process.env.NETWORK_ID || 1337
 
-const rpc = 'http://localhost:8545'
+// const rpc = 'http://localhost:8545'
+const rpc = 'ws://localhost:8545'
 
-const provider = new ethers.providers.JsonRpcProvider(rpc)
+// const provider = new ethers.providers.JsonRpcProvider(rpc)
+const provider = new ethers.providers.WebSocketProvider(rpc)
 
 const iMarket = new ethers.utils.Interface(marketABI)
 const market = new ethers.Contract(
@@ -68,86 +70,63 @@ const Config = require(`${__dirname}/config`)(sequelize) as ModelStatic<any>
   await sequelize.authenticate()
   await sequelize.sync({ alter: true })
 
-  while (true) {
-    const block = await provider.getBlockNumber()
-    const lastBlock = (await Config.findByPk('block'))?.value || block - 1000
+  market.on('ListingEvent', async (nftType, tokenId) => {
+    console.log(nftType, tokenId)
+    const listing = (await market.functions.getListing(nftType, tokenId))[0]
 
-    const filter = market.filters.ListingEvent()
-    const events = await market.queryFilter(
-      filter,
-      Number(lastBlock) + 1,
-      block
-    )
-    for (const event of events) {
-      const res = iMarket.decodeEventLog(
-        event.event as string,
-        event.data,
-        event.topics
-      )
-      const listing = (
-        await market.functions.getListing(res.nftType, res.tokenId)
-      )[0]
+    let nft
+    let props
 
-      let nft
-      let props
-
-      if (res.nftType == 0) {
-        nft = (await commander.functions.getCommander(res.tokenId))[0]
-        props = {
-          isGenesis: nft.isGenesis,
-          rarity: nft.rarity,
-          gender: nft.gender,
-          class: nft.class,
-        }
-      } else if (res.nftType == 1) {
-        nft = (await knight.functions.getKnight(res.tokenId))[0]
-        props = {
-          combatPower: nft.combatPower,
-          bonusPower: nft.bonusPower,
-          rarity: nft.rarity,
-          gender: nft.gender,
-          class: nft.class,
-        }
-      } else if (res.nftType == 2) {
-        nft = (await guild.functions.getGuild(res.tokenId))[0]
+    if (nftType == 0) {
+      nft = (await commander.functions.getCommander(tokenId))[0]
+      props = {
+        isGenesis: nft.isGenesis,
+        rarity: nft.rarity,
+        gender: nft.gender,
+        class: nft.class,
       }
-
-      const _listing = {
-        owner: listing.owner,
-        amount: listing.amount.toString(),
+    } else if (nftType == 1) {
+      nft = (await knight.functions.getKnight(tokenId))[0]
+      props = {
+        combatPower: nft.combatPower,
+        bonusPower: nft.bonusPower,
+        rarity: nft.rarity,
+        gender: nft.gender,
+        class: nft.class,
       }
-
-      let data = {
-        id: res.tokenId.toString(),
-        status: 0,
-      }
-
-      if ((listing.amount as BigNumber).gt(1)) {
-        data = {
-          id: res.tokenId.toString(),
-          ...props,
-          ..._listing,
-          status: 1,
-        }
-      }
-      try {
-        if (res.nftType == 0) {
-          Commander.upsert(data)
-        }
-        if (res.nftType == 1) {
-          Knight.upsert(data)
-        }
-      } catch (error: any) {
-        console.log(error.toString())
-      }
+    } else if (nftType == 2) {
+      nft = (await guild.functions.getGuild(tokenId))[0]
     }
 
-    Config.upsert({
-      id: 'block',
-      value: block,
-    })
-    await new Promise((r) => setTimeout(r, 5000))
-  }
+    const _listing = {
+      owner: listing.owner,
+      amount: listing.amount.toString(),
+    }
+
+    let data = {
+      id: tokenId.toString(),
+      status: 0,
+    }
+
+    if ((listing.amount as BigNumber).gt(1)) {
+      data = {
+        id: tokenId.toString(),
+        ...props,
+        ..._listing,
+        status: 1,
+      }
+    }
+    try {
+      if (nftType == 0) {
+        Commander.upsert(data)
+      }
+      if (nftType == 1) {
+        Knight.upsert(data)
+      }
+    } catch (error: any) {
+      console.log(error.toString())
+    }
+  })
 })()
 
 const app = express()
