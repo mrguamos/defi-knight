@@ -16,7 +16,7 @@
     { id: 4, name: 5 },
   ]
   const min = ref(rarities[0])
-  const max = ref(rarities[0])
+  const max = ref(rarities[4])
 </script>
 <template>
   <div class="flex flex-col w-full justify-center items-center p-2 space-y-2">
@@ -161,6 +161,8 @@
     <div class="flex justify-center items-center gap-2">
       <input type="checkbox" id="genesis" class="rounded-md" />
       <label for="genesis">Genesis</label>
+      <input type="checkbox" id="non-genesis" class="rounded-md" />
+      <label for="non-genesis">Non Genesis</label>
     </div>
   </div>
 </template>

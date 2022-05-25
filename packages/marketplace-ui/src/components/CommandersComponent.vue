@@ -6,7 +6,12 @@
 
 <template>
   <div class="flex h-full">
-    <FilterComponent><CharacterFilter> </CharacterFilter> </FilterComponent>
+    <FilterComponent
+      ><CharacterFilter> </CharacterFilter>
+      <template v-slot:search-button>
+        <slot name="search-button"></slot>
+      </template>
+    </FilterComponent>
     <ResultComponent> </ResultComponent>
   </div>
 </template>

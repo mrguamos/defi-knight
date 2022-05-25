@@ -67,66 +67,70 @@ const Knight = require(`${__dirname}/knight`)(sequelize) as ModelStatic<any>
 const Config = require(`${__dirname}/config`)(sequelize) as ModelStatic<any>
 
 ;(async () => {
-  await sequelize.authenticate()
-  await sequelize.sync({ alter: true })
+  try {
+    await sequelize.authenticate()
+    await sequelize.sync({ alter: true })
 
-  market.on('ListingEvent', async (nftType, tokenId) => {
-    console.log(nftType, tokenId)
-    const listing = (await market.functions.getListing(nftType, tokenId))[0]
+    market.on('ListingEvent', async (nftType, tokenId) => {
+      console.log(nftType, tokenId)
+      const listing = (await market.functions.getListing(nftType, tokenId))[0]
 
-    let nft
-    let props
+      let nft
+      let props
 
-    if (nftType == 0) {
-      nft = (await commander.functions.getCommander(tokenId))[0]
-      props = {
-        isGenesis: nft.isGenesis,
-        rarity: nft.rarity,
-        gender: nft.gender,
-        class: nft.class,
-      }
-    } else if (nftType == 1) {
-      nft = (await knight.functions.getKnight(tokenId))[0]
-      props = {
-        combatPower: nft.combatPower,
-        bonusPower: nft.bonusPower,
-        rarity: nft.rarity,
-        gender: nft.gender,
-        class: nft.class,
-      }
-    } else if (nftType == 2) {
-      nft = (await guild.functions.getGuild(tokenId))[0]
-    }
-
-    const _listing = {
-      owner: listing.owner,
-      amount: listing.amount.toString(),
-    }
-
-    let data = {
-      id: tokenId.toString(),
-      status: 0,
-    }
-
-    if ((listing.amount as BigNumber).gt(1)) {
-      data = {
-        id: tokenId.toString(),
-        ...props,
-        ..._listing,
-        status: 1,
-      }
-    }
-    try {
       if (nftType == 0) {
-        Commander.upsert(data)
+        nft = (await commander.functions.getCommander(tokenId))[0]
+        props = {
+          isGenesis: nft.isGenesis,
+          rarity: nft.rarity,
+          gender: nft.gender,
+          class: nft.class,
+        }
+      } else if (nftType == 1) {
+        nft = (await knight.functions.getKnight(tokenId))[0]
+        props = {
+          combatPower: nft.combatPower,
+          bonusPower: nft.bonusPower,
+          rarity: nft.rarity,
+          gender: nft.gender,
+          class: nft.class,
+        }
+      } else if (nftType == 2) {
+        nft = (await guild.functions.getGuild(tokenId))[0]
       }
-      if (nftType == 1) {
-        Knight.upsert(data)
+
+      const _listing = {
+        owner: listing.owner,
+        amount: listing.amount.toString(),
       }
-    } catch (error: any) {
-      console.log(error.toString())
-    }
-  })
+
+      let data = {
+        id: tokenId.toString(),
+        status: 0,
+      }
+
+      if ((listing.amount as BigNumber).gt(1)) {
+        data = {
+          id: tokenId.toString(),
+          ...props,
+          ..._listing,
+          status: 1,
+        }
+      }
+      try {
+        if (nftType == 0) {
+          Commander.upsert(data)
+        }
+        if (nftType == 1) {
+          Knight.upsert(data)
+        }
+      } catch (error: any) {
+        console.log(error.toString())
+      }
+    })
+  } catch (error) {
+    console.log(error)
+  }
 })()
 
 const app = express()
@@ -167,36 +171,3 @@ const port = 8080
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
-
-// server.route({
-//   method: 'GET',
-//   url: '/commanders',
-//   schema: {
-//     querystring: {
-//       page: { type: 'integer' },
-//     },
-//   },
-//   handler: async (request, reply) => {
-//     console.log(querystring.parse(request.query.toString()))
-
-//     const commanders = await Commander.findAndCountAll({
-//       where: {
-//         status: 1,
-//       },
-//       offset: 10,
-//       limit: 2,
-//     })
-//     return commanders
-//   },
-// })
-
-// server.get('/knights', async (request, reply) => {
-//   const knights = await Knight.findAndCountAll({
-//     where: {
-//       status: 1,
-//     },
-//     offset: 10,
-//     limit: 2,
-//   })
-//   return knights
-// })

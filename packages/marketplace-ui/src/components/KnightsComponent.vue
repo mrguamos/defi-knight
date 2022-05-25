@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import { ref } from 'vue'
-  import FilterComponent from '../components/FilterComponent.vue'
-  import ResultComponent from '../components/ResultComponent.vue'
-  import CharacterFilter from '../components/CharacterFilter.vue'
+  import FilterComponent from './FilterComponent.vue'
+  import ResultComponent from './ResultComponent.vue'
+  import CharacterFilter from './CharacterFilter.vue'
   const minCP = ref(0)
   const maxCP = ref(250)
 </script>
@@ -12,7 +12,7 @@
     <FilterComponent>
       <CharacterFilter>
         <div
-          class="flex flex-col w-full justify-center items-center p-2 space-y-2"
+          class="flex flex-col w-full justify-center items-center p-2 space-y-2 pb-4"
         >
           <span class="text-lg font-semibold">Combat Power</span>
           <div class="flex w-full gap-2">
@@ -37,6 +37,9 @@
           </div>
         </div>
       </CharacterFilter>
+      <template v-slot:search-button>
+        <slot name="search-button"></slot>
+      </template>
     </FilterComponent>
     <ResultComponent></ResultComponent>
   </div>

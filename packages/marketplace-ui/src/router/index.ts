@@ -12,15 +12,15 @@ const router = createRouter({
         { path: '', redirect: '/buy/commanders' },
         {
           path: 'commanders',
-          component: () => import('../views/CommandersView.vue'),
+          component: () => import('../views/CommandersBuyView.vue'),
         },
         {
           path: 'knights',
-          component: () => import('../views/KnightsView.vue'),
+          component: () => import('../views/KnightsBuyView.vue'),
         },
         {
           path: 'guilds',
-          component: () => import('../views/GuildsView.vue'),
+          component: () => import('../views/GuildsBuyView.vue'),
         },
       ],
     },
@@ -31,15 +31,15 @@ const router = createRouter({
         { path: '', redirect: '/sell/commanders' },
         {
           path: 'commanders',
-          component: () => import('../views/CommandersView.vue'),
+          component: () => import('../views/CommandersSellView.vue'),
         },
         {
           path: 'knights',
-          component: () => import('../views/KnightsView.vue'),
+          component: () => import('../views/KnightsSellView.vue'),
         },
         {
           path: 'guilds',
-          component: () => import('../views/GuildsView.vue'),
+          component: () => import('../views/GuildsSellView.vue'),
         },
       ],
     },
@@ -50,15 +50,15 @@ const router = createRouter({
         { path: '', redirect: '/listings/commanders' },
         {
           path: 'commanders',
-          component: () => import('../views/CommandersView.vue'),
+          component: () => import('../views/CommandersListingsView.vue'),
         },
         {
           path: 'knights',
-          component: () => import('../views/KnightsView.vue'),
+          component: () => import('../views/KnightsListingsView.vue'),
         },
         {
           path: 'guilds',
-          component: () => import('../views/GuildsView.vue'),
+          component: () => import('../views/GuildsListingsView.vue'),
         },
       ],
     },
