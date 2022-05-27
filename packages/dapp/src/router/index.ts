@@ -26,6 +26,16 @@ const router = createRouter({
     {
       path: '/guilds',
       name: 'Guilds',
+      children: [
+        {
+          path: '/manage',
+          name: 'Manage Guild',
+          component: () =>
+            import(
+              /* webpackChunkName: "manage-guild" */ '../views/ManageGuild.vue'
+            ),
+        },
+      ],
       component: () =>
         import(/* webpackChunkName: "guilds" */ '../views/GuildsPage.vue'),
     },

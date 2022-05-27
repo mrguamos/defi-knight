@@ -28,6 +28,12 @@ module.exports = async (callback, deployer, network, accounts) => {
 
     console.log(guildMember.address);
     console.log(await commander.ownerOf(1));
+
+    console.log(
+      await commander.isApprovedForAll(config.from, guildMember.address)
+    );
+    console.log(await commander.isApprovedForAll(config.from, game.address));
+    //await guildMember.transferToOwner("0", "1", config.from);
     await game.disbandGuild(guildToken.toString());
   } catch (error) {
     console.log(error);

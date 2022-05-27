@@ -39,7 +39,8 @@ module.exports = async (callback, deployer, network, accounts) => {
       ).toString();
       knightTokens[i] = knightToken;
     }
-
+    console.log(commanderTokens.toString());
+    console.log(knightTokens.toString());
     //add guild members
     await game.addGuildMembers(guildToken, commanderTokens, knightTokens);
 

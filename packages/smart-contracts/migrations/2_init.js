@@ -86,9 +86,13 @@ module.exports = async (deployer, network, accounts) => {
     }
   );
 
-  const guildMember = await deployProxy(GuildMember, [], {
-    deployer,
-  });
+  const guildMember = await deployProxy(
+    GuildMember,
+    [commander.address, knight.address],
+    {
+      deployer,
+    }
+  );
 
   await guildHelper.setGuildAddress(guild.address);
   const morale = await deployProxy(Morale, { deployer });
@@ -185,13 +189,12 @@ module.exports = async (deployer, network, accounts) => {
   const GAME_ADMIN_ROLE = await guild.GAME_ADMIN_ROLE();
   await guild.grantRole(GAME_ADMIN_ROLE, game.address);
 
-  await defiKnight.setTaxRecipientAddress(game.address);
-
   await guildMember.grantRole(
     await guildMember.GAME_ADMIN_ROLE(),
     game.address
   );
-  await guildMember.approveGameContract(game.address);
+
+  await defiKnight.setTaxRecipientAddress(game.address);
 
   const market = await deployProxy(
     Market,

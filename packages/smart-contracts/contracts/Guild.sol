@@ -40,7 +40,7 @@ contract Guild is
     mapping(uint256 => uint256) public lastFight;
 
     struct GuildState {
-        bytes32 emblem;
+        uint8 emblem;
         uint8 morale;
         uint16 combatPower;
         uint8 winRate;
@@ -117,7 +117,7 @@ contract Guild is
     {
         counter.increment();
         uint256 tokenId = counter.current();
-        guilds[tokenId] = (GuildState("", 0, 0, 0, name));
+        guilds[tokenId] = (GuildState(0, 0, 0, 0, name));
         emit NewGuild(tokenId, to);
         _safeMint(to, tokenId);
     }
@@ -256,21 +256,5 @@ contract Guild is
         whenNotPaused
     {
         guilds[guildId].winRate = winRate;
-    }
-
-    function updateGuildStats(
-        uint256 guildId,
-        bytes32 emblem,
-        uint8 morale,
-        uint16 combatPower,
-        uint8 winRate,
-        bytes32 name
-    ) public onlyRole(GAME_ADMIN_ROLE) whenNotPaused {
-        GuildState storage gs = guilds[guildId];
-        if (gs.emblem != emblem) gs.emblem = emblem;
-        if (gs.morale != morale) gs.morale = morale;
-        if (gs.combatPower != combatPower) gs.combatPower = combatPower;
-        if (gs.winRate != winRate) gs.winRate = winRate;
-        if (gs.name != name) gs.name = name;
     }
 }

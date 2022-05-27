@@ -1,89 +1,20 @@
 <template>
   <div class="flex flex-col h-full pb-10">
-    <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-      <div class="inline-block py-2 min-w-full sm:px-6 lg:px-8">
-        <div class="overflow-hidden shadow-md sm:rounded-lg">
-          <table class="min-w-full">
-            <thead class="bg-gray-700 text-gray-400">
-              <tr>
-                <th
-                  scope="col"
-                  class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                >
-                  ID
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                >
-                  EMBLEM
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                >
-                  NAME
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                >
-                  MORALE
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                >
-                  COMBAT POWER
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                >
-                  BONUS
-                </th>
-                <th scope="col" class="relative py-3 px-6">
-                  <span class="sr-only">Edit</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody class="">
-              <tr
-                v-for="item of paginatedGuilds"
-                :key="item.id"
-                class="border-b bg-gray-800 border-gray-700"
-              >
-                <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                  {{ item.id }}
-                </td>
-                <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                  {{ ethers.utils.parseBytes32String(item.emblem) }}
-                </td>
-                <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                  {{ ethers.utils.parseBytes32String(item.name) }}
-                </td>
-                <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                  {{ item.morale }}
-                </td>
-                <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                  {{ item.combatPower }}
-                </td>
-                <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                  {{ item.winRate }}
-                </td>
-                <td
-                  class="text-right px-6 text-sm font-medium whitespace-nowrap"
-                >
-                  <button class="text-[#9ba1fd] inline-flex items-center">
-                    <FontAwesomeIcon :icon="['fas', 'edit']" size="lg" />
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    <NFTList
+      :items="paginatedGuilds"
+      nft="guilds"
+      class="mb-10"
+      mode="inventory"
+    >
+      <div class="flex justify-center mt-5">
+        <PrimaryButton
+          v-if="hasAllowance"
+          class="self-center mt-2"
+          @click="guildDialog()"
+          >MANAGE</PrimaryButton
+        >
       </div>
-    </div>
+    </NFTList>
     <div class="grow"></div>
     <GridPagination
       v-model="page"
@@ -199,6 +130,7 @@
   import { Guild } from '../types/guild'
   import { ethers } from 'ethers'
   import GridPagination from '../components/GridPagination.vue'
+  import NFTList from '../components/NFTList.vue'
   import DKIcon from '../components/DKIcon.vue'
   import { useContract } from '../stores/contract-store'
   import { useMain } from '../stores/main-store'

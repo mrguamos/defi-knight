@@ -8,14 +8,16 @@
         :key="item.id"
         class="h-min text-white flex justify-center px-5 md:px-0"
       >
-        <NFTCard :item="item" :nft="nft" :mode="mode" />
+        <NFTCard :item="item" :nft="nft" :mode="mode">
+          <slot></slot>
+        </NFTCard>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { CharacterCommon } from '../types/common'
+  import { Common } from '../types/common'
   import { PropType } from 'vue'
 
   import NFTCard from './NFTCard.vue'
@@ -30,7 +32,7 @@
       required: true,
     },
     items: {
-      type: Array as PropType<CharacterCommon[]>,
+      type: Array as PropType<Common[]>,
       required: true,
     },
   })

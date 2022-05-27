@@ -245,7 +245,8 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
             for (uint16 f = 0; f < guildCommander[guildId].length; f++) {
                 guildMember.transferToOwner(
                     TYPE_COMMANDER,
-                    guildCommander[guildId][f]
+                    guildCommander[guildId][f],
+                    msg.sender
                 );
                 delete commanderGuild[guildCommander[guildId][f]];
             }
@@ -256,11 +257,12 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
             for (uint16 f = 0; f < guildKnight[guildId].length; f++) {
                 guildMember.transferToOwner(
                     TYPE_KNIGHT,
-                    guildKnight[guildId][f]
+                    guildKnight[guildId][f],
+                    msg.sender
                 );
                 delete knightGuild[guildKnight[guildId][f]];
             }
-            delete guildCommander[guildId];
+            delete guildKnight[guildId];
         }
     }
 

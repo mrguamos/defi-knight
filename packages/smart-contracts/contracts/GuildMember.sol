@@ -23,12 +23,17 @@ contract GuildMember is
     Commander private commander;
     Knight private knight;
 
-    function initialize() public initializer {
+    function initialize(Commander _commander, Knight _knight)
+        public
+        initializer
+    {
         __AccessControl_init();
         __UUPSUpgradeable_init();
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(UPGRADER_ROLE, msg.sender);
         _grantRole(GAME_ADMIN_ROLE, msg.sender);
+        commander = _commander;
+        knight = _knight;
     }
 
     function _authorizeUpgrade(address newImplementation)
@@ -37,19 +42,23 @@ contract GuildMember is
         onlyRole(UPGRADER_ROLE)
     {}
 
-    function transferToOwner(uint8 nftType, uint256 tokenId) external {
+    function transferToOwner(
+        uint8 nftType,
+        uint256 tokenId,
+        address owner
+    ) external onlyRole(GAME_ADMIN_ROLE) {
         if (nftType == TYPE_COMMANDER) {
-            commander.safeTransferFrom(address(this), msg.sender, tokenId);
+            commander.safeTransferFrom(address(this), owner, tokenId);
         } else {
-            knight.safeTransferFrom(address(this), msg.sender, tokenId);
+            knight.safeTransferFrom(address(this), owner, tokenId);
         }
     }
 
     function approveGameContract(address gameAddress)
         external
-        onlyRole(GAME_ADMIN_ROLE)
+        onlyRole(DEFAULT_ADMIN_ROLE)
     {
-        commander.setApprovalForAll(gameAddress, true);
-        knight.setApprovalForAll(gameAddress, true);
+        //commander.setApprovalForAll(gameAddress, true);
+        //knight.setApprovalForAll(gameAddress, true);
     }
 }
