@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import './index.css'
+import ScriptX from 'vue-scriptx'
+import Ads from 'vue-google-adsense'
 import router from './router'
 import { createPinia } from 'pinia'
 import { useWeb3 } from './stores/web3-store'
@@ -42,7 +44,13 @@ import VueGtag from 'vue-gtag'
     faShoppingCart,
     faCoins
   )
+
   const app = createApp(App)
+  app.use(ScriptX)
+  app.use(Ads.AutoAdsense, {
+    adClient: 'ca-pub-3072480337071983',
+    isNewAdsCode: true,
+  })
   app.use(VueGtag, {
     config: { id: 'G-9JVRHW9TRZ' },
   })

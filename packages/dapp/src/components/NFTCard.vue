@@ -13,7 +13,7 @@
       <div class="flex justify-between">
         ID <span>{{ item.id }}</span>
       </div>
-      <div class="flex justify-between">
+      <div class="flex justify-between items-center">
         RARITY
         <div class="flex gap-[2px]">
           <FontAwesomeIcon
