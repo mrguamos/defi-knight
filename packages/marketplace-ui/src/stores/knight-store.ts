@@ -1,12 +1,19 @@
 import { defineStore } from 'pinia'
 import { useAccount } from './account-store'
 import { useContract } from './contract-store'
+import type { Knight } from '../types/knight'
 
 import type { BigNumberish } from 'ethers'
 
 export const useKnight = defineStore('knight', {
   state: () => {
-    return {}
+    return {
+      list: [] as Knight[],
+      bonus: 0,
+      filter: {
+        id: '',
+      },
+    }
   },
   actions: {
     async getKnights() {
@@ -52,6 +59,10 @@ export const useKnight = defineStore('knight', {
     safeTransferFrom(to: string, tokenId: number) {
       const contracts = useContract()
       return contracts.knight.transferFrom(useAccount().address, to, tokenId)
+    },
+    getBonus() {
+      const contracts = useContract()
+      return contracts.commander.BONUS_POWER()
     },
   },
 })

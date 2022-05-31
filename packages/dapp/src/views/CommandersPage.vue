@@ -93,7 +93,7 @@
                       SUBMIT</PrimaryButton
                     >
 
-                    <SecondaryButton c @click="closeModal()">
+                    <SecondaryButton @click="closeModal()">
                       CANCEL</SecondaryButton
                     >
                   </div>
@@ -224,6 +224,7 @@
     if (account.isConnected) {
       try {
         main.loading = true
+        commander.bonus = await commander.getBonus()
         const tokens = await commander.getCommanders()
         commanders.value = await Promise.all(
           tokens.map(async (token) => {

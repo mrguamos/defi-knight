@@ -20,6 +20,8 @@ contract Knight is
     ERC721BurnableUpgradeable,
     UUPSUpgradeable
 {
+    uint8 public constant BONUS_POWER = 20;
+
     using Counters for Counters.Counter;
 
     Counters.Counter public counter;
@@ -34,7 +36,7 @@ contract Knight is
         uint8 class;
         uint8 gender;
         uint16 combatPower;
-        uint16 bonusPower;
+        bool isGenesis;
     }
 
     mapping(uint256 => KnightState) knights;
@@ -97,7 +99,6 @@ contract Knight is
 
         uint8 rarity;
         uint16 combatPower;
-        uint8 bonusPower = 0;
 
         // • One-star, 44% chance
         // • Two-star, 35% chance
@@ -122,17 +123,13 @@ contract Knight is
             rarity = 4;
         }
 
-        if (tokenId <= 1000) {
-            bonusPower = 20;
-        }
-
         knights[tokenId] = (
             KnightState(
                 rarity,
                 uint8(rollClass),
                 uint8(rollGender),
                 combatPower,
-                bonusPower
+                tokenId <= 1000
             )
         );
         emit NewKnight(tokenId, to);

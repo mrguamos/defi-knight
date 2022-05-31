@@ -9,6 +9,7 @@ export const useCommander = defineStore('commander', {
     return {
       iCommander: undefined as unknown as ethers.utils.Interface,
       loading: false,
+      bonus: 0,
     }
   },
   actions: {
@@ -63,6 +64,10 @@ export const useCommander = defineStore('commander', {
     safeTransferFrom(to: string, tokenId: number) {
       const contracts = useContract()
       return contracts.commander.transferFrom(useAccount().address, to, tokenId)
+    },
+    getBonus() {
+      const contracts = useContract()
+      return contracts.commander.BONUS_MAX_WR()
     },
   },
 })

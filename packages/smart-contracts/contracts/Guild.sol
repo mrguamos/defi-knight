@@ -143,7 +143,7 @@ contract Guild is
             guildKnight[tokenId].push(knights[i]);
             knight.setMapping(knights[i], tokenId);
             Knight.KnightState memory kk = knight.getKnight(knights[i]);
-            guilds[tokenId].combatPower += kk.combatPower + kk.bonusPower;
+            // guilds[tokenId].combatPower += kk.combatPower + kk.bonusPower;
         }
     }
 

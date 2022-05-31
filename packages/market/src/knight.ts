@@ -34,8 +34,8 @@ module.exports = function (sequelize: Sequelize) {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
-      bonusPower: {
-        type: DataTypes.INTEGER,
+      isGenesis: {
+        type: DataTypes.BOOLEAN,
         allowNull: true,
       },
       status: {

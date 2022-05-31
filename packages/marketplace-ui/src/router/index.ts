@@ -7,58 +7,58 @@ const router = createRouter({
     {
       path: '/buy',
       name: 'buy',
-      component: () => import('../views/MarketplaceView.vue'),
+      component: () => import('../views/BuyView.vue'),
       children: [
         { path: '', redirect: '/buy/commanders' },
         {
           path: 'commanders',
-          component: () => import('../views/CommandersBuyView.vue'),
+          component: () => import('../views/CommandersView.vue'),
         },
         {
           path: 'knights',
-          component: () => import('../views/KnightsBuyView.vue'),
+          component: () => import('../views/KnightsView.vue'),
         },
         {
           path: 'guilds',
-          component: () => import('../views/GuildsBuyView.vue'),
+          component: () => import('../views/GuildsView.vue'),
         },
       ],
     },
     {
       path: '/sell',
-      component: () => import('../views/MarketplaceView.vue'),
+      component: () => import('../views/SellView.vue'),
       children: [
         { path: '', redirect: '/sell/commanders' },
         {
           path: 'commanders',
-          component: () => import('../views/CommandersSellView.vue'),
+          component: () => import('../views/CommandersView.vue'),
         },
         {
           path: 'knights',
-          component: () => import('../views/KnightsSellView.vue'),
+          component: () => import('../views/KnightsView.vue'),
         },
         {
           path: 'guilds',
-          component: () => import('../views/GuildsSellView.vue'),
+          component: () => import('../views/GuildsView.vue'),
         },
       ],
     },
     {
       path: '/listings',
-      component: () => import('../views/MarketplaceView.vue'),
+      component: () => import('../views/ListingsView.vue'),
       children: [
         { path: '', redirect: '/listings/commanders' },
         {
           path: 'commanders',
-          component: () => import('../views/CommandersListingsView.vue'),
+          component: () => import('../views/CommandersView.vue'),
         },
         {
           path: 'knights',
-          component: () => import('../views/KnightsListingsView.vue'),
+          component: () => import('../views/KnightsView.vue'),
         },
         {
           path: 'guilds',
-          component: () => import('../views/GuildsListingsView.vue'),
+          component: () => import('../views/GuildsView.vue'),
         },
       ],
     },

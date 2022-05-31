@@ -172,4 +172,16 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
     function _onlyNonContract() internal view {
         require(tx.origin == msg.sender, "Wallet Only");
     }
+
+    function withdraw() external onlyRole(DEFAULT_ADMIN_ROLE) {
+        payable(msg.sender).transfer(address(this).balance);
+    }
+
+    function emergencyWithdraw() external onlyRole(DEFAULT_ADMIN_ROLE) {
+        defiKnight.transfer(msg.sender, address(this).balance);
+    }
+
+    fallback() external payable {}
+
+    receive() external payable {}
 }

@@ -8,6 +8,7 @@ export const useKnight = defineStore('knight', {
   state: () => {
     return {
       iKnight: undefined as unknown as ethers.utils.Interface,
+      bonus: 0,
     }
   },
   actions: {
@@ -62,6 +63,10 @@ export const useKnight = defineStore('knight', {
     safeTransferFrom(to: string, tokenId: number) {
       const contracts = useContract()
       return contracts.knight.transferFrom(useAccount().address, to, tokenId)
+    },
+    getBonus() {
+      const contracts = useContract()
+      return contracts.knight.BONUS_POWER()
     },
   },
 })

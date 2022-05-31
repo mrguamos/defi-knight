@@ -20,6 +20,8 @@ contract Commander is
     ERC721BurnableUpgradeable,
     UUPSUpgradeable
 {
+    uint8 public constant BONUS_MAX_WR = 1;
+
     using Counters for Counters.Counter;
 
     Counters.Counter public counter;

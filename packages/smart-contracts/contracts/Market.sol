@@ -16,6 +16,7 @@ contract Market is
     UUPSUpgradeable,
     ERC721Holder
 {
+    uint256 public constant TAX_FEE = 10;
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
 
     DefiKnight private defiKnight;
@@ -72,30 +73,37 @@ contract Market is
         uint256 tokenId,
         uint256 amount
     ) external {
+        require(commander.ownerOf(tokenId) == msg.sender);
         if (nftType == TYPE_COMMANDER) {
-            require(commander.ownerOf(tokenId) == msg.sender);
             commander.safeTransferFrom(msg.sender, address(this), tokenId);
         } else if (nftType == TYPE_KNIGHT) {
-            require(knight.ownerOf(tokenId) == msg.sender);
             knight.safeTransferFrom(msg.sender, address(this), tokenId);
         } else if (nftType == TYPE_GUILD) {
-            require(guild.ownerOf(tokenId) == msg.sender);
             guild.safeTransferFrom(msg.sender, address(this), tokenId);
         }
         list[nftType][tokenId] = Listing(msg.sender, amount);
         emit ListingEvent(nftType, tokenId);
     }
 
+    function edit(
+        uint8 nftType,
+        uint256 tokenId,
+        uint256 amount
+    ) external {
+        Listing storage listing = list[nftType][tokenId];
+        require(listing.owner == msg.sender);
+        listing.amount = amount;
+        emit ListingEvent(nftType, tokenId);
+    }
+
     function cancel(uint8 nftType, uint256 tokenId) external {
         Listing memory listing = list[nftType][tokenId];
+        require(listing.owner == msg.sender);
         if (nftType == TYPE_COMMANDER) {
-            require(listing.owner == msg.sender);
             commander.safeTransferFrom(address(this), msg.sender, tokenId);
         } else if (nftType == TYPE_KNIGHT) {
-            require(listing.owner == msg.sender);
             knight.safeTransferFrom(address(this), msg.sender, tokenId);
         } else if (nftType == TYPE_GUILD) {
-            require(listing.owner == msg.sender);
             guild.safeTransferFrom(address(this), msg.sender, tokenId);
         }
         delete list[nftType][tokenId];
@@ -106,21 +114,19 @@ contract Market is
         uint8 nftType,
         uint256 tokenId,
         uint256 amount
-    ) external {
+    ) external payable {
         Listing memory listing = list[nftType][tokenId];
+        require(listing.amount == amount, "Invalid amount");
+        require(msg.value >= amount, "Not Enough Balance");
         if (nftType == TYPE_COMMANDER) {
-            require(listing.amount == amount);
-            defiKnight.transferFrom(msg.sender, listing.owner, amount);
             commander.safeTransferFrom(address(this), msg.sender, tokenId);
         } else if (nftType == TYPE_KNIGHT) {
-            require(listing.amount == amount);
-            defiKnight.transferFrom(msg.sender, listing.owner, amount);
             knight.safeTransferFrom(address(this), msg.sender, tokenId);
         } else if (nftType == TYPE_GUILD) {
-            require(listing.amount == amount);
-            defiKnight.transferFrom(msg.sender, listing.owner, amount);
             guild.safeTransferFrom(address(this), msg.sender, tokenId);
         }
+        uint256 fee = (amount * TAX_FEE) / 100;
+        payable(listing.owner).transfer(msg.value - fee);
         delete list[nftType][tokenId];
         emit ListingEvent(nftType, tokenId);
     }
@@ -132,4 +138,16 @@ contract Market is
     {
         return list[nftType][tokenId];
     }
+
+    function withdraw() external onlyRole(DEFAULT_ADMIN_ROLE) {
+        payable(msg.sender).transfer(address(this).balance);
+    }
+
+    function emergencyWithdraw() external onlyRole(DEFAULT_ADMIN_ROLE) {
+        defiKnight.transfer(msg.sender, address(this).balance);
+    }
+
+    fallback() external payable {}
+
+    receive() external payable {}
 }

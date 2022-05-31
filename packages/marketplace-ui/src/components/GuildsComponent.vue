@@ -50,6 +50,10 @@
       </template>
     </FilterComponent>
 
-    <ResultComponent></ResultComponent>
+    <ResultComponent>
+      <div class="flex flex-col items-center justify-center h-full">
+        COMING SOON
+      </div>
+    </ResultComponent>
   </div>
 </template>

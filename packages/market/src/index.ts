@@ -90,10 +90,10 @@ const Config = require(`${__dirname}/config`)(sequelize) as ModelStatic<any>
         nft = (await knight.functions.getKnight(tokenId))[0]
         props = {
           combatPower: nft.combatPower,
-          bonusPower: nft.bonusPower,
           rarity: nft.rarity,
           gender: nft.gender,
           class: nft.class,
+          isGenesis: nft.isGenesis,
         }
       } else if (nftType == 2) {
         nft = (await guild.functions.getGuild(tokenId))[0]
@@ -137,33 +137,53 @@ const app = express()
 app.use(cors())
 
 app.get('/commanders', async (req: express.Request, res: express.Response) => {
-  const { offset, limit, rarity, address } = req.query
-  const commanders = await Commander.findAndCountAll({
-    where: {
-      status: 1,
-      owner: {
-        [Op.notILike]: address as string,
+  try {
+    const { offset, limit, rarity, address, listed } = req.query
+    let owner = {}
+
+    if (listed === '0') {
+      owner = Sequelize.where(
+        Sequelize.fn('lower', Sequelize.col('owner')),
+        Op.ne,
+        Sequelize.fn('lower', address)
+      )
+    } else {
+      owner = Sequelize.where(
+        Sequelize.fn('lower', Sequelize.col('owner')),
+        Sequelize.fn('lower', address)
+      )
+    }
+    const commanders = await Commander.findAndCountAll({
+      where: {
+        status: 1,
+        owner,
       },
-    },
-    offset: Number(offset),
-    limit: Number(limit),
-  })
-  res.send(commanders)
+      offset: Number(offset),
+      limit: Number(limit),
+    })
+    res.send(commanders)
+  } catch (error) {
+    console.log(error)
+  }
 })
 
 app.get('/knights', async (req: express.Request, res: express.Response) => {
-  const { offset, limit, address } = req.query
-  const knights = await Knight.findAndCountAll({
-    where: {
-      status: 1,
-      owner: {
-        [Op.notILike]: address as string,
+  try {
+    const { offset, limit, address } = req.query
+    const knights = await Knight.findAndCountAll({
+      where: {
+        status: 1,
+        owner: {
+          [Op.notILike]: address as string,
+        },
       },
-    },
-    offset: Number(offset),
-    limit: Number(limit),
-  })
-  res.send(knights)
+      offset: Number(offset),
+      limit: Number(limit),
+    })
+    res.send(knights)
+  } catch (error) {
+    console.log(error)
+  }
 })
 
 const port = 8080

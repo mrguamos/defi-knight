@@ -11,17 +11,28 @@ export const useMarket = defineStore('market', {
     }
   },
   actions: {
-    async sell(nftType: number, tokenId: number, amount: number) {
+    async sell(nftType: number, tokenId: number, amount: string) {
       const contracts = useContract()
+
       return contracts.market.functions.sell(
         nftType,
         tokenId,
-        ethers.utils.parseUnits(amount.toString(), 'ether')
+        ethers.utils.parseUnits(amount, 'ether')
+      )
+    },
+    async edit(nftType: number, tokenId: number, amount: string) {
+      const contracts = useContract()
+      return contracts.market.functions.edit(
+        nftType,
+        tokenId,
+        ethers.utils.parseUnits(amount, 'ether')
       )
     },
     async buy(nftType: number, tokenId: number, amount: string) {
       const contracts = useContract()
-      return contracts.market.functions.buy(nftType, tokenId, amount)
+      return contracts.market.functions.buy(nftType, tokenId, amount, {
+        value: amount,
+      })
     },
     async cancel(nftType: number, tokenId: number) {
       const contracts = useContract()

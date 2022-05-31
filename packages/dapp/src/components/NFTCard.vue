@@ -37,13 +37,13 @@
         <span v-if="nft === 'knights'">CP</span>
         <div v-if="nft === 'knights'">
           <span>{{ (item as Knight).combatPower }}</span>
-          <span v-if="(item as Knight).bonusPower > 0 ">
+          <span v-if="(item as CharacterCommon).isGenesis ">
             +
-            {{ (item as Knight).bonusPower }}
+            {{ useKnight().bonus }}
           </span>
         </div>
-        <div v-if="(item as Commander).isGenesis && nft === 'commanders'">
-          MAX WR + 1
+        <div v-if="(item as CharacterCommon).isGenesis && nft === 'commanders'">
+          MAX WR + {{ useCommander().bonus }}
         </div>
       </div>
     </div>
@@ -56,7 +56,8 @@
   import type { Knight } from '../types/knight'
   import type { Common } from '../types/common'
   import type { CharacterCommon } from '../types/common'
-
+  import { useCommander } from '../stores/commander-store'
+  import { useKnight } from '../stores/knight-store'
   defineProps({
     nft: {
       type: String,

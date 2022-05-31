@@ -217,6 +217,7 @@
     if (account.isConnected) {
       try {
         main.loading = true
+        knight.bonus = await knight.getBonus()
         const tokens = await knight.getKnights()
         knights.value = await Promise.all(
           tokens.map(async (token) => {

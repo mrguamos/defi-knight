@@ -3,6 +3,8 @@
   import { MenuIcon } from '@heroicons/vue/solid'
   import { useWeb3 } from './stores/web3-store'
   import { useAccount } from './stores/account-store'
+  import { useMain } from './stores/main-store'
+  import DefiSpinner from './components/DefiSpinner.vue'
 
   const eth = useWeb3()
   const account = useAccount()
@@ -17,6 +19,7 @@
 
 <template>
   <div class="h-screen flex flex-col">
+    <DefiSpinner v-if="useMain().loading" />
     <header
       class="w-full py-1 bg-black bg-opacity-50 flex justify-between items-center shadow-2xl shadow-cyan-500/50"
     >
