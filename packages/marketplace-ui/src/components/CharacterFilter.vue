@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { ref, watch } from 'vue'
   import {
     Listbox,
     ListboxButton,
@@ -7,6 +7,9 @@
     ListboxOption,
   } from '@headlessui/vue'
   import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid'
+  import { useCommander } from '../stores/commander-store'
+  import { useKnight } from '../stores/knight-store'
+  import { useMain } from '../stores/main-store'
 
   const rarities = [
     { id: 0, name: 1 },
@@ -17,16 +20,69 @@
   ]
   const min = ref(rarities[0])
   const max = ref(rarities[4])
+  const race = ref([] as number[])
+  const genesis = ref([] as number[])
+
+  if (useMain().nft === 'commanders') {
+    race.value = useCommander().filter.race
+    genesis.value = useCommander().filter.genesis
+    min.value = rarities[useCommander().filter.min]
+    max.value = rarities[useCommander().filter.max]
+  } else {
+    race.value = useKnight().filter.race
+    genesis.value = useKnight().filter.genesis
+    min.value = rarities[useKnight().filter.min]
+    max.value = rarities[useKnight().filter.max]
+  }
+
+  watch(race, (race) => {
+    console.log(race)
+    if (useMain().nft === 'commanders') useCommander().filter.race = race
+    else if (useMain().nft === 'knights') useKnight().filter.race = race
+  })
+
+  watch(genesis, (genesis) => {
+    if (useMain().nft === 'commanders') useCommander().filter.genesis = genesis
+    else if (useMain().nft === 'knights') useKnight().filter.genesis = genesis
+  })
+
+  watch(min, (min) => {
+    if (useMain().nft === 'commanders') useCommander().filter.min = min.id
+    else if (useMain().nft === 'knights') useKnight().filter.min = min.id
+  })
+
+  watch(max, (max) => {
+    if (useMain().nft === 'commanders') useCommander().filter.max = max.id
+    else if (useMain().nft === 'knights') useKnight().filter.max = max.id
+  })
 </script>
 <template>
   <div class="flex flex-col w-full justify-center items-center p-2 space-y-2">
     <span class="text-lg font-semibold">Race</span>
     <div class="flex justify-center items-center gap-2">
-      <input type="checkbox" id="orc" class="rounded-md" />
+      <input
+        type="checkbox"
+        id="orc"
+        class="rounded-md"
+        :value="1"
+        v-model="race"
+      />
       <label for="orc">Orc</label>
-      <input type="checkbox" id="demon" class="rounded-md" />
+      <input
+        type="checkbox"
+        id="demon"
+        class="rounded-md"
+        :value="2"
+        v-model="race"
+      />
       <label for="demon">Demon</label>
-      <input type="checkbox" id="human" class="rounded-md" />
+      <input
+        type="checkbox"
+        id="human"
+        class="rounded-md"
+        :value="0"
+        v-model="race"
+      />
       <label for="human">Human</label>
     </div>
   </div>
@@ -159,9 +215,21 @@
   <div class="flex flex-col w-full justify-center items-center p-2 space-y-2">
     <span class="text-lg font-semibold">Others</span>
     <div class="flex justify-center items-center gap-2">
-      <input type="checkbox" id="genesis" class="rounded-md" />
+      <input
+        type="checkbox"
+        id="genesis"
+        class="rounded-md"
+        v-model="genesis"
+        :value="1"
+      />
       <label for="genesis">Genesis</label>
-      <input type="checkbox" id="non-genesis" class="rounded-md" />
+      <input
+        type="checkbox"
+        id="non-genesis"
+        class="rounded-md"
+        v-model="genesis"
+        :value="0"
+      />
       <label for="non-genesis">Non Genesis</label>
     </div>
   </div>

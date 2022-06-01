@@ -3,7 +3,7 @@
   import FilterComponent from '../components/FilterComponent.vue'
   import ResultComponent from '../components/ResultComponent.vue'
   import CharacterFilter from '../components/CharacterFilter.vue'
-  import { useCommander } from '../stores/commander-store'
+  import { useKnight } from '../stores/knight-store'
   import NFTCard from './NFTCard.vue'
   import CharacterAttributes from './CharacterAttributes.vue'
   import { GiftIcon } from '@heroicons/vue/solid'
@@ -15,10 +15,11 @@
   import { isError } from '../utils/util'
   import DialogComponent from './DialogComponent.vue'
   import GridPagination from './GridPagination.vue'
-  import type { Commander } from '../types/commander'
-  import CommanderResetButton from './CommanderResetButton.vue'
+  import type { Knight } from '../types/knight'
+  import CombatPowerFilter from './CombatPowerFilter.vue'
+  import KnightResetButton from './KnightResetButton.vue'
 
-  const commander = useCommander()
+  const knight = useKnight()
   const market = useMarket()
   const contract = useContract()
   const account = useAccount()
@@ -34,7 +35,7 @@
   const sell = async () => {
     try {
       main.loading = true
-      const res = await market.sell(0, tokenId.value, price.value.toString())
+      const res = await market.sell(1, tokenId.value, price.value.toString())
       await res.wait()
     } catch (error) {
       console.log(error)
@@ -47,7 +48,7 @@
   const gift = async () => {
     try {
       main.loading = true
-      const res = await commander.safeTransferFrom(
+      const res = await knight.safeTransferFrom(
         recipientAddress.value,
         tokenId.value
       )
@@ -63,7 +64,7 @@
   const setApprovalForAll = async () => {
     try {
       main.loading = true
-      const res = await commander.setApprovalForAll(contract.market.address)
+      const res = await knight.setApprovalForAll(contract.market.address)
       await res.wait()
       await getApproved()
     } catch (error) {
@@ -80,9 +81,7 @@
 
   const getApproved = async () => {
     if (account.isConnected) {
-      market.isApproved = await commander.isApprovedForAll(
-        contract.market.address
-      )
+      market.isApproved = await knight.isApprovedForAll(contract.market.address)
     }
   }
 
@@ -107,53 +106,59 @@
 
   const search = async (page: number) => {
     useMain().loading = true
-    commander.list.data = []
-    commander.list.currentPage = page
+    knight.list.data = []
+    knight.list.currentPage = page
     if (account.isConnected) {
       try {
-        commander.bonus = await commander.getBonus()
-        if (commander.filter.id) {
-          const owner = await commander.ownerOf(commander.filter.id)
+        knight.bonus = await knight.getBonus()
+        if (knight.filter.id) {
+          const owner = await knight.ownerOf(knight.filter.id)
           if (owner.toLowerCase() === account.address.toLowerCase()) {
-            const c = (await commander.getCommander(commander.filter.id))[0]
-            commander.list.data = [
+            const k = (await knight.getKnight(knight.filter.id))[0]
+            knight.list.data = [
               {
-                ...c,
-                id: commander.filter.id,
+                ...k,
+                id: knight.filter.id,
               },
             ]
           }
         } else {
-          const tokens = await commander.getCommanders()
+          const tokens = await knight.getKnights()
           const list = await Promise.all(
             tokens.map(async (token) => {
               const id = Number(token.toString())
-              const c = (await commander.getCommander(id))[0]
+              const c = (await knight.getKnight(id))[0]
               return { ...c, id: id }
             })
           )
-          commander.list.data = list.filter((item: Commander) => {
+          knight.list.data = list.filter((item: Knight) => {
+            let id = true
+            if (knight.filter.id) {
+              id = item.id == knight.filter.id
+            }
             let race = true
-            if (commander.filter.race.length > 0) {
-              race = commander.filter.race.includes(item.class)
+            if (knight.filter.race.length > 0) {
+              race = knight.filter.race.includes(item.class)
             }
             let genesis = true
-            if (commander.filter.genesis.length > 0) {
-              genesis = commander.filter.genesis.includes(
-                item.isGenesis ? 1 : 0
-              )
+            if (knight.filter.genesis.length > 0) {
+              genesis = knight.filter.genesis.includes(item.isGenesis ? 1 : 0)
             }
             const rarity =
-              item.rarity >= commander.filter.min &&
-              item.rarity <= commander.filter.max
+              item.rarity >= knight.filter.min &&
+              item.rarity <= knight.filter.max
 
-            return race && genesis && rarity
+            const cp =
+              item.combatPower >= knight.filter.minCP &&
+              item.combatPower <= knight.filter.maxCP
+
+            return id && race && genesis && rarity && cp
           })
         }
 
-        commander.list.total = commander.list.data.length
+        knight.list.total = knight.list.data.length
       } catch (e: unknown) {
-        //
+        console.log(e)
       } finally {
         useMain().loading = false
       }
@@ -166,8 +171,7 @@
     <DialogComponent v-model="sellDialog">
       <template v-slot:title>
         <span
-          >List Commander #
-          <span class="text-teal-700">{{ tokenId }}</span></span
+          >List Knight # <span class="text-teal-700">{{ tokenId }}</span></span
         >
       </template>
       <template v-slot:content>
@@ -201,7 +205,7 @@
     <DialogComponent v-model="giftDialog">
       <template v-slot:title>
         <span
-          >Transfer Commander #
+          >Transfer Knight #
           <span class="text-teal-700">{{ tokenId }}</span></span
         >
       </template>
@@ -235,7 +239,9 @@
     </DialogComponent>
 
     <FilterComponent
-      ><CharacterFilter> </CharacterFilter>
+      ><CharacterFilter>
+        <CombatPowerFilter />
+      </CharacterFilter>
       <template v-slot:control-buttons>
         <button
           @click="search(1)"
@@ -243,7 +249,7 @@
         >
           Search
         </button>
-        <CommanderResetButton />
+        <KnightResetButton />
       </template>
     </FilterComponent>
     <ResultComponent>
@@ -252,16 +258,16 @@
           class="grow h-full grid grid-cols-1 result-sm:grid-cols-2 result-md:grid-cols-3 result-lg:grid-cols-4 result-xl:grid-cols-5 result-2xl:grid-cols-6 gap-7 w-full"
         >
           <div
-            v-for="item of commander.paginatedCommanders"
+            v-for="item of knight.paginatedKnights"
             :key="item.id"
             class="h-min text-white flex justify-center px-5 md:px-0"
           >
             <NFTCard
               :item="item"
-              :imageURL="`commanders/${item.class}-${item.gender}-${item.rarity}.png`"
+              :imageURL="`knights/${item.class}-${item.gender}-${item.rarity}.png`"
             >
               <div>
-                <CharacterAttributes :item="item" nft="commanders" />
+                <CharacterAttributes :item="item" nft="knights" />
                 <div class="border-b border-gray-500/50 w-full mt-4"></div>
                 <div class="flex justify-center items-center gap-10 mt-4">
                   <button
@@ -293,13 +299,13 @@
         </div>
         <div
           class="flex flex-col w-full justify-center mt-10"
-          v-if="commander.list.data.length > 0"
+          v-if="knight.list.data.length > 0"
         >
           <GridPagination
-            v-model="commander.list.currentPage"
-            :length="commander.list.total"
+            v-model="knight.list.currentPage"
+            :length="knight.list.total"
             :total-visible="totalVisible"
-            :pages-number="commander.pagesNumber"
+            :pages-number="knight.pagesNumber"
             :rows-per-page="rowsPerPage"
           />
         </div>

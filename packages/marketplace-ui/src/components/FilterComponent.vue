@@ -5,10 +5,15 @@
 
   const idInput = (payload: Event) => {
     if (useMain().nft === 'commanders')
-      useCommander().filter.id = (payload.target as HTMLInputElement).value
+      useCommander().filter.id = Number(
+        (payload.target as HTMLInputElement).value
+      )
     else if (useMain().nft === 'knights')
-      useKnight().filter.id = (payload.target as HTMLInputElement).value
-    else useCommander().filter.id = (payload.target as HTMLInputElement).value
+      useKnight().filter.id = Number((payload.target as HTMLInputElement).value)
+    else
+      useCommander().filter.id = Number(
+        (payload.target as HTMLInputElement).value
+      )
   }
 
   const idValue = () => {
@@ -20,6 +25,7 @@
 
 <template>
   <div
+    :key="useMain().key"
     class="bg-gray-900/50 w-full flex lg:w-80 flex-col overflow-y-auto border-r-2 border-r-gray-500/20 items-center divide-y divide-gray-500/50 shrink-0"
     style="height: calc(100vh - 142px)"
   >
@@ -41,12 +47,7 @@
       </div>
     </div>
     <div class="w-full flex items-center justify-center py-2 gap-4">
-      <slot name="search-button"></slot>
-      <button
-        class="uppercase border-2 border-red-700 rounded-lg p-2 bg-transparent hover:bg-red-600/50 active:border-transparent active:ring active:ring-red-700"
-      >
-        Reset
-      </button>
+      <slot name="control-buttons"></slot>
     </div>
 
     <div class="w-full"></div>

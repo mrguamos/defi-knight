@@ -73,12 +73,14 @@ contract Market is
         uint256 tokenId,
         uint256 amount
     ) external {
-        require(commander.ownerOf(tokenId) == msg.sender);
         if (nftType == TYPE_COMMANDER) {
+            require(commander.ownerOf(tokenId) == msg.sender);
             commander.safeTransferFrom(msg.sender, address(this), tokenId);
         } else if (nftType == TYPE_KNIGHT) {
+            require(knight.ownerOf(tokenId) == msg.sender);
             knight.safeTransferFrom(msg.sender, address(this), tokenId);
         } else if (nftType == TYPE_GUILD) {
+            require(guild.ownerOf(tokenId) == msg.sender);
             guild.safeTransferFrom(msg.sender, address(this), tokenId);
         }
         list[nftType][tokenId] = Listing(msg.sender, amount);

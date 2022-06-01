@@ -14,6 +14,7 @@
 
   import DialogComponent from './DialogComponent.vue'
   import GridPagination from './GridPagination.vue'
+  import CommanderResetButton from './CommanderResetButton.vue'
 
   const commander = useCommander()
   const market = useMarket()
@@ -25,7 +26,7 @@
 
   const price = ref('')
   const totalVisible = 3
-  const rowsPerPage = 2
+  const rowsPerPage = 10
 
   const buy = async () => {
     try {
@@ -61,6 +62,10 @@
           offset: ((page - 1) * rowsPerPage).toString(),
           listed: '0',
           limit: rowsPerPage.toString(),
+          race: commander.filter.race.toString(),
+          min: commander.filter.min.toString(),
+          max: commander.filter.max.toString(),
+          genesis: commander.filter.genesis.toString(),
         }
         commander.bonus = await commander.getBonus()
         const res = await commander.listCommanders(queryParams)
@@ -112,13 +117,14 @@
 
     <FilterComponent
       ><CharacterFilter> </CharacterFilter>
-      <template v-slot:search-button>
+      <template v-slot:control-buttons>
         <button
           @click="search(1)"
           class="uppercase border-2 border-teal-700 rounded-lg p-2 bg-transparent hover:bg-teal-600/50 active:border-transparent active:ring active:ring-teal-700"
         >
           Search
         </button>
+        <CommanderResetButton />
       </template>
     </FilterComponent>
     <ResultComponent>

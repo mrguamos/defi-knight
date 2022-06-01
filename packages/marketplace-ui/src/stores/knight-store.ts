@@ -1,21 +1,47 @@
 import { defineStore } from 'pinia'
 import { useAccount } from './account-store'
 import { useContract } from './contract-store'
-import type { Knight } from '../types/knight'
-
+import axios from 'axios'
 import type { BigNumberish } from 'ethers'
-
+import type { Knight } from '../types/knight'
 export const useKnight = defineStore('knight', {
   state: () => {
     return {
-      list: [] as Knight[],
-      bonus: 0,
-      filter: {
-        id: '',
+      list: {
+        data: [] as Knight[],
+        total: 0,
+        currentPage: 1,
       },
+      filter: {
+        id: undefined as unknown as number,
+        race: [] as number[],
+        genesis: [] as number[],
+        min: 0,
+        max: 4,
+        minCP: 0,
+        maxCP: 250,
+      },
+      bonus: 0,
     }
   },
+  getters: {
+    pagesNumber(): number {
+      return Math.ceil(this.list.total / 2)
+    },
+    paginatedKnights(): Knight[] {
+      const start = (this.list.currentPage - 1) * 10
+      return this.list.data.slice(start, start + 10)
+    },
+  },
   actions: {
+    async listKnights(queryParams: Record<string, string>) {
+      const params = new URLSearchParams(queryParams).toString()
+      return axios.get(`http://localhost:8080/knights?${params}`)
+    },
+    async listedKnights(queryParams: Record<string, string>) {
+      const params = new URLSearchParams(queryParams).toString()
+      return axios.get(`http://localhost:8080/knights?${params}`)
+    },
     async getKnights() {
       const contracts = useContract()
       const account = useAccount()
@@ -31,9 +57,9 @@ export const useKnight = defineStore('knight', {
       )
       return tokens
     },
-    getKnight(tokenId: number) {
+    getKnight(tokenId: BigNumberish) {
       const contracts = useContract()
-      return contracts.knight.functions.getKnight(tokenId)
+      return contracts.knight.functions.getKnight(tokenId.toString())
     },
     async getLastIndexKnight() {
       const contracts = useContract()
@@ -62,7 +88,11 @@ export const useKnight = defineStore('knight', {
     },
     getBonus() {
       const contracts = useContract()
-      return contracts.commander.BONUS_POWER()
+      return contracts.knight.BONUS_POWER()
+    },
+    ownerOf(tokenId: number) {
+      const contracts = useContract()
+      return contracts.knight.ownerOf(tokenId)
     },
   },
 })

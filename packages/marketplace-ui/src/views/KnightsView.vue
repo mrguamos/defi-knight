@@ -1,43 +1,13 @@
 <script setup lang="ts">
-  import KnightsComponent from '../components/KnightsComponent.vue'
-  import { useKnight } from '../stores/knight-store'
-  import { useAccount } from '../stores/account-store'
+  import KnightsSellComponent from '../components/KnightsSellComponent.vue'
   import { useMain } from '../stores/main-store'
+  import KnightsBuyComponent from '../components/KnightsBuyComponent.vue'
+  import KnightsListComponent from '../components/KnightsListComponent.vue'
   useMain().nft = 'knights'
-
-  const knight = useKnight()
-  const account = useAccount()
-
-  const search = async () => {
-    if (account.isConnected) {
-      try {
-        const tokens = await knight.getKnights()
-        knight.list = await Promise.all(
-          tokens.map(async (token) => {
-            const id = Number(token.toString())
-            const c = (await knight.getKnight(id))[0]
-            return { ...c, id: id }
-          })
-        )
-
-        // eslint-disable-next-line
-      } catch (e: any) {
-      } finally {
-        //
-      }
-    }
-  }
 </script>
 
 <template>
-  <KnightsComponent mode="sell">
-    <template v-slot:search-button>
-      <button
-        @click="search()"
-        class="uppercase border-2 border-teal-700 rounded-lg p-2 bg-transparent hover:bg-teal-600/50 active:border-transparent active:ring active:ring-teal-700"
-      >
-        Search
-      </button>
-    </template></KnightsComponent
-  >
+  <KnightsSellComponent v-if="useMain().mode === 'sell'" />
+  <KnightsBuyComponent v-if="useMain().mode === 'buy'" />
+  <KnightsListComponent v-if="useMain().mode === 'listing'" />
 </template>

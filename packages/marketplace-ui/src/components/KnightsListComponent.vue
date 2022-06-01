@@ -3,7 +3,7 @@
   import FilterComponent from '../components/FilterComponent.vue'
   import ResultComponent from '../components/ResultComponent.vue'
   import CharacterFilter from '../components/CharacterFilter.vue'
-  import { useCommander } from '../stores/commander-store'
+  import { useKnight } from '../stores/knight-store'
   import NFTCard from './NFTCard.vue'
   import CharacterAttributes from './CharacterAttributes.vue'
   import { XCircleIcon } from '@heroicons/vue/solid'
@@ -11,13 +11,14 @@
   import { useMarket } from '../stores/market-store'
   import { useAccount } from '../stores/account-store'
   import { useMain } from '../stores/main-store'
-  import type { CommanderMarket } from '../types/market'
+  import type { KnightMarket } from '../types/market'
 
   import DialogComponent from './DialogComponent.vue'
   import GridPagination from './GridPagination.vue'
-  import CommanderResetButton from './CommanderResetButton.vue'
+  import KnightResetButton from './KnightResetButton.vue'
+  import CombatPowerFilter from './CombatPowerFilter.vue'
 
-  const commander = useCommander()
+  const knight = useKnight()
   const market = useMarket()
 
   const account = useAccount()
@@ -33,7 +34,7 @@
   const edit = async () => {
     try {
       main.loading = true
-      const res = await market.edit(0, tokenId.value, newPrice.value.toString())
+      const res = await market.edit(1, tokenId.value, newPrice.value.toString())
       await res.wait()
     } catch (error) {
       //
@@ -68,8 +69,8 @@
 
   const search = async (page: number) => {
     useMain().loading = true
-    commander.list.data = []
-    commander.list.currentPage = page
+    knight.list.data = []
+    knight.list.currentPage = page
     if (account.isConnected) {
       try {
         const queryParams: Record<string, string> = {
@@ -77,15 +78,15 @@
           offset: ((page - 1) * rowsPerPage).toString(),
           listed: '1',
           limit: rowsPerPage.toString(),
-          race: commander.filter.race.toString(),
-          min: commander.filter.min.toString(),
-          max: commander.filter.max.toString(),
-          genesis: commander.filter.genesis.toString(),
+          race: knight.filter.race.toString(),
+          min: knight.filter.min.toString(),
+          max: knight.filter.max.toString(),
+          genesis: knight.filter.genesis.toString(),
         }
-        commander.bonus = await commander.getBonus()
-        const res = await commander.listCommanders(queryParams)
-        commander.list.data = res.data.rows
-        commander.list.total = res.data.count
+        knight.bonus = await knight.getBonus()
+        const res = await knight.listKnights(queryParams)
+        knight.list.data = res.data.rows
+        knight.list.total = res.data.count
       } catch (e: unknown) {
         //
       } finally {
@@ -100,8 +101,7 @@
     <DialogComponent v-model="editDialog">
       <template v-slot:title>
         <span
-          >Edit Commander #
-          <span class="text-teal-700">{{ tokenId }}</span></span
+          >Edit Knight # <span class="text-teal-700">{{ tokenId }}</span></span
         >
       </template>
       <template v-slot:content>
@@ -138,7 +138,9 @@
     </DialogComponent>
 
     <FilterComponent
-      ><CharacterFilter> </CharacterFilter>
+      ><CharacterFilter>
+        <CombatPowerFilter />
+      </CharacterFilter>
       <template v-slot:control-buttons>
         <button
           @click="search(1)"
@@ -146,7 +148,7 @@
         >
           Search
         </button>
-        <CommanderResetButton />
+        <KnightResetButton />
       </template>
     </FilterComponent>
     <ResultComponent>
@@ -155,30 +157,30 @@
           class="grow h-full grid grid-cols-1 result-sm:grid-cols-2 result-md:grid-cols-3 result-lg:grid-cols-4 result-xl:grid-cols-5 result-2xl:grid-cols-6 gap-7 w-full"
         >
           <div
-            v-for="item of commander.list.data"
+            v-for="item of knight.list.data"
             :key="item.id"
             class="h-min text-white flex justify-center px-5 md:px-0"
           >
             <NFTCard
               :item="item"
-              :imageURL="`commanders/${item.class}-${item.gender}-${item.rarity}.png`"
+              :imageURL="`knights/${item.class}-${item.gender}-${item.rarity}.png`"
             >
               <div>
-                <CharacterAttributes :item="item" nft="commanders" />
+                <CharacterAttributes :item="item" nft="knights" />
                 <div class="border-b border-gray-500/50 w-full mt-4"></div>
                 <div
                   class="flex items-center justify-between mt-4 text-base font-semibold text-blue-400"
                 >
                   <span>Price</span>
                   <span
-                    >{{ main.getEthAmount((item as CommanderMarket).amount)}}
+                    >{{ main.getEthAmount((item as KnightMarket).amount)}}
                     BNB</span
                   >
                 </div>
                 <div class="flex justify-center items-center gap-10 mt-2">
                   <button
                     title="Edit"
-                    @click="openEditDialog(item.id, (item as CommanderMarket).amount)"
+                    @click="openEditDialog(item.id, (item as KnightMarket).amount)"
                   >
                     <PencilIcon class="h-7 w-7 text-teal-700" />
                   </button>
@@ -192,13 +194,13 @@
         </div>
         <div
           class="flex flex-col w-full justify-center mt-10"
-          v-if="commander.list.data.length > 0"
+          v-if="knight.list.data.length > 0"
         >
           <GridPagination
-            v-model="commander.list.currentPage"
-            :length="commander.list.total"
+            v-model="knight.list.currentPage"
+            :length="knight.list.total"
             :total-visible="totalVisible"
-            :pages-number="commander.pagesNumber"
+            :pages-number="knight.pagesNumber"
             :rows-per-page="rowsPerPage"
             @update:model-value="search"
           />

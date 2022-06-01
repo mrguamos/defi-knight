@@ -138,8 +138,19 @@ app.use(cors())
 
 app.get('/commanders', async (req: express.Request, res: express.Response) => {
   try {
-    const { offset, limit, rarity, address, listed } = req.query
+    const { offset, limit, min, max, address, listed, race, genesis } =
+      req.query
     let owner = {}
+
+    if (Number(limit) > 100) {
+      res.status(400).send()
+      return
+    }
+
+    if (!address) {
+      res.status(400).send()
+      return
+    }
 
     if (listed === '0') {
       owner = Sequelize.where(
@@ -153,36 +164,160 @@ app.get('/commanders', async (req: express.Request, res: express.Response) => {
         Sequelize.fn('lower', address)
       )
     }
+
+    const where = []
+
+    if (race) {
+      where.push({
+        class: {
+          [Op.in]: race.toString().split(','),
+        },
+      })
+    }
+
+    if (min) {
+      where.push({
+        rarity: {
+          [Op.gte]: min,
+        },
+      })
+    }
+    if (max) {
+      where.push({
+        rarity: {
+          [Op.lte]: max,
+        },
+      })
+    }
+
+    if (genesis) {
+      where.push({
+        isGenesis: {
+          [Op.in]: genesis.toString().split(','),
+        },
+      })
+    }
+
     const commanders = await Commander.findAndCountAll({
-      where: {
-        status: 1,
-        owner,
-      },
+      where: Sequelize.and([
+        where,
+        {
+          status: 1,
+          owner,
+        },
+      ]),
       offset: Number(offset),
       limit: Number(limit),
     })
     res.send(commanders)
   } catch (error) {
     console.log(error)
+    res.status(400).send()
   }
 })
 
 app.get('/knights', async (req: express.Request, res: express.Response) => {
   try {
-    const { offset, limit, address } = req.query
-    const knights = await Knight.findAndCountAll({
-      where: {
-        status: 1,
-        owner: {
-          [Op.notILike]: address as string,
+    const {
+      offset,
+      limit,
+      min,
+      max,
+      address,
+      listed,
+      race,
+      genesis,
+      minCP,
+      maxCP,
+    } = req.query
+    let owner = {}
+
+    if (Number(limit) > 100) {
+      res.status(400).send()
+      return
+    }
+
+    if (!address) {
+      res.status(400).send()
+      return
+    }
+
+    if (listed === '0') {
+      owner = Sequelize.where(
+        Sequelize.fn('lower', Sequelize.col('owner')),
+        Op.ne,
+        Sequelize.fn('lower', address)
+      )
+    } else {
+      owner = Sequelize.where(
+        Sequelize.fn('lower', Sequelize.col('owner')),
+        Sequelize.fn('lower', address)
+      )
+    }
+
+    const where = []
+
+    if (race) {
+      where.push({
+        class: {
+          [Op.in]: race.toString().split(','),
         },
-      },
+      })
+    }
+
+    if (min) {
+      where.push({
+        rarity: {
+          [Op.gte]: min,
+        },
+      })
+    }
+    if (max) {
+      where.push({
+        rarity: {
+          [Op.lte]: max,
+        },
+      })
+    }
+
+    if (genesis) {
+      where.push({
+        isGenesis: {
+          [Op.in]: genesis.toString().split(','),
+        },
+      })
+    }
+
+    if (minCP) {
+      where.push({
+        combatPower: {
+          [Op.gte]: minCP,
+        },
+      })
+    }
+    if (maxCP) {
+      where.push({
+        combatPower: {
+          [Op.lte]: maxCP,
+        },
+      })
+    }
+
+    const knights = await Knight.findAndCountAll({
+      where: Sequelize.and([
+        where,
+        {
+          status: 1,
+          owner,
+        },
+      ]),
       offset: Number(offset),
       limit: Number(limit),
     })
     res.send(knights)
   } catch (error) {
     console.log(error)
+    res.status(400).send()
   }
 })
 

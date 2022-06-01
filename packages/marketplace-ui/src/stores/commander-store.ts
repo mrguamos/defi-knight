@@ -13,14 +13,18 @@ export const useCommander = defineStore('commander', {
         currentPage: 1,
       },
       filter: {
-        id: undefined as unknown,
+        id: undefined as unknown as number,
+        race: [] as number[],
+        genesis: [] as number[],
+        min: 0,
+        max: 4,
       },
       bonus: 0,
     }
   },
   getters: {
     pagesNumber(): number {
-      return Math.ceil(this.list.total / 2)
+      return Math.ceil(this.list.total / 10)
     },
     paginatedCommanders(): Commander[] {
       const start = (this.list.currentPage - 1) * 10
@@ -83,6 +87,10 @@ export const useCommander = defineStore('commander', {
     getBonus() {
       const contracts = useContract()
       return contracts.commander.BONUS_MAX_WR()
+    },
+    ownerOf(tokenId: number) {
+      const contracts = useContract()
+      return contracts.commander.ownerOf(tokenId)
     },
   },
 })
