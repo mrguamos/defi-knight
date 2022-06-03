@@ -26,11 +26,11 @@ export const useKnight = defineStore('knight', {
   },
   getters: {
     pagesNumber(): number {
-      return Math.ceil(this.list.total / 2)
+      return Math.ceil(this.list.total / 20)
     },
     paginatedKnights(): Knight[] {
-      const start = (this.list.currentPage - 1) * 10
-      return this.list.data.slice(start, start + 10)
+      const start = (this.list.currentPage - 1) * 20
+      return this.list.data.slice(start, start + 20)
     },
   },
   actions: {

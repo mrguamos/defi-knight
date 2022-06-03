@@ -54,5 +54,13 @@ export const useMarket = defineStore('market', {
         }&${searchParams}`
       )
     },
+    getListing(nftType: number, tokenId: number) {
+      const contracts = useContract()
+      return contracts.market.functions.getListing(nftType, tokenId)
+    },
+    getListings(nftType: number, tokenIds: number[]) {
+      const contracts = useContract()
+      return contracts.market.functions.getListings(nftType, tokenIds)
+    },
   },
 })

@@ -3,6 +3,8 @@ import { useAccount } from './account-store'
 import { useContract } from './contract-store'
 import { ethers, providers } from 'ethers'
 import { markRaw } from 'vue'
+import { useCommander } from './commander-store'
+import { useKnight } from './knight-store'
 
 // eslint-disable-next-line
 declare let window: any
@@ -38,7 +40,6 @@ export const useWeb3 = defineStore('web3', {
         const account = useAccount()
         const contracts = useContract()
         contracts.init()
-
         await account.init(address)
         return
       }
@@ -49,6 +50,8 @@ export const useWeb3 = defineStore('web3', {
 })
 
 const handleAccountsChanged = async (accounts: string[]) => {
+  useCommander().$reset()
+  useKnight().$reset()
   useAccount().$reset()
   const chainId = parseInt(
     await window.ethereum.request({ method: 'eth_chainId' }),
@@ -65,6 +68,8 @@ const handleAccountsChanged = async (accounts: string[]) => {
 }
 
 const handleChainChanged = async (chainId: string) => {
+  useCommander().$reset()
+  useKnight().$reset()
   useAccount().$reset()
   const _chainId = parseInt(chainId, 16)
   if (_chainId === (Number(import.meta.env.VITE_APP_NETWORK_ID) || 1337)) {

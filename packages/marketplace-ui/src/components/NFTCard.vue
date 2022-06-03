@@ -1,6 +1,14 @@
 <template>
   <div class="flex flex-col max-w-md w-full">
-    <img :src="getImageUrl(imageURL)" class="max-w-[10rem] self-center" />
+    <div class="inline-flex relative self-center items-center justify-center">
+      <img :src="getImageUrl(imageURL)" class="max-w-[10rem] self-center" />
+      <div
+        v-if="(item as unknown as MarketCommon)?.sold"
+        class="absolute text-9xl text-red-400"
+      >
+        &#10060;
+      </div>
+    </div>
     <div
       class="text-sm font-medium flex flex-col p-6 rounded-md h-min w-full"
       style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
@@ -17,6 +25,7 @@
   import type { PropType } from 'vue'
   import type { Common } from '../types/common'
   import { getImageUrl } from '../utils/util'
+  import type { MarketCommon } from '../types/market'
 
   defineProps({
     item: {

@@ -17,6 +17,7 @@
   import GridPagination from './GridPagination.vue'
   import KnightResetButton from './KnightResetButton.vue'
   import CombatPowerFilter from './CombatPowerFilter.vue'
+  import { constants } from 'ethers'
 
   const knight = useKnight()
   const market = useMarket()
@@ -29,13 +30,14 @@
   const price = ref('0')
   const newPrice = ref('')
   const totalVisible = 3
-  const rowsPerPage = 10
+  const rowsPerPage = 20
 
   const edit = async () => {
     try {
       main.loading = true
       const res = await market.edit(1, tokenId.value, newPrice.value.toString())
       await res.wait()
+      await search(1)
     } catch (error) {
       //
     } finally {
@@ -73,20 +75,60 @@
     knight.list.currentPage = page
     if (account.isConnected) {
       try {
-        const queryParams: Record<string, string> = {
-          address: account.address,
-          offset: ((page - 1) * rowsPerPage).toString(),
-          listed: '1',
-          limit: rowsPerPage.toString(),
-          race: knight.filter.race.toString(),
-          min: knight.filter.min.toString(),
-          max: knight.filter.max.toString(),
-          genesis: knight.filter.genesis.toString(),
-        }
         knight.bonus = await knight.getBonus()
-        const res = await knight.listKnights(queryParams)
-        knight.list.data = res.data.rows
-        knight.list.total = res.data.count
+        if (knight.filter.id) {
+          const listing = (await market.getListing(1, knight.filter.id))[0]
+          if (
+            constants.AddressZero.toLowerCase() !=
+            listing.owner.toString().toLowerCase()
+          ) {
+            if (
+              listing.owner.toString().toLowerCase() ==
+              account.address.toLowerCase()
+            ) {
+              const c = (await knight.getKnight(knight.filter.id))[0]
+
+              knight.list.data = [
+                {
+                  ...c,
+                  ...listing,
+                  id: knight.filter.id,
+                },
+              ]
+            }
+          }
+        } else {
+          const queryParams: Record<string, string> = {
+            address: account.address,
+            offset: ((page - 1) * rowsPerPage).toString(),
+            listed: '1',
+            limit: rowsPerPage.toString(),
+            race: knight.filter.race.toString(),
+            min: knight.filter.min.toString(),
+            max: knight.filter.max.toString(),
+            genesis: knight.filter.genesis.toString(),
+          }
+          const res = await knight.listKnights(queryParams)
+          const ids: number[] = []
+          const rows: KnightMarket[] = res.data.rows
+          rows.forEach((row: KnightMarket) => {
+            ids.push(row.id)
+          })
+          const listings = (await market.getListings(1, ids))[0]
+          listings.forEach((item: KnightMarket) => {
+            if (
+              constants.AddressZero.toLowerCase() ==
+              item.owner.toString().toLowerCase()
+            ) {
+              const row = rows.find((r) => {
+                return r.id == item.id
+              })
+              if (row) row.sold = true
+            }
+          })
+          knight.list.data = rows
+          knight.list.total = res.data.count
+        }
       } catch (e: unknown) {
         //
       } finally {

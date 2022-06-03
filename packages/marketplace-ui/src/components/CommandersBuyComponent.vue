@@ -15,6 +15,7 @@
   import DialogComponent from './DialogComponent.vue'
   import GridPagination from './GridPagination.vue'
   import CommanderResetButton from './CommanderResetButton.vue'
+  import { constants } from 'ethers'
 
   const commander = useCommander()
   const market = useMarket()
@@ -26,13 +27,21 @@
 
   const price = ref('')
   const totalVisible = 3
-  const rowsPerPage = 10
+  const rowsPerPage = 20
 
   const buy = async () => {
     try {
       main.loading = true
       const res = await market.buy(0, tokenId.value, price.value.toString())
       await res.wait()
+      await search(1)
+      const index = commander.list.data.findIndex(
+        (item) => item.id == tokenId.value
+      )
+      if (index > 0) {
+        const c = commander.list.data[index] as CommanderMarket
+        c.sold = true
+      }
     } catch (error) {
       //
     } finally {
@@ -57,22 +66,62 @@
     commander.list.currentPage = page
     if (account.isConnected) {
       try {
-        const queryParams: Record<string, string> = {
-          address: account.address,
-          offset: ((page - 1) * rowsPerPage).toString(),
-          listed: '0',
-          limit: rowsPerPage.toString(),
-          race: commander.filter.race.toString(),
-          min: commander.filter.min.toString(),
-          max: commander.filter.max.toString(),
-          genesis: commander.filter.genesis.toString(),
-        }
         commander.bonus = await commander.getBonus()
-        const res = await commander.listCommanders(queryParams)
-        commander.list.data = res.data.rows
-        commander.list.total = res.data.count
+        if (commander.filter.id) {
+          const listing = (await market.getListing(0, commander.filter.id))[0]
+          if (
+            constants.AddressZero.toLowerCase() !=
+            listing.owner.toString().toLowerCase()
+          ) {
+            if (
+              listing.owner.toString().toLowerCase() !=
+              account.address.toLowerCase()
+            ) {
+              const c = (await commander.getCommander(commander.filter.id))[0]
+
+              commander.list.data = [
+                {
+                  ...c,
+                  ...listing,
+                  id: commander.filter.id,
+                },
+              ]
+            }
+          }
+        } else {
+          const queryParams: Record<string, string> = {
+            address: account.address,
+            offset: ((page - 1) * rowsPerPage).toString(),
+            listed: '0',
+            limit: rowsPerPage.toString(),
+            race: commander.filter.race.toString(),
+            min: commander.filter.min.toString(),
+            max: commander.filter.max.toString(),
+            genesis: commander.filter.genesis.toString(),
+          }
+          const res = await commander.listCommanders(queryParams)
+          const ids: number[] = []
+          const rows: CommanderMarket[] = res.data.rows
+          rows.forEach((row: CommanderMarket) => {
+            ids.push(row.id)
+          })
+          const listings = (await market.getListings(0, ids))[0]
+          listings.forEach((item: CommanderMarket) => {
+            if (
+              constants.AddressZero.toLowerCase() ==
+              item.owner.toString().toLowerCase()
+            ) {
+              const row = rows.find((r) => {
+                return r.id == item.id
+              })
+              if (row) row.sold = true
+            }
+          })
+          commander.list.data = rows
+          commander.list.total = res.data.count
+        }
       } catch (e: unknown) {
-        //
+        console.log(e)
       } finally {
         useMain().loading = false
       }

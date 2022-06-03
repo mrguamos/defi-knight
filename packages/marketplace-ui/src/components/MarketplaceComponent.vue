@@ -1,9 +1,10 @@
 <script setup lang="ts">
   import { RouterView, RouterLink } from 'vue-router'
+  import { useAccount } from '../stores/account-store'
 </script>
 
 <template>
-  <div class="flex flex-col h-full">
+  <div class="flex flex-col h-full" :key="useAccount().address">
     <div
       class="w-full py-5 flex items-center justify-evenly text-base border-y border-y-blue-500"
     >

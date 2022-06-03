@@ -22,10 +22,12 @@ import express from 'express'
 
 import cors from 'cors'
 
+import 'dotenv/config'
+
 const networkId = process.env.NETWORK_ID || 1337
 
 // const rpc = 'http://localhost:8545'
-const rpc = 'ws://localhost:8545'
+const rpc = process.env.RPC as string
 
 // const provider = new ethers.providers.JsonRpcProvider(rpc)
 const provider = new ethers.providers.WebSocketProvider(rpc)
@@ -54,8 +56,7 @@ const guild = new ethers.Contract(
   guildABI,
   provider
 )
-const connectionString =
-  'postgres://kkdapqey:smZCA6X5Uk260hINQCYGRzIRWDpMErU7@john.db.elephantsql.com/kkdapqey'
+const connectionString = process.env.DB as string
 
 const sequelize = new Sequelize(connectionString, {
   logging: false,

@@ -29,13 +29,14 @@
   const recipientAddress = ref('')
   const price = ref('0')
   const totalVisible = 3
-  const rowsPerPage = 10
+  const rowsPerPage = 20
 
   const sell = async () => {
     try {
       main.loading = true
       const res = await market.sell(0, tokenId.value, price.value.toString())
       await res.wait()
+      await search(1)
     } catch (error) {
       console.log(error)
     } finally {

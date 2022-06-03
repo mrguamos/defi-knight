@@ -192,7 +192,7 @@
 
   const page = ref(1)
   const totalVisible = 3
-  const rowsPerPage = 10
+  const rowsPerPage = 20
   const guild = useGuild()
   const priceManager = usePriceManager()
   const name = ref('')

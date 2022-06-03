@@ -135,7 +135,7 @@
   const dialog = ref(false)
   const page = ref(1)
   const totalVisible = 3
-  const rowsPerPage = 10
+  const rowsPerPage = 20
   const commander = useCommander()
   const priceManager = usePriceManager()
   const account = useAccount()

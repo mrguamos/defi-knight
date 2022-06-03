@@ -34,6 +34,7 @@ contract Market is
     struct Listing {
         address owner;
         uint256 amount;
+        uint256 id;
     }
     mapping(uint8 => mapping(uint256 => Listing)) list;
 
@@ -83,7 +84,7 @@ contract Market is
             require(guild.ownerOf(tokenId) == msg.sender);
             guild.safeTransferFrom(msg.sender, address(this), tokenId);
         }
-        list[nftType][tokenId] = Listing(msg.sender, amount);
+        list[nftType][tokenId] = Listing(msg.sender, amount, tokenId);
         emit ListingEvent(nftType, tokenId);
     }
 
@@ -139,6 +140,19 @@ contract Market is
         returns (Listing memory)
     {
         return list[nftType][tokenId];
+    }
+
+    function getListings(uint8 nftType, uint256[] memory tokenId)
+        external
+        view
+        returns (Listing[] memory)
+    {
+        Listing[] memory ll = new Listing[](tokenId.length);
+        for (uint256 i = 0; i < tokenId.length; i++) {
+            ll[i] = (list[nftType][tokenId[i]]);
+            ll[i].id = tokenId[i];
+        }
+        return ll;
     }
 
     function withdraw() external onlyRole(DEFAULT_ADMIN_ROLE) {
