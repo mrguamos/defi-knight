@@ -222,6 +222,7 @@ Moralis.Cloud.define('commanders', async (request) => {
   const genesis = request.params.genesis
   const Commander = Moralis.Object.extend('Commander')
   const query = new Moralis.Query(Commander)
+  const gender = request.params.gender
 
   if (!offset) {
     throw 'Offset required.'
@@ -265,6 +266,15 @@ Moralis.Cloud.define('commanders', async (request) => {
     query.containedIn('isGenesis', gg)
   }
 
+  if (gender) {
+    const genders = gender.toString().split(',')
+    const gg = []
+    genders.forEach((g) => {
+      gg.push(Number(g))
+    })
+    query.containedIn('gender', gg)
+  }
+
   query.equalTo('owner', address.toLowerCase())
   if (Number(listed) == 0) {
     query.notEqualTo('owner', address.toLowerCase())
@@ -292,6 +302,7 @@ Moralis.Cloud.define('knights', async (request) => {
   const genesis = request.params.genesis
   const Knight = Moralis.Object.extend('Knight')
   const query = new Moralis.Query(Knight)
+  const gender = request.params.gender
 
   if (!offset) {
     throw 'Offset required.'
@@ -338,9 +349,18 @@ Moralis.Cloud.define('knights', async (request) => {
     const genesiss = genesis.toString().split(',')
     const gg = []
     genesiss.forEach((g) => {
-      gg.push(Boolean(Number(g)))
+      gg.push(Number(g))
     })
     query.containedIn('isGenesis', gg)
+  }
+
+  if (gender) {
+    const genders = gender.toString().split(',')
+    const gg = []
+    genders.forEach((g) => {
+      gg.push(Boolean(Number(g)))
+    })
+    query.containedIn('gender', gg)
   }
 
   query.equalTo('owner', address.toLowerCase())

@@ -18,6 +18,7 @@ export const useCommander = defineStore('commander', {
         genesis: [] as number[],
         min: 0,
         max: 4,
+        gender: [] as number[],
       },
       bonus: 0,
     }

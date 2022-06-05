@@ -107,6 +107,7 @@
             min: commander.filter.min.toString(),
             max: commander.filter.max.toString(),
             genesis: commander.filter.genesis.toString(),
+            gender: commander.filter.gender.toString(),
           }
           const res = await commander.listCommanders(queryParams)
           const ids: number[] = []

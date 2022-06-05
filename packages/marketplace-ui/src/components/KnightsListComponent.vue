@@ -109,6 +109,7 @@
             min: knight.filter.min.toString(),
             max: knight.filter.max.toString(),
             genesis: knight.filter.genesis.toString(),
+            gender: knight.filter.gender.toString(),
           }
           const res = await knight.listKnights(queryParams)
           const ids: number[] = []

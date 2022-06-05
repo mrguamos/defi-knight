@@ -22,15 +22,18 @@
   const max = ref(rarities[4])
   const race = ref([] as number[])
   const genesis = ref([] as number[])
+  const gender = ref([] as number[])
 
   if (useMain().nft === 'commanders') {
     race.value = useCommander().filter.race
     genesis.value = useCommander().filter.genesis
+    gender.value = useCommander().filter.gender
     min.value = rarities[useCommander().filter.min]
     max.value = rarities[useCommander().filter.max]
   } else {
     race.value = useKnight().filter.race
     genesis.value = useKnight().filter.genesis
+    gender.value = useKnight().filter.gender
     min.value = rarities[useKnight().filter.min]
     max.value = rarities[useKnight().filter.max]
   }
@@ -44,6 +47,11 @@
   watch(genesis, (genesis) => {
     if (useMain().nft === 'commanders') useCommander().filter.genesis = genesis
     else if (useMain().nft === 'knights') useKnight().filter.genesis = genesis
+  })
+
+  watch(gender, (gender) => {
+    if (useMain().nft === 'commanders') useCommander().filter.gender = gender
+    else if (useMain().nft === 'knights') useKnight().filter.gender = gender
   })
 
   watch(min, (min) => {
@@ -209,6 +217,27 @@
           </div>
         </Listbox>
       </div>
+    </div>
+  </div>
+  <div class="flex flex-col w-full justify-center items-center p-2 space-y-2">
+    <span class="text-lg font-semibold">Gender</span>
+    <div class="flex justify-center items-center gap-2">
+      <input
+        type="checkbox"
+        id="gender"
+        class="rounded-md"
+        v-model="gender"
+        :value="0"
+      />
+      <label for="gender">Male</label>
+      <input
+        type="checkbox"
+        id="non-gender"
+        class="rounded-md"
+        v-model="gender"
+        :value="1"
+      />
+      <label for="non-gender">Female</label>
     </div>
   </div>
   <slot></slot>

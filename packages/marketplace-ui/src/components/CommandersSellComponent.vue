@@ -149,7 +149,12 @@
               item.rarity >= commander.filter.min &&
               item.rarity <= commander.filter.max
 
-            return race && genesis && rarity
+            let gender = true
+            if (commander.filter.gender.length > 0) {
+              gender = commander.filter.gender.includes(item.gender)
+            }
+
+            return race && genesis && rarity && gender
           })
         }
 

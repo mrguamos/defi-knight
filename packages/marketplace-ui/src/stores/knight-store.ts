@@ -20,6 +20,7 @@ export const useKnight = defineStore('knight', {
         max: 4,
         minCP: 0,
         maxCP: 250,
+        gender: [] as number[],
       },
       bonus: 0,
     }
