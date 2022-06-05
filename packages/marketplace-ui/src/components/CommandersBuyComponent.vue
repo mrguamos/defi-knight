@@ -35,13 +35,6 @@
       const res = await market.buy(0, tokenId.value, price.value.toString())
       await res.wait()
       await search(1)
-      const index = commander.list.data.findIndex(
-        (item) => item.id == tokenId.value
-      )
-      if (index > 0) {
-        const c = commander.list.data[index] as CommanderMarket
-        c.sold = true
-      }
     } catch (error) {
       //
     } finally {
@@ -101,9 +94,10 @@
           }
           const res = await commander.listCommanders(queryParams)
           const ids: number[] = []
-          const rows: CommanderMarket[] = res.data.rows
+          const rows: CommanderMarket[] = res.data.result.results
           rows.forEach((row: CommanderMarket) => {
-            ids.push(row.id)
+            row.id = row.tokenId
+            ids.push(row.tokenId)
           })
           const listings = (await market.getListings(0, ids))[0]
           listings.forEach((item: CommanderMarket) => {
@@ -118,7 +112,7 @@
             }
           })
           commander.list.data = rows
-          commander.list.total = res.data.count
+          commander.list.total = res.data.result.count
         }
       } catch (e: unknown) {
         console.log(e)

@@ -36,11 +36,9 @@ export const useKnight = defineStore('knight', {
   actions: {
     async listKnights(queryParams: Record<string, string>) {
       const params = new URLSearchParams(queryParams).toString()
-      return axios.get(`http://localhost:8080/knights?${params}`)
-    },
-    async listedKnights(queryParams: Record<string, string>) {
-      const params = new URLSearchParams(queryParams).toString()
-      return axios.get(`http://localhost:8080/knights?${params}`)
+      return axios.get(
+        `https://usnk634vqwwp.usemoralis.com:2053/server/functions/knights?${params}`
+      )
     },
     async getKnights() {
       const contracts = useContract()

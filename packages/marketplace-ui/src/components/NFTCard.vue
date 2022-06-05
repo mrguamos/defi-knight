@@ -14,7 +14,8 @@
       style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
     >
       <div class="flex justify-between">
-        ID <span>{{ item.id }}</span>
+        ID
+        <span>{{ item.id }}</span>
       </div>
       <slot></slot>
     </div>

@@ -49,8 +49,9 @@
   const cancel = async (id: number) => {
     try {
       main.loading = true
-      const res = await market.cancel(0, id)
+      const res = await market.cancel(1, id)
       await res.wait()
+      await search(1)
     } catch (error) {
       //
     } finally {
@@ -78,6 +79,7 @@
         knight.bonus = await knight.getBonus()
         if (knight.filter.id) {
           const listing = (await market.getListing(1, knight.filter.id))[0]
+          console.log(listing.owner.toString())
           if (
             constants.AddressZero.toLowerCase() !=
             listing.owner.toString().toLowerCase()
@@ -110,9 +112,10 @@
           }
           const res = await knight.listKnights(queryParams)
           const ids: number[] = []
-          const rows: KnightMarket[] = res.data.rows
+          const rows: KnightMarket[] = res.data.result.results
           rows.forEach((row: KnightMarket) => {
-            ids.push(row.id)
+            row.id = row.tokenId
+            ids.push(row.tokenId)
           })
           const listings = (await market.getListings(1, ids))[0]
           listings.forEach((item: KnightMarket) => {
@@ -127,7 +130,7 @@
             }
           })
           knight.list.data = rows
-          knight.list.total = res.data.count
+          knight.list.total = res.data.result.count
         }
       } catch (e: unknown) {
         //

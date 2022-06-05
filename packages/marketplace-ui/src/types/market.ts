@@ -5,6 +5,7 @@ export type MarketCommon = {
   amount: string
   owner: string
   sold: boolean
+  tokenId: number
 }
 
 export type CommanderMarket = Commander &

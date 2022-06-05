@@ -54,6 +54,7 @@
         tokenId.value
       )
       await res.wait()
+      await search(1)
     } catch (error) {
       //
     } finally {

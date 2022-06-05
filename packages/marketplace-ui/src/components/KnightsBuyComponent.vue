@@ -36,13 +36,6 @@
       const res = await market.buy(1, tokenId.value, price.value.toString())
       await res.wait()
       await search(1)
-      const index = knight.list.data.findIndex(
-        (item) => item.id == tokenId.value
-      )
-      if (index > 0) {
-        const c = knight.list.data[index] as KnightMarket
-        c.sold = true
-      }
     } catch (error) {
       //
     } finally {
@@ -104,9 +97,10 @@
           }
           const res = await knight.listKnights(queryParams)
           const ids: number[] = []
-          const rows: KnightMarket[] = res.data.rows
+          const rows: KnightMarket[] = res.data.result.results
           rows.forEach((row: KnightMarket) => {
-            ids.push(row.id)
+            row.id = row.tokenId
+            ids.push(row.tokenId)
           })
           const listings = (await market.getListings(1, ids))[0]
           listings.forEach((item: KnightMarket) => {
@@ -121,7 +115,7 @@
             }
           })
           knight.list.data = rows
-          knight.list.total = res.data.count
+          knight.list.total = res.data.result.count
         }
       } catch (e: unknown) {
         //

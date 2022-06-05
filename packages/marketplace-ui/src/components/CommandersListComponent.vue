@@ -50,6 +50,7 @@
       main.loading = true
       const res = await market.cancel(0, id)
       await res.wait()
+      await search(1)
     } catch (error) {
       //
     } finally {
@@ -109,9 +110,11 @@
           }
           const res = await commander.listCommanders(queryParams)
           const ids: number[] = []
-          const rows: CommanderMarket[] = res.data.rows
+          const rows: CommanderMarket[] = res.data.result.results
+
           rows.forEach((row: CommanderMarket) => {
-            ids.push(row.id)
+            row.id = row.tokenId
+            ids.push(row.tokenId)
           })
           const listings = (await market.getListings(0, ids))[0]
           listings.forEach((item: CommanderMarket) => {
@@ -126,7 +129,7 @@
             }
           })
           commander.list.data = rows
-          commander.list.total = res.data.count
+          commander.list.total = res.data.result.count
         }
       } catch (e: unknown) {
         //
@@ -220,7 +223,7 @@
                 <div class="flex justify-center items-center gap-10 mt-2">
                   <button
                     title="Edit"
-                    @click="openEditDialog(item.id, (item as CommanderMarket).amount)"
+                    @click="openEditDialog(item.id , (item as CommanderMarket).amount)"
                   >
                     <PencilIcon class="h-7 w-7 text-teal-700" />
                   </button>
