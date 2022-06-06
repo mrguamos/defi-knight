@@ -45,8 +45,6 @@ contract Commander is
     //commander => guild
     mapping(uint256 => uint256) public commanderGuild;
 
-    address public guildAddress;
-
     PriceManager priceManager;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
@@ -175,20 +173,14 @@ contract Commander is
         return commanders[tokenId];
     }
 
-    function setMapping(uint256 tokenId, uint256 guildId) public {
-        require(msg.sender == guildAddress);
+    function setMapping(uint256 tokenId, uint256 guildId)
+        public
+        onlyRole(MINTER_ROLE)
+    {
         commanderGuild[tokenId] = guildId;
     }
 
-    function deleteMapping(uint256 tokenId) public {
-        require(msg.sender == guildAddress);
+    function deleteMapping(uint256 tokenId) public onlyRole(MINTER_ROLE) {
         delete commanderGuild[tokenId];
-    }
-
-    function setGuildAddress(address _guildAddress)
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
-        guildAddress = _guildAddress;
     }
 }

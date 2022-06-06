@@ -11,7 +11,6 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./Commander.sol";
 import "./Knight.sol";
-import "./GuildHelper.sol";
 
 contract Guild is
     Initializable,
@@ -26,6 +25,9 @@ contract Guild is
 
     Counters.Counter public counter;
 
+    uint8 private constant TYPE_COMMANDER = 0;
+    uint8 private constant TYPE_KNIGHT = 1;
+
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
@@ -33,18 +35,18 @@ contract Guild is
 
     mapping(address => bool) _isBlacklisted;
     //guild => commanders
-    mapping(uint256 => uint256[]) private guildCommander;
+    mapping(uint256 => uint256[]) public guildCommander;
     //guild => knights
-    mapping(uint256 => uint256[]) private guildKnight;
-
-    mapping(uint256 => uint256) public lastFight;
+    mapping(uint256 => uint256[]) public guildKnight;
 
     struct GuildState {
-        bytes32 emblem;
+        uint8 emblem;
         uint8 morale;
         uint16 combatPower;
         uint8 winRate;
         bytes32 name;
+        uint8 maxKnight;
+        uint256 lastFight;
     }
 
     mapping(uint256 => GuildState) public guilds;
@@ -53,16 +55,14 @@ contract Guild is
 
     Commander private commander;
     Knight private knight;
-    GuildHelper private guildHelper;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() initializer {}
 
-    function initialize(
-        Commander _commander,
-        Knight _knight,
-        GuildHelper _guildHelper
-    ) public initializer {
+    function initialize(Commander _commander, Knight _knight)
+        public
+        initializer
+    {
         __ERC721_init("DefiKnightGuild", "DKG");
         __ERC721Enumerable_init();
         __Pausable_init();
@@ -77,7 +77,6 @@ contract Guild is
         _grantRole(GAME_ADMIN_ROLE, msg.sender);
         commander = _commander;
         knight = _knight;
-        guildHelper = _guildHelper;
     }
 
     function getAllCommanders(uint256 tokenId)
@@ -117,55 +116,9 @@ contract Guild is
     {
         counter.increment();
         uint256 tokenId = counter.current();
-        guilds[tokenId] = (GuildState("", 0, 0, 0, name));
+        guilds[tokenId] = (GuildState(0, 0, 0, 0, name, 0, 0));
         emit NewGuild(tokenId, to);
         _safeMint(to, tokenId);
-    }
-
-    function addMembers(
-        address caller,
-        uint256 tokenId,
-        uint256[] calldata commanders,
-        uint256[] calldata knights
-    ) public onlyRole(GAME_ADMIN_ROLE) whenNotPaused {
-        for (uint8 i = 0; i < commanders.length; i++) {
-            require(commander.ownerOf(commanders[i]) == caller);
-            require(commander.commanderGuild(commanders[i]) == 0);
-            guildCommander[tokenId].push(commanders[i]);
-            commander.setMapping(commanders[i], tokenId);
-            if (commander.getCommander(commanders[i]).isGenesis) {
-                guilds[tokenId].winRate += 1;
-            }
-        }
-        for (uint16 i = 0; i < knights.length; i++) {
-            require(knight.ownerOf(knights[i]) == caller);
-            require(knight.knightGuild(knights[i]) == 0);
-            guildKnight[tokenId].push(knights[i]);
-            knight.setMapping(knights[i], tokenId);
-            Knight.KnightState memory kk = knight.getKnight(knights[i]);
-            // guilds[tokenId].combatPower += kk.combatPower + kk.bonusPower;
-        }
-    }
-
-    function disband(uint256 tokenId)
-        public
-        onlyRole(GAME_ADMIN_ROLE)
-        whenNotPaused
-    {
-        guilds[tokenId].combatPower = 0;
-        guilds[tokenId].winRate = 0;
-        guilds[tokenId].morale = 0;
-
-        for (uint8 i = 0; i < guildCommander[tokenId].length; i++) {
-            commander.deleteMapping(guildCommander[tokenId][i]);
-        }
-
-        for (uint16 i = 0; i < guildKnight[tokenId].length; i++) {
-            knight.deleteMapping(guildKnight[tokenId][i]);
-        }
-
-        delete guildCommander[tokenId];
-        delete guildKnight[tokenId];
     }
 
     function _beforeTokenTransfer(
@@ -181,17 +134,6 @@ contract Guild is
             !_isBlacklisted[to] && !_isBlacklisted[from],
             "Blacklisted address"
         );
-
-        uint256[] memory commanders = guildCommander[tokenId];
-        uint256[] memory knights = guildKnight[tokenId];
-
-        for (uint8 i = 0; i < commanders.length; i++) {
-            guildHelper.transferCommander(from, to, commanders[i]);
-        }
-
-        for (uint8 i = 0; i < knights.length; i++) {
-            guildHelper.transferKnight(from, to, knights[i]);
-        }
 
         super._beforeTokenTransfer(from, to, tokenId);
     }
@@ -235,10 +177,66 @@ contract Guild is
         return guilds[tokenId];
     }
 
-    function setLastFight(uint256 tokenId, uint256 timestamp)
+    function setLastFight(uint256 tokenId) public onlyRole(GAME_ADMIN_ROLE) {
+        guilds[tokenId].lastFight = block.timestamp;
+    }
+
+    function updateCombatPower(uint256 guildId, uint16 combatPower)
+        public
+        onlyRole(GAME_ADMIN_ROLE)
+        whenNotPaused
+    {
+        guilds[guildId].combatPower = combatPower;
+    }
+
+    function updateWinRate(uint256 guildId, uint8 winRate)
+        public
+        onlyRole(GAME_ADMIN_ROLE)
+        whenNotPaused
+    {
+        guilds[guildId].winRate = winRate;
+    }
+
+    function updateMaxKnight(uint256 guildId, uint8 maxKnight)
+        public
+        onlyRole(GAME_ADMIN_ROLE)
+        whenNotPaused
+    {
+        guilds[guildId].maxKnight = maxKnight;
+    }
+
+    function addMember(
+        uint256 guildId,
+        uint256 tokenId,
+        uint8 nftType
+    ) public onlyRole(GAME_ADMIN_ROLE) whenNotPaused {
+        if (nftType == TYPE_COMMANDER) {
+            guildCommander[guildId].push(tokenId);
+        } else if (nftType == TYPE_KNIGHT) {
+            guildKnight[guildId].push(tokenId);
+        }
+    }
+
+    function deleteCommanderMapping(uint256 guildId)
+        public
+        onlyRole(GAME_ADMIN_ROLE)
+        whenNotPaused
+    {
+        delete guildCommander[guildId];
+    }
+
+    function deleteKnightMapping(uint256 guildId)
+        public
+        onlyRole(GAME_ADMIN_ROLE)
+        whenNotPaused
+    {
+        delete guildKnight[guildId];
+    }
+
+    function addMorale(uint256 guildId, uint8 amount)
         public
         onlyRole(GAME_ADMIN_ROLE)
     {
-        lastFight[tokenId] = timestamp;
+        guilds[guildId].morale = amount;
     }
 }

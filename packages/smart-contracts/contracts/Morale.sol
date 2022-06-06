@@ -9,8 +9,6 @@ contract Morale is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
-    mapping(uint256 => uint16) public guildMorale;
-
     function initialize() public initializer {
         __AccessControl_init();
         __UUPSUpgradeable_init();
@@ -23,11 +21,4 @@ contract Morale is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         override
         onlyRole(UPGRADER_ROLE)
     {}
-
-    function addMorale(uint256 guildId, uint16 amount)
-        public
-        onlyRole(MINTER_ROLE)
-    {
-        guildMorale[guildId] = guildMorale[guildId] + amount;
-    }
 }

@@ -46,8 +46,6 @@ contract Knight is
     // //knight => guild
     mapping(uint256 => uint256) public knightGuild;
 
-    address public guildAddress;
-
     PriceManager priceManager;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
@@ -192,20 +190,14 @@ contract Knight is
         return knights[tokenId];
     }
 
-    function setMapping(uint256 tokenId, uint256 guildId) public {
-        require(msg.sender == guildAddress);
+    function setMapping(uint256 tokenId, uint256 guildId)
+        public
+        onlyRole(MINTER_ROLE)
+    {
         knightGuild[tokenId] = guildId;
     }
 
-    function deleteMapping(uint256 tokenId) public {
-        require(msg.sender == guildAddress);
+    function deleteMapping(uint256 tokenId) public onlyRole(MINTER_ROLE) {
         delete knightGuild[tokenId];
-    }
-
-    function setGuildAddress(address _guildAddress)
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
-        guildAddress = _guildAddress;
     }
 }
