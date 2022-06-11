@@ -136,6 +136,7 @@
         //
       } finally {
         useMain().loading = false
+        useMain().filter = false
       }
     }
   }

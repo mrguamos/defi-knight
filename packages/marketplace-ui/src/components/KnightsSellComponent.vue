@@ -163,6 +163,7 @@
         console.log(e)
       } finally {
         useMain().loading = false
+        useMain().filter = false
       }
     }
   }
