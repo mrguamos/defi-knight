@@ -1,10 +1,12 @@
 <script setup lang="ts">
+  import { ref } from 'vue'
   import { RouterView, RouterLink } from 'vue-router'
   import { MenuIcon } from '@heroicons/vue/solid'
   import { useWeb3 } from './stores/web3-store'
   import { useAccount } from './stores/account-store'
   import { useMain } from './stores/main-store'
   import DefiSpinner from './components/DefiSpinner.vue'
+  import MenuDrawer from './components/MenuDrawer.vue'
 
   const eth = useWeb3()
   const account = useAccount()
@@ -15,10 +17,12 @@
       console.log(error)
     }
   }
+  const drawer = ref(false)
 </script>
 
 <template>
   <div class="h-screen flex flex-col">
+    <MenuDrawer v-model="drawer" />
     <DefiSpinner v-if="useMain().loading" />
     <header
       class="w-full py-1 bg-black bg-opacity-50 flex justify-between items-center shadow-2xl shadow-cyan-500/50"
@@ -61,7 +65,7 @@
       </div>
       <div class="lg:hidden flex items-center pr-5">
         <button>
-          <MenuIcon class="h-10 w-10 text-teal-600" />
+          <MenuIcon class="h-10 w-10 text-teal-600" @click="drawer = true" />
         </button>
       </div>
     </header>
