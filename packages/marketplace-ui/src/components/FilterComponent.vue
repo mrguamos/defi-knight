@@ -26,8 +26,12 @@
 <template>
   <div
     :key="useMain().key"
-    class="bg-gray-900/50 w-full flex lg:w-80 flex-col overflow-y-auto border-r-2 border-r-gray-500/20 items-center divide-y divide-gray-500/50 shrink-0"
+    class="z-20 lg:z-0 ease-in-out duration-300 bg-gray-900/50 w-full lg:flex lg:w-80 flex-col overflow-y-auto border-r-2 border-r-gray-500/20 items-center divide-y divide-gray-500/50 shrink-0"
     style="height: calc(100vh - 142px)"
+    :class="
+      ({ 'translate-x-0': useMain().filter && useMain().width < 1024 },
+      { '-translate-x-full': !useMain().filter && useMain().width < 1024 })
+    "
   >
     <div class="py-5 flex w-full justify-center items-center text-xl">
       Filter
@@ -48,6 +52,12 @@
     </div>
     <div class="w-full flex items-center justify-center py-2 gap-4">
       <slot name="control-buttons"></slot>
+      <button
+        @click="useMain().filter = !useMain().filter"
+        class="lg:hidden right-1 mr-3 text-sm uppercase border-2 border-white rounded-lg p-2 bg-transparent hover:bg-white active:border-transparent active:ring active:ring-white hover:text-black"
+      >
+        CLOSE
+      </button>
     </div>
 
     <div class="w-full"></div>

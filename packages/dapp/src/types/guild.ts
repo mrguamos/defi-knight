@@ -6,4 +6,6 @@ export type Guild = Common & {
   combatPower: number
   winRate: number
   name: string
+  lastFight: string
+  maxKnight: number
 }

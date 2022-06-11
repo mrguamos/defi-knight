@@ -118,6 +118,7 @@
       } catch (e: unknown) {
         console.log(e)
       } finally {
+        useMain().filter = false
         useMain().loading = false
       }
     }

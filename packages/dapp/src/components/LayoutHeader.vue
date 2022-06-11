@@ -23,7 +23,10 @@
           <HeaderButton>KNIGHTS</HeaderButton>
         </router-link>
         <router-link to="/guilds">
-          <HeaderButton>GUILDS</HeaderButton>
+          <HeaderButton
+            :class="route.name == 'ManageGuild' ? 'shadow-text' : ''"
+            >GUILDS</HeaderButton
+          >
         </router-link>
         <router-link to="/conquer">
           <HeaderButton>CONQUER</HeaderButton>
@@ -118,11 +121,13 @@
   import { ref } from 'vue'
   import MenuDrawer from './MenuDrawer.vue'
   import DKIcon from './DKIcon.vue'
+  import { useRoute } from 'vue-router'
 
   const account = useAccount()
   const eth = useWeb3()
   const drawer = ref(false)
   const scroll = ref(false)
+  const route = useRoute()
 
   window.addEventListener('scroll', () => {
     if (window.scrollY > 34) {

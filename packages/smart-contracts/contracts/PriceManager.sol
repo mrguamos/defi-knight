@@ -39,7 +39,7 @@ contract PriceManager is
         defiKnight = _defiKnight;
         mintFee = 50;
         stableFee = 100000000000000000;
-        guildFee = 10;
+        guildFee = 50;
         moraleFee = 1;
     }
 

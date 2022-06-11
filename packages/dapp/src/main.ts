@@ -1,8 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import './index.css'
-import ScriptX from 'vue-scriptx'
-import Ads from 'vue-google-adsense'
 import router from './router'
 import { createPinia } from 'pinia'
 import { useWeb3 } from './stores/web3-store'
@@ -22,6 +20,8 @@ import {
   faBan,
   faShoppingCart,
   faCoins,
+  faSort,
+  faCheck,
 } from '@fortawesome/free-solid-svg-icons'
 import { faStar as farStar } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -42,15 +42,13 @@ import VueGtag from 'vue-gtag'
     faGem,
     faBan,
     faShoppingCart,
-    faCoins
+    faCoins,
+    faSort,
+    faCheck
   )
 
   const app = createApp(App)
-  app.use(ScriptX)
-  app.use(Ads.AutoAdsense, {
-    adClient: 'ca-pub-3072480337071983',
-    isNewAdsCode: true,
-  })
+
   app.use(VueGtag, {
     config: { id: 'G-9JVRHW9TRZ' },
   })

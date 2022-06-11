@@ -29,6 +29,12 @@ const router = createRouter({
       component: () =>
         import(/* webpackChunkName: "guilds" */ '../views/GuildsPage.vue'),
     },
+    {
+      path: '/guilds/manage/:id',
+      name: 'ManageGuild',
+      component: () =>
+        import(/* webpackChunkName: "manage" */ '../views/ManageGuildPage.vue'),
+    },
   ],
 })
 
