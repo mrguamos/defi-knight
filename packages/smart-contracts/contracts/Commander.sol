@@ -33,6 +33,7 @@ contract Commander is
     mapping(address => bool) _isBlacklisted;
 
     struct CommanderState {
+        uint256 id;
         uint8 rarity;
         uint8 class;
         bool isGenesis;
@@ -108,6 +109,7 @@ contract Commander is
         else if (rollRarity < 6 && rollRarity >= 1) rarity = 3;
         else rarity = 4;
         commanders[tokenId] = CommanderState(
+            tokenId,
             rarity,
             uint8(rollClass),
             tokenId <= 1000,
@@ -182,5 +184,17 @@ contract Commander is
 
     function deleteMapping(uint256 tokenId) public onlyRole(MINTER_ROLE) {
         delete commanderGuild[tokenId];
+    }
+
+    function getCommandersByIds(uint256[] calldata tokenIds)
+        external
+        view
+        returns (CommanderState[] memory)
+    {
+        CommanderState[] memory cc = new CommanderState[](tokenIds.length);
+        for (uint256 i = 0; i < tokenIds.length; i++) {
+            cc[i] = (commanders[tokenIds[i]]);
+        }
+        return cc;
     }
 }

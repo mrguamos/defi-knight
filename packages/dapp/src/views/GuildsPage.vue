@@ -1,11 +1,108 @@
 <template>
   <div class="flex flex-col h-full pb-10">
-    <NFTList
-      :items="paginatedGuilds"
-      nft="guilds"
-      class="mb-10"
-      mode="inventory"
-    />
+    <div
+      class="overflow-x-auto overflow-y-auto sm:-mx-6 lg:-mx-8 h-[calc(100vh-300px)]"
+    >
+      <div class="inline-block py-2 min-w-full sm:px-6 lg:px-8">
+        <div class="overflow-hidden shadow-md sm:rounded-lg">
+          <table class="min-w-full">
+            <thead
+              class="bg-blue-700 text-white"
+              style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
+            >
+              <tr>
+                <th
+                  scope="col"
+                  class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
+                >
+                  ID
+                </th>
+
+                <th
+                  scope="col"
+                  class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
+                >
+                  NAME
+                </th>
+                <th
+                  scope="col"
+                  class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
+                >
+                  MORALE
+                </th>
+                <th
+                  scope="col"
+                  class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
+                >
+                  COMBAT POWER
+                </th>
+                <th
+                  scope="col"
+                  class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
+                >
+                  BONUS WR
+                </th>
+                <th
+                  scope="col"
+                  class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
+                >
+                  LAST FIGHT
+                </th>
+                <th scope="col" class="relative py-3 px-6">
+                  <span class="sr-only">Manage</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="">
+              <tr
+                v-for="item of paginatedGuilds"
+                :key="item.id"
+                class="border-b even:bg-blue-700/30 odd:bg-blue-700/50 border-gray-700"
+                style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
+              >
+                <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
+                  {{ item.id }}
+                </td>
+                <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
+                  {{ utils.parseBytes32String(item.name) }}
+                </td>
+                <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
+                  {{ item.morale }}
+                </td>
+                <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
+                  {{ item.combatPower }}
+                </td>
+                <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
+                  {{ item.winRate }}
+                </td>
+                <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
+                  {{ item.lastFight > 0 ? new Date(item.lastFight) : 'N/A' }}
+                </td>
+                <td
+                  class="text-right px-6 text-sm font-medium whitespace-nowrap space-x-2"
+                >
+                  <router-link :to="`/guilds/manage/${item.id}`">
+                    <button
+                      class="text-teal-700 inline-flex items-center"
+                      title="Manage"
+                    >
+                      <FontAwesomeIcon :icon="['fas', 'tasks']" size="lg" />
+                    </button>
+                  </router-link>
+                  <button
+                    class="text-red-700 inline-flex items-center"
+                    title="Conquer"
+                  >
+                    <FontAwesomeIcon :icon="['fas', 'khanda']" size="lg" />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
     <div class="grow"></div>
     <GridPagination
       v-model="page"
@@ -106,12 +203,11 @@
   import SecondaryButton from '../components/SecondaryButton.vue'
   import { useAccount } from '../stores/account-store'
   import { Guild } from '../types/guild'
-  import { ethers } from 'ethers'
+  import { utils } from 'ethers'
   import GridPagination from '../components/GridPagination.vue'
   import DKIcon from '../components/DKIcon.vue'
   import { useContract } from '../stores/contract-store'
   import { useMain } from '../stores/main-store'
-  import NFTList from '../components/NFTList.vue'
 
   const page = ref(1)
   const totalVisible = 3
@@ -210,7 +306,7 @@
 
   const getMintFee = async () => {
     mintFee.value = Number(
-      ethers.utils.formatUnits(await priceManager.getGuildMintFee(), 'ether')
+      utils.formatUnits(await priceManager.getGuildMintFee(), 'ether')
     )
   }
 

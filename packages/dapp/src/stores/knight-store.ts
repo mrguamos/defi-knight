@@ -68,5 +68,9 @@ export const useKnight = defineStore('knight', {
       const contracts = useContract()
       return contracts.knight.BONUS_POWER()
     },
+    async getKnightsByIds(tokenIds: number[]) {
+      const contracts = useContract()
+      return contracts.knight.functions.getKnightsByIds(tokenIds)
+    },
   },
 })

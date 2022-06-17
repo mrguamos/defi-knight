@@ -69,5 +69,9 @@ export const useCommander = defineStore('commander', {
       const contracts = useContract()
       return contracts.commander.BONUS_MAX_WR()
     },
+    async getCommandersByIds(tokenIds: number[]) {
+      const contracts = useContract()
+      return contracts.commander.functions.getCommandersByIds(tokenIds)
+    },
   },
 })

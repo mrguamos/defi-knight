@@ -40,6 +40,7 @@ contract Guild is
     mapping(uint256 => uint256[]) public guildKnight;
 
     struct GuildState {
+        uint256 id;
         uint8 emblem;
         uint8 morale;
         uint16 combatPower;
@@ -116,7 +117,7 @@ contract Guild is
     {
         counter.increment();
         uint256 tokenId = counter.current();
-        guilds[tokenId] = (GuildState(0, 0, 0, 0, name, 0, 0));
+        guilds[tokenId] = (GuildState(tokenId, 0, 0, 0, 0, name, 0, 0));
         emit NewGuild(tokenId, to);
         _safeMint(to, tokenId);
     }

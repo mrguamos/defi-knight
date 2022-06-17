@@ -30,6 +30,14 @@ export const useGuild = defineStore('guild', {
       )
       return tokens
     },
+    async getAllCommanders(tokenId: number) {
+      const contracts = useContract()
+      return contracts.guild.functions.getAllCommanders(tokenId)
+    },
+    async getAllKnights(tokenId: number) {
+      const contracts = useContract()
+      return contracts.guild.functions.getAllKnights(tokenId)
+    },
     getGuild(tokenId: number) {
       const contracts = useContract()
       return contracts.guild.functions.getGuild(tokenId)

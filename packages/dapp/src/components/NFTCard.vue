@@ -8,7 +8,7 @@
       <div class="flex justify-between">
         ID <span>{{ item.id }}</span>
       </div>
-      <div v-if="nft != 'guilds'" class="flex justify-between items-center">
+      <div class="flex justify-between items-center">
         RARITY
         <div class="flex gap-[2px]">
           <FontAwesomeIcon
@@ -27,7 +27,7 @@
         </div>
       </div>
 
-      <div v-if="nft != 'guilds'" class="flex justify-between">
+      <div class="flex justify-between">
         <span v-if="nft === 'commanders'">BONUS</span>
         <span v-if="nft === 'knights'">CP</span>
         <div v-if="nft === 'knights'">
@@ -38,38 +38,7 @@
           </span>
         </div>
         <div v-if="(item as CharacterCommon).isGenesis && nft === 'commanders'">
-          MAX WR + {{ useCommander().bonus }}
-        </div>
-      </div>
-      <div v-if="nft === 'guilds'" class="flex flex-col">
-        <div class="flex justify-between">
-          <span>NAME</span>
-          <span>{{ utils.parseBytes32String((item as Guild).name) }}</span>
-        </div>
-        <div class="flex justify-between">
-          <span>CP</span>
-          <span>{{ (item as Guild).combatPower }}</span>
-        </div>
-        <div class="flex justify-between">
-          <span>MAX WR</span>
-          <span>{{ (item as Guild).winRate }}</span>
-        </div>
-        <div class="flex justify-between">
-          <span>MORALE</span>
-          <span>{{ (item as Guild).morale }}</span>
-        </div>
-        <div class="flex justify-between">
-          <span>LAST FIGHT</span>
-          <span>{{ (item as Guild).lastFight }}</span>
-        </div>
-        <div class="flex justify-between">
-          <span>MAX KNIGHT</span>
-          <span>{{ (item as Guild).maxKnight }}</span>
-        </div>
-        <div v-if="mode != 'manage'" class="flex justify-center pt-4">
-          <router-link :to="`/guilds/manage/${item.id}`">
-            <PrimaryButton>MANAGE</PrimaryButton>
-          </router-link>
+          MAX WR + {{ useCommander().bonus }}%
         </div>
       </div>
     </div>
@@ -78,15 +47,12 @@
 
 <script lang="ts" setup>
   import { PropType } from 'vue'
-  import type { Commander } from '../types/commander'
   import type { Knight } from '../types/knight'
-  import type { Guild } from '../types/guild'
   import type { Common } from '../types/common'
   import type { CharacterCommon } from '../types/common'
   import { useCommander } from '../stores/commander-store'
   import { useKnight } from '../stores/knight-store'
-  import { utils } from 'ethers'
-  import PrimaryButton from './PrimaryButton.vue'
+
   const props = defineProps({
     nft: {
       type: String,
@@ -103,14 +69,9 @@
   })
 
   function getImageUrl(item: Common) {
-    let name = ''
-    if (props.nft == 'guilds') {
-      name = `emblems/${(item as Guild).emblem}.png`
-    } else {
-      name = `${props.nft}/${(item as CharacterCommon).class}-${
-        (item as CharacterCommon).gender
-      }-${(item as CharacterCommon).rarity}.png`
-    }
+    const name = `${props.nft}/${(item as CharacterCommon).class}-${
+      (item as CharacterCommon).gender
+    }-${(item as CharacterCommon).rarity}.png`
     return new URL(`/src/assets/${name}`, import.meta.url).href
   }
 </script>

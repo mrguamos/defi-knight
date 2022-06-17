@@ -22,6 +22,9 @@ import {
   faCoins,
   faSort,
   faCheck,
+  faKhanda,
+  faTasks,
+  faUserPlus,
 } from '@fortawesome/free-solid-svg-icons'
 import { faStar as farStar } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -44,7 +47,10 @@ import VueGtag from 'vue-gtag'
     faShoppingCart,
     faCoins,
     faSort,
-    faCheck
+    faCheck,
+    faKhanda,
+    faTasks,
+    faUserPlus
   )
 
   const app = createApp(App)

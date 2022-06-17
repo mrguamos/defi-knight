@@ -142,15 +142,15 @@ contract Market is
         return list[nftType][tokenId];
     }
 
-    function getListings(uint8 nftType, uint256[] memory tokenId)
+    function getListings(uint8 nftType, uint256[] calldata tokenIds)
         external
         view
         returns (Listing[] memory)
     {
-        Listing[] memory ll = new Listing[](tokenId.length);
-        for (uint256 i = 0; i < tokenId.length; i++) {
-            ll[i] = (list[nftType][tokenId[i]]);
-            ll[i].id = tokenId[i];
+        Listing[] memory ll = new Listing[](tokenIds.length);
+        for (uint256 i = 0; i < tokenIds.length; i++) {
+            ll[i] = (list[nftType][tokenIds[i]]);
+            ll[i].id = tokenIds[i];
         }
         return ll;
     }

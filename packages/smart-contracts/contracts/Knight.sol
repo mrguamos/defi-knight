@@ -32,6 +32,7 @@ contract Knight is
     mapping(address => bool) _isBlacklisted;
 
     struct KnightState {
+        uint256 id;
         uint8 rarity;
         uint8 class;
         uint8 gender;
@@ -123,6 +124,7 @@ contract Knight is
 
         knights[tokenId] = (
             KnightState(
+                tokenId,
                 rarity,
                 uint8(rollClass),
                 uint8(rollGender),
@@ -199,5 +201,17 @@ contract Knight is
 
     function deleteMapping(uint256 tokenId) public onlyRole(MINTER_ROLE) {
         delete knightGuild[tokenId];
+    }
+
+    function getCommandersByIds(uint256[] calldata tokenIds)
+        external
+        view
+        returns (KnightState[] memory)
+    {
+        KnightState[] memory kk = new KnightState[](tokenIds.length);
+        for (uint256 i = 0; i < tokenIds.length; i++) {
+            kk[i] = (knights[tokenIds[i]]);
+        }
+        return kk;
     }
 }
