@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { Common } from '../types/common'
+  import { CharacterCommon } from '../types/common'
   import { PropType } from 'vue'
 
   import NFTCard from './NFTCard.vue'
@@ -30,7 +30,7 @@
       required: true,
     },
     items: {
-      type: Array as PropType<Common[]>,
+      type: Array as PropType<CharacterCommon[]>,
       required: true,
     },
   })

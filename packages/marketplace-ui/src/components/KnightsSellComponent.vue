@@ -12,7 +12,6 @@
   import { useContract } from '../stores/contract-store'
   import { useAccount } from '../stores/account-store'
   import { useMain } from '../stores/main-store'
-  import { isError } from '../utils/util'
   import DialogComponent from './DialogComponent.vue'
   import GridPagination from './GridPagination.vue'
   import type { Knight } from '../types/knight'
@@ -71,11 +70,6 @@
       await getApproved()
     } catch (error) {
       console.log(error)
-      if (isError(error)) {
-        if (error.code !== 4001) {
-          //
-        }
-      }
     } finally {
       main.loading = false
     }

@@ -28,6 +28,7 @@ contract Knight is
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
+    bytes32 public constant GAME_ADMIN_ROLE = keccak256("GAME_ADMIN_ROLE");
 
     mapping(address => bool) _isBlacklisted;
 
@@ -145,7 +146,6 @@ contract Knight is
             !_isBlacklisted[to] && !_isBlacklisted[from],
             "Blacklisted address"
         );
-        require(knightGuild[tokenId] == 0);
         super._beforeTokenTransfer(from, to, tokenId);
     }
 
@@ -194,16 +194,16 @@ contract Knight is
 
     function setMapping(uint256 tokenId, uint256 guildId)
         public
-        onlyRole(MINTER_ROLE)
+        onlyRole(GAME_ADMIN_ROLE)
     {
         knightGuild[tokenId] = guildId;
     }
 
-    function deleteMapping(uint256 tokenId) public onlyRole(MINTER_ROLE) {
+    function deleteMapping(uint256 tokenId) public onlyRole(GAME_ADMIN_ROLE) {
         delete knightGuild[tokenId];
     }
 
-    function getCommandersByIds(uint256[] calldata tokenIds)
+    function getKnightsByIds(uint256[] calldata tokenIds)
         external
         view
         returns (KnightState[] memory)

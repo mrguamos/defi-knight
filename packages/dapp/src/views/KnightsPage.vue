@@ -113,7 +113,7 @@
   import { useKnight } from '../stores/knight-store'
   import { usePriceManager } from '../stores/price-manager-store'
   import { useAccount, AccountStore } from '../stores/account-store'
-  import { useMarket } from '../stores/market-store'
+
   import { Knight } from '../types/knight'
   import PrimaryButton from '../components/PrimaryButton.vue'
   import GridPagination from '../components/GridPagination.vue'
@@ -138,7 +138,6 @@
   const stableFee = ref(0)
   const hasAllowance = ref(false)
   const main = useMain()
-  const market = useMarket()
 
   account.$subscribe(async (mutation) => {
     const { isConnected } =
@@ -146,7 +145,6 @@
         .payload || false
     if (isConnected) {
       getKnights()
-      getApproved()
       getAllowance()
     } else {
       knights.value = []
@@ -275,13 +273,4 @@
       main.loading = false
     }
   }
-
-  const getApproved = async () => {
-    if (account.isConnected) {
-      market.isApproved = await knight.isApprovedForAll(
-        useContract().market.address
-      )
-    }
-  }
-  getApproved()
 </script>

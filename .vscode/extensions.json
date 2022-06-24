@@ -5,6 +5,7 @@
     "esbenp.prettier-vscode", 
     "dbaeumer.vscode-eslint", 
     "irongeek.vscode-env",
-    "johnsoncodehk.vscode-typescript-vue-plugin"
+    "johnsoncodehk.vscode-typescript-vue-plugin",
+    "sdras.vue-vscode-snippets"
   ]
 }

@@ -13,7 +13,7 @@ interface IUniswapV2Factory {
 contract DefiKnight is ERC20, Ownable {
     address public pairAddress;
     address public taxRecipientAddress;
-    uint256 public constant TAX_FEE = 5;
+    uint256 public constant TAX_FEE = 6;
     bool public takeFee;
     mapping(address => bool) public excludedAddressFromFee;
 

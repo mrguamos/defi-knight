@@ -1,8 +1,8 @@
 <template>
   <MenuDrawer v-model="drawer" />
   <div
-    class="flex w-full fixed top-0 z-10 items-center h-20 transition-all duration-700"
-    :class="scroll ? 'bg-slate-900 bg-opacity-90' : 'bg-transparent'"
+    class="flex w-full fixed top-0 z-10 items-center h-20 transition duration-700"
+    :class="scroll ? 'bg-slate-900 bg-opacity-90 shadow-lg' : 'bg-transparent'"
   >
     <div class="ml-5 lg:block hidden">
       <router-link to="/">

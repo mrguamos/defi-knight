@@ -176,11 +176,16 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         Guild.GuildState memory g,
         uint256[] calldata newCommanderTokens
     ) private returns (uint8 maxKnight) {
-        uint8 guildWinRate = g.winRate;
+        maxKnight = g.maxKnight;
         if (newCommanderTokens.length != 0) {
+            uint8 guildWinRate = g.winRate;
             for (uint8 f = 0; f < newCommanderTokens.length; f++) {
-                require(commander.ownerOf(newCommanderTokens[f]) == msg.sender);
-                uint256 cg = commander.commanderGuild(newCommanderTokens[f]);
+                uint256 commanderId = newCommanderTokens[f];
+                require(
+                    commander.ownerOf(commanderId) == msg.sender,
+                    "Commander not owner"
+                );
+                uint256 cg = commander.commanderGuild(commanderId);
                 require(
                     cg == 0,
                     string(
@@ -191,18 +196,18 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
                     )
                 );
                 Commander.CommanderState memory cs = commander.getCommander(
-                    newCommanderTokens[f]
+                    commanderId
                 );
 
                 if (cs.isGenesis) {
                     guildWinRate += commander.BONUS_MAX_WR();
                 }
-                guild.addMember(guildId, newCommanderTokens[f], TYPE_COMMANDER);
-                commander.setMapping(newCommanderTokens[f], guildId);
+                guild.addMember(guildId, commanderId, TYPE_COMMANDER);
+                commander.setMapping(commanderId, guildId);
                 commander.safeTransferFrom(
                     msg.sender,
                     address(guildMember),
-                    newCommanderTokens[f]
+                    commanderId
                 );
                 maxKnight += cs.rarity + 1;
             }

@@ -12,14 +12,14 @@
         RARITY
         <div class="flex gap-[2px]">
           <FontAwesomeIcon
-            v-for="r in (item as CharacterCommon).rarity + 1"
+            v-for="r in item.rarity + 1"
             :key="r"
             :icon="['fa', 'star']"
             size="sm"
             class="text-yellow-300"
           />
           <FontAwesomeIcon
-            v-for="r in 4 - (item as CharacterCommon).rarity"
+            v-for="r in 4 - item.rarity"
             :key="r"
             :icon="['far', 'star']"
             size="sm"
@@ -32,12 +32,12 @@
         <span v-if="nft === 'knights'">CP</span>
         <div v-if="nft === 'knights'">
           <span>{{ (item as Knight).combatPower }}</span>
-          <span v-if="(item as CharacterCommon).isGenesis ">
+          <span v-if="item.isGenesis">
             +
             {{ useKnight().bonus }}
           </span>
         </div>
-        <div v-if="(item as CharacterCommon).isGenesis && nft === 'commanders'">
+        <div v-if="item.isGenesis && nft === 'commanders'">
           MAX WR + {{ useCommander().bonus }}%
         </div>
       </div>
@@ -48,7 +48,6 @@
 <script lang="ts" setup>
   import { PropType } from 'vue'
   import type { Knight } from '../types/knight'
-  import type { Common } from '../types/common'
   import type { CharacterCommon } from '../types/common'
   import { useCommander } from '../stores/commander-store'
   import { useKnight } from '../stores/knight-store'
@@ -59,7 +58,7 @@
       required: true,
     },
     item: {
-      type: Object as PropType<Common>,
+      type: Object as PropType<CharacterCommon>,
       required: true,
     },
     mode: {
@@ -68,10 +67,8 @@
     },
   })
 
-  function getImageUrl(item: Common) {
-    const name = `${props.nft}/${(item as CharacterCommon).class}-${
-      (item as CharacterCommon).gender
-    }-${(item as CharacterCommon).rarity}.png`
+  function getImageUrl(item: CharacterCommon) {
+    const name = `${props.nft}/${item.class}-${item.gender}-${item.rarity}.png`
     return new URL(`/src/assets/${name}`, import.meta.url).href
   }
 </script>

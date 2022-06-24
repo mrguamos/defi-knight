@@ -29,6 +29,7 @@ contract Commander is
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
+    bytes32 public constant GAME_ADMIN_ROLE = keccak256("GAME_ADMIN_ROLE");
 
     mapping(address => bool) _isBlacklisted;
 
@@ -128,7 +129,7 @@ contract Commander is
             !_isBlacklisted[to] && !_isBlacklisted[from],
             "Blacklisted address"
         );
-        require(commanderGuild[tokenId] == 0);
+
         super._beforeTokenTransfer(from, to, tokenId);
     }
 
@@ -177,12 +178,12 @@ contract Commander is
 
     function setMapping(uint256 tokenId, uint256 guildId)
         public
-        onlyRole(MINTER_ROLE)
+        onlyRole(GAME_ADMIN_ROLE)
     {
         commanderGuild[tokenId] = guildId;
     }
 
-    function deleteMapping(uint256 tokenId) public onlyRole(MINTER_ROLE) {
+    function deleteMapping(uint256 tokenId) public onlyRole(GAME_ADMIN_ROLE) {
         delete commanderGuild[tokenId];
     }
 
