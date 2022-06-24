@@ -16,5 +16,11 @@ export const useGame = defineStore('game', {
       const contracts = useContract()
       return contracts.game.addGuildMembers(guildId, commanders, knights)
     },
+    async disbandGuild(
+      guildId: number
+    ): Promise<providers.TransactionResponse> {
+      const contracts = useContract()
+      return contracts.game.disbandGuild(guildId)
+    },
   },
 })

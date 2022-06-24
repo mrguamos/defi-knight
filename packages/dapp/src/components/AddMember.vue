@@ -301,7 +301,11 @@
       </div>
     </div>
     <div class="flex gap-2 mt-10">
-      <PrimaryButton @click="emit('submit')">SUBMIT</PrimaryButton>
+      <PrimaryButton
+        v-if="commanderApproved && knightApproved"
+        @click="emit('submit')"
+        >SUBMIT</PrimaryButton
+      >
       <PrimaryButton
         v-if="!commanderApproved"
         @click="setApprovalForAll('commander')"

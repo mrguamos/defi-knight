@@ -26,6 +26,7 @@ import {
   faTasks,
   faUserPlus,
   faTimes,
+  faUserSlash,
 } from '@fortawesome/free-solid-svg-icons'
 import { faStar as farStar } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -52,7 +53,8 @@ import VueGtag from 'vue-gtag'
     faKhanda,
     faTasks,
     faUserPlus,
-    faTimes
+    faTimes,
+    faUserSlash
   )
 
   const app = createApp(App)

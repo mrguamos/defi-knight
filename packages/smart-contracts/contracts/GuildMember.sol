@@ -53,12 +53,4 @@ contract GuildMember is
             knight.safeTransferFrom(address(this), owner, tokenId);
         }
     }
-
-    function approveGameContract(address gameAddress)
-        external
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
-        //commander.setApprovalForAll(gameAddress, true);
-        //knight.setApprovalForAll(gameAddress, true);
-    }
 }

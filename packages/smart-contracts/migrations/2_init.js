@@ -171,8 +171,11 @@ module.exports = async (deployer, network, accounts) => {
   const NFT_GUILD_MINTER = await guild.MINTER_ROLE();
   await guild.grantRole(NFT_GUILD_MINTER, game.address);
 
-  const GAME_ADMIN_ROLE = await guild.GAME_ADMIN_ROLE();
-  await guild.grantRole(GAME_ADMIN_ROLE, game.address);
+  const GUILD_GAME_ADMIN_ROLE = await guild.GAME_ADMIN_ROLE();
+  await guild.grantRole(GUILD_GAME_ADMIN_ROLE, game.address);
+
+  const GUILD_MEMBER_GAME_ADMIN_ROLE = await guildMember.GAME_ADMIN_ROLE();
+  await guildMember.grantRole(GUILD_MEMBER_GAME_ADMIN_ROLE, game.address);
 
   await defiKnight.setTaxRecipientAddress(game.address);
 

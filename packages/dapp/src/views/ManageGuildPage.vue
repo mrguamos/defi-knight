@@ -184,17 +184,22 @@
             </div>
           </div>
         </div>
-        <button
-          class="mt-10"
-          title="Add Member"
-          @click="addMemberToggle = true"
-        >
-          <FontAwesomeIcon
-            :icon="['fas', 'user-plus']"
-            size="2x"
-            class="text-teal-700"
-          />
-        </button>
+        <div class="flex gap-10 mt-10">
+          <button title="Add Member" @click="addMemberToggle = true">
+            <FontAwesomeIcon
+              :icon="['fas', 'user-plus']"
+              size="2x"
+              class="text-teal-700"
+            />
+          </button>
+          <button title="Disband Guild" @click="disband()">
+            <FontAwesomeIcon
+              :icon="['fas', 'user-slash']"
+              size="2x"
+              class="text-red-700"
+            />
+          </button>
+        </div>
         <div class="flex flex-col w-full justify-center items-center">
           <div
             class="uppercase mt-10 text-base font-bold py-2 text-teal-700 max-w-lg w-full text-center"
@@ -586,6 +591,21 @@
     try {
       main.loading = true
       const tx = await game.addGuildMembers(id, commanderIds, knightIds)
+      await tx.wait()
+      router.push({
+        path: `/guilds`,
+      })
+    } catch (error) {
+      //
+    } finally {
+      main.loading = false
+    }
+  }
+
+  const disband = async () => {
+    try {
+      main.loading = true
+      const tx = await game.disbandGuild(id)
       await tx.wait()
       router.push({
         path: `/guilds`,
