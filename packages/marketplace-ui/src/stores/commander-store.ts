@@ -36,7 +36,9 @@ export const useCommander = defineStore('commander', {
     async listCommanders(queryParams: Record<string, string>) {
       const params = new URLSearchParams(queryParams).toString()
       return axios.get(
-        `https://usnk634vqwwp.usemoralis.com:2053/server/functions/commanders?${params}`
+        `${
+          import.meta.env.VITE_APP_MORALIS_SERVER
+        }/functions/commanders?${params}`
       )
     },
     async getCommanders() {

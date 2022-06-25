@@ -1,5 +1,7 @@
 Moralis.Cloud.beforeSave('ListingEvents', async (request) => {
-  const web3 = Moralis.web3ByChain('0x539')
+  //moralis docs
+  const config = await Moralis.Config.get()
+  const web3 = Moralis.web3ByChain(config.get('NETWORK_ID'))
   const logger = Moralis.Cloud.getLogger()
   const confirmed = request.object.get('confirmed')
   const abiMarket = [
@@ -53,7 +55,7 @@ Moralis.Cloud.beforeSave('ListingEvents', async (request) => {
     logger.info('nftType: ' + nftType + ' tokenId: ' + tokenId)
     const marketContract = new web3.eth.Contract(
       abiMarket,
-      '0x6677d9600D23799Cc319Fb4793344c73AEB2DFD2'
+      config.get('MARKET_ADDRESS')
     )
     const listing = await marketContract.methods
       .getListing(nftType, tokenId)
@@ -72,6 +74,11 @@ Moralis.Cloud.beforeSave('ListingEvents', async (request) => {
           outputs: [
             {
               components: [
+                {
+                  internalType: 'uint256',
+                  name: 'id',
+                  type: 'uint256',
+                },
                 {
                   internalType: 'uint8',
                   name: 'rarity',
@@ -105,7 +112,7 @@ Moralis.Cloud.beforeSave('ListingEvents', async (request) => {
       ]
       const contract = new web3.eth.Contract(
         abiCommander,
-        '0xcbdcdC32165a581d87E9526E1220eBb395d7397d'
+        config.get('COMMANDER_ADDRESS')
       )
       const c = await contract.methods.getCommander(tokenId).call()
       const Commander = Moralis.Object.extend('Commander')
@@ -142,6 +149,11 @@ Moralis.Cloud.beforeSave('ListingEvents', async (request) => {
           outputs: [
             {
               components: [
+                {
+                  internalType: 'uint256',
+                  name: 'id',
+                  type: 'uint256',
+                },
                 {
                   internalType: 'uint8',
                   name: 'rarity',
@@ -180,7 +192,7 @@ Moralis.Cloud.beforeSave('ListingEvents', async (request) => {
       ]
       const contract = new web3.eth.Contract(
         abiKnight,
-        '0xe975A1B4D74A3361A7BFD082211Ac0CA455bED4C'
+        config.get('KNIGHT_ADDRESS')
       )
       const k = await contract.methods.getKnight(tokenId).call()
       const Knight = Moralis.Object.extend('Knight')
