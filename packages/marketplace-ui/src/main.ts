@@ -3,10 +3,15 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { useWeb3 } from './stores/web3-store'
 import App from './App.vue'
+import VueGtag from 'vue-gtag'
 
 import router from './router'
 ;(async () => {
   const app = createApp(App)
+
+  app.use(VueGtag, {
+    config: { id: 'G-9JVRHW9TRZ' },
+  })
 
   app.use(createPinia())
   app.use(router)
