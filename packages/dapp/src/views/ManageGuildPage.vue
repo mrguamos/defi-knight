@@ -194,7 +194,7 @@
           </button>
           <button title="Disband Guild" @click="disband()">
             <FontAwesomeIcon
-              :icon="['fas', 'user-slash']"
+              :icon="['fas', 'users-slash']"
               size="2x"
               class="text-red-700"
             />
