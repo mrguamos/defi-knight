@@ -22,5 +22,10 @@ export const useGame = defineStore('game', {
       const contracts = useContract()
       return contracts.game.disbandGuild(guildId)
     },
+
+    async getRewardsPool() {
+      const contracts = useContract()
+      return contracts.dk.balanceOf(contracts.game.address)
+    },
   },
 })

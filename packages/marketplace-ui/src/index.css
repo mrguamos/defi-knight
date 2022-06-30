@@ -30,6 +30,16 @@ html {
   border-radius: 20px;
 }
 
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 body {
   @apply text-white;
   background-color: #000000;

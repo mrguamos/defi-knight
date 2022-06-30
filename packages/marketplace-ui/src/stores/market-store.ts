@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { useContract } from './contract-store'
-import { ethers } from 'ethers'
+import { ethers, providers } from 'ethers'
 
 export const useMarket = defineStore('market', {
   state: () => {
@@ -44,6 +44,13 @@ export const useMarket = defineStore('market', {
     getListings(nftType: number, tokenIds: number[]) {
       const contracts = useContract()
       return contracts.market.functions.getListings(nftType, tokenIds)
+    },
+    async buyEmblem(
+      guildId: number,
+      emblem: number
+    ): Promise<providers.TransactionResponse> {
+      const contracts = useContract()
+      return contracts.market.functions.buyEmblem(guildId, emblem)
     },
   },
 })

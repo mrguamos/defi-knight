@@ -1,9 +1,9 @@
 <template>
   <div
     v-if="selectedGuild"
-    class="flex flex-col w-full h-full items-center justify-center pb-10"
+    class="flex flex-col w-full h-full items-center justify-center pb-10 pt-28"
   >
-    <Transition>
+    <Transition mode="out-in">
       <div
         v-show="!addMemberToggle"
         class="flex flex-col w-full h-full items-center justify-center"
@@ -350,21 +350,20 @@
         </div>
       </div>
     </Transition>
-    <Transition>
-      <AddMember
-        v-show="addMemberToggle"
-        :knights="filteredKnights"
-        :commanders="filteredCommanders"
-        :new-knights="newKnightsGuild"
-        :new-commanders="newCommandersGuild"
-        @add-commander="addCommander"
-        @remove-commander="removeCommander"
-        @add-knight="addKnight"
-        @remove-knight="removeKnight"
-        @submit="submit"
-        @close="(val:boolean) => (addMemberToggle = val)"
-      />
-    </Transition>
+
+    <AddMember
+      v-show="addMemberToggle"
+      :knights="filteredKnights"
+      :commanders="filteredCommanders"
+      :new-knights="newKnightsGuild"
+      :new-commanders="newCommandersGuild"
+      @add-commander="addCommander"
+      @remove-commander="removeCommander"
+      @add-knight="addKnight"
+      @remove-knight="removeKnight"
+      @submit="submit"
+      @close="(val:boolean) => (addMemberToggle = val)"
+    />
 
     <TransitionRoot appear :show="dialog" as="template">
       <Dialog as="div" @close="main.loading ? '' : closeModal()">

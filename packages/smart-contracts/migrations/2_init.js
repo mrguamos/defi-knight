@@ -187,7 +187,15 @@ module.exports = async (deployer, network, accounts) => {
 
   const market = await deployProxy(
     Market,
-    [defiKnight.address, commander.address, knight.address, guild.address],
+    [
+      defiKnight.address,
+      commander.address,
+      knight.address,
+      guild.address,
+      priceManager.address,
+      game.address,
+    ],
     { deployer }
   );
+  await guild.grantRole(GUILD_GAME_ADMIN_ROLE, market.address);
 };

@@ -1,11 +1,11 @@
 <template>
   <div
     v-if="modelValue"
-    class="z-20 flex h-screen w-full fixed grow bg-transparent"
+    class="z-50 flex h-screen w-full fixed grow bg-transparent"
     @click="emit('update:modelValue', false)"
   ></div>
   <div
-    class="drawer z-20 flex flex-col h-full fixed w-72 ease-in-out duration-300"
+    class="drawer z-50 flex flex-col h-full fixed w-72 ease-in-out duration-300"
     :class="modelValue ? 'translate-x-0' : '-translate-x-full'"
   >
     <div class="self-center pt-10 pb-10">

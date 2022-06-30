@@ -71,5 +71,9 @@ export const useGuild = defineStore('guild', {
         tokenId
       )
     },
+    async getTotalGuilds() {
+      const contracts = useContract()
+      return contracts.guild.counter()
+    },
   },
 })

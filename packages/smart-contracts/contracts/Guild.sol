@@ -57,6 +57,10 @@ contract Guild is
     Commander private commander;
     Knight private knight;
 
+    uint8 public constant EMBLEM_BONUS = 5;
+    uint8 public constant POTION_WR_BONUS = 5;
+    uint8 public constant POTION_CP_BONUS = 100;
+
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() initializer {}
 
@@ -237,7 +241,17 @@ contract Guild is
     function addMorale(uint256 guildId, uint8 amount)
         public
         onlyRole(GAME_ADMIN_ROLE)
+        whenNotPaused
     {
         guilds[guildId].morale = amount;
+    }
+
+    function updateEmblem(uint256 guildId, uint8 emblem)
+        public
+        onlyRole(GAME_ADMIN_ROLE)
+        whenNotPaused
+    {
+        guilds[guildId].emblem = emblem;
+        updateWinRate(guildId, guilds[guildId].winRate + EMBLEM_BONUS);
     }
 }

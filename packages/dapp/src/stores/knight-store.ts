@@ -72,5 +72,9 @@ export const useKnight = defineStore('knight', {
       const contracts = useContract()
       return contracts.knight.functions.getKnightsByIds(tokenIds)
     },
+    async getTotalKnights() {
+      const contracts = useContract()
+      return contracts.knight.counter()
+    },
   },
 })

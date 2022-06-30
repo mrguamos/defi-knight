@@ -323,7 +323,7 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         guild.updateCombatPower(guildId, 0);
         guild.updateMaxKnight(guildId, 0);
         if (g.emblem != 0) {
-            guild.updateWinRate(guildId, 5);
+            guild.updateWinRate(guildId, guild.EMBLEM_BONUS());
         } else {
             guild.updateWinRate(guildId, 0);
         }

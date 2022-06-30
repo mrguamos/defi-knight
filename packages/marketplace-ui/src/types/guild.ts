@@ -1,7 +1,7 @@
 import type { Common } from './common'
 
 export type Guild = Common & {
-  emblem: string
+  emblem: number
   morale: number
   combatPower: number
   winRate: number

@@ -73,5 +73,9 @@ export const useCommander = defineStore('commander', {
       const contracts = useContract()
       return contracts.commander.functions.getCommandersByIds(tokenIds)
     },
+    async getTotalCommanders() {
+      const contracts = useContract()
+      return contracts.commander.counter()
+    },
   },
 })

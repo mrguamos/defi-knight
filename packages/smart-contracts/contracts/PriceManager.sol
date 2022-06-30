@@ -18,6 +18,9 @@ contract PriceManager is
     uint256 private stableFee;
     uint256 private guildFee;
     uint256 private moraleFee;
+    uint256 private emblemFee;
+    uint256 private potionCPFee;
+    uint256 private potionWRFee;
     IOracle private oracle;
     DefiKnight private defiKnight;
 
@@ -41,6 +44,9 @@ contract PriceManager is
         stableFee = 100000000000000000;
         guildFee = 50;
         moraleFee = 1;
+        emblemFee = 50;
+        potionCPFee = 50;
+        potionWRFee = 50;
     }
 
     function getMintFee() public view returns (uint256) {
@@ -53,6 +59,10 @@ contract PriceManager is
 
     function getGuildFee() public view returns (uint256) {
         return (oracle.getUsdPrice() * guildFee) * 10**defiKnight.decimals();
+    }
+
+    function getEmblemFee() public view returns (uint256) {
+        return (oracle.getUsdPrice() * emblemFee) * 10**defiKnight.decimals();
     }
 
     function getMoraleFee() public view returns (uint256) {
@@ -80,11 +90,40 @@ contract PriceManager is
         moraleFee = _moraleFee;
     }
 
+    function setEmblemFee(uint256 _emblemFee)
+        external
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        emblemFee = _emblemFee;
+    }
+
     //in wei
     function setStableFee(uint256 _stableFee)
         external
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
         stableFee = _stableFee;
+    }
+
+    function setPotionCPFee(uint256 _potionCPFee)
+        external
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        potionCPFee = _potionCPFee;
+    }
+
+    function setPotionWRFee(uint256 _potionWRFee)
+        external
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        potionWRFee = _potionWRFee;
+    }
+
+    function getPotionCPFee() public view returns (uint256) {
+        return (oracle.getUsdPrice() * potionCPFee) * 10**defiKnight.decimals();
+    }
+
+    function getPotionWRFee() public view returns (uint256) {
+        return (oracle.getUsdPrice() * potionWRFee) * 10**defiKnight.decimals();
     }
 }

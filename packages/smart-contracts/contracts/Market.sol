@@ -9,6 +9,7 @@ import "./DefiKnight.sol";
 import "./Commander.sol";
 import "./Knight.sol";
 import "./Guild.sol";
+import "./PriceManager.sol";
 
 contract Market is
     Initializable,
@@ -23,6 +24,8 @@ contract Market is
     Commander private commander;
     Knight private knight;
     Guild private guild;
+    address private gameAddress;
+    PriceManager priceManager;
 
     uint8 private constant TYPE_COMMANDER = 0;
     uint8 private constant TYPE_KNIGHT = 1;
@@ -42,7 +45,9 @@ contract Market is
         DefiKnight _defiKnight,
         Commander _commander,
         Knight _knight,
-        Guild _guild
+        Guild _guild,
+        PriceManager _priceManager,
+        address _gameAddress
     ) public initializer {
         __AccessControl_init();
         __UUPSUpgradeable_init();
@@ -52,6 +57,8 @@ contract Market is
         commander = _commander;
         knight = _knight;
         guild = _guild;
+        priceManager = _priceManager;
+        gameAddress = _gameAddress;
     }
 
     function _authorizeUpgrade(address newImplementation)
@@ -161,6 +168,22 @@ contract Market is
 
     function emergencyWithdraw() external onlyRole(DEFAULT_ADMIN_ROLE) {
         defiKnight.transfer(msg.sender, address(this).balance);
+    }
+
+    function buyEmblem(uint256 guildId, uint8 emblem) external onlyNonContract {
+        require(gameAddress != address(0), "Set game address first");
+        require(guild.ownerOf(guildId) == msg.sender, "Not Owner");
+        require(
+            guild.getGuild(guildId).emblem == 0,
+            "Guild has emblem already"
+        );
+        require(emblem != 0);
+        defiKnight.transferFrom(
+            msg.sender,
+            gameAddress,
+            priceManager.getEmblemFee()
+        );
+        guild.updateEmblem(guildId, emblem);
     }
 
     fallback() external payable {}

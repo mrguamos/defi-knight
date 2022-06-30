@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col h-full pb-10">
+  <div class="flex flex-col h-full pb-10 pt-28">
     <NFTList
       :items="paginatedCommanders"
       nft="commanders"

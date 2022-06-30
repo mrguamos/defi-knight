@@ -18,6 +18,12 @@
         <span class="uppercase">Guilds</span>
       </RouterLink>
     </div>
-    <RouterView />
+    <router-view v-slot="{ Component, route }">
+      <transition name="fade" mode="out-in">
+        <div :key="route.fullPath">
+          <component :is="Component"></component>
+        </div>
+      </transition>
+    </router-view>
   </div>
 </template>
