@@ -86,14 +86,18 @@
                       class="text-teal-700 inline-flex items-center"
                       title="Manage"
                     >
-                      <FontAwesomeIcon :icon="['fas', 'tasks']" size="lg" />
+                      <FontAwesomeIcon :icon="['fas', 'tasks']" size="2x" />
                     </button>
                   </router-link>
                   <button
                     class="text-red-700 inline-flex items-center"
                     title="Conquer"
                   >
-                    <FontAwesomeIcon :icon="['fas', 'khanda']" size="lg" />
+                    <FontAwesomeIcon
+                      :icon="['fas', 'khanda']"
+                      size="2x"
+                      class="fa-beat"
+                    />
                   </button>
                 </td>
               </tr>

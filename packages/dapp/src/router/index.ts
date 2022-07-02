@@ -35,6 +35,12 @@ const router = createRouter({
       component: () =>
         import(/* webpackChunkName: "manage" */ '../views/ManageGuildPage.vue'),
     },
+    {
+      path: '/conquer',
+      name: 'Conquer',
+      component: () =>
+        import(/* webpackChunkName: "conquer" */ '../views/ConquerPage.vue'),
+    },
   ],
 })
 

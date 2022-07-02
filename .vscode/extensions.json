@@ -1,11 +1,12 @@
 {
   "recommendations": [
     "juanblanco.solidity", 
-    "johnsoncodehk.volar", 
+    "vue.volar", 
     "esbenp.prettier-vscode", 
     "dbaeumer.vscode-eslint", 
     "irongeek.vscode-env",
-    "johnsoncodehk.vscode-typescript-vue-plugin",
-    "sdras.vue-vscode-snippets"
+    "vue.vscode-typescript-vue-plugin",
+    "sdras.vue-vscode-snippets",
+    "dsznajder.es7-react-js-snippets"
   ]
 }
