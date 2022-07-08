@@ -15,5 +15,9 @@ export const usePriceManager = defineStore('price-manager', {
       const contracts = useContract()
       return contracts.priceManager.getGuildFee()
     },
+    async getMoraleFee() {
+      const contracts = useContract()
+      return contracts.priceManager.getMoraleFee()
+    },
   },
 })

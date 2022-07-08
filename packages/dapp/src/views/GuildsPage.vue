@@ -75,8 +75,15 @@
                 <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
                   {{ item.winRate }}
                 </td>
-                <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                  {{ item.lastFight > 0 ? new Date(item.lastFight) : 'N/A' }}
+                <td
+                  class="py-4 px-6 text-sm font-bold whitespace-nowrap"
+                  :class="isCooldown(item) ? 'text-green-700' : 'text-red-700'"
+                >
+                  {{
+                    item.lastFight > 0
+                      ? dayjs.unix(item.lastFight).toDate().toLocaleString()
+                      : 'N/A'
+                  }}
                 </td>
                 <td
                   class="text-right px-6 text-sm font-medium whitespace-nowrap space-x-2"
@@ -89,9 +96,11 @@
                       <FontAwesomeIcon :icon="['fas', 'tasks']" size="2x" />
                     </button>
                   </router-link>
+
                   <button
                     class="text-red-700 inline-flex items-center"
                     title="Conquer"
+                    @click="showConquer(item)"
                   >
                     <FontAwesomeIcon
                       :icon="['fas', 'khanda']"
@@ -190,6 +199,66 @@
         </div>
       </Dialog>
     </TransitionRoot>
+    <TransitionRoot appear :show="moraleDialog" as="template">
+      <Dialog as="div" @close="main.loading ? '' : closeMoraleModal()">
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+          <div class="min-h-screen px-4 text-center">
+            <TransitionChild
+              as="template"
+              enter="duration-300 ease-out"
+              enter-from="opacity-0"
+              enter-to="opacity-100"
+              leave="duration-200 ease-in"
+              leave-from="opacity-100"
+              leave-to="opacity-0"
+            >
+              <DialogOverlay class="fixed inset-0 bg-black opacity-70" />
+            </TransitionChild>
+
+            <span class="inline-block h-screen align-middle" aria-hidden="true">
+              &#8203;
+            </span>
+
+            <TransitionChild
+              as="template"
+              enter="duration-300 ease-out"
+              enter-from="opacity-0 scale-95"
+              enter-to="opacity-100 scale-100"
+              leave="duration-200 ease-in"
+              leave-from="opacity-100 scale-100"
+              leave-to="opacity-0 scale-95"
+            >
+              <div
+                class="inline-block w-auto max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-slate-900 bg-opacity-90 rounded-md"
+                style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
+              >
+                <DialogTitle
+                  as="h3"
+                  class="text-center text-lg font-medium text-teal-700"
+                  ><div class="flex flex-col gap-2">
+                    <span class="text-red-700 animate-pulse"
+                      >OUT OF MORALE</span
+                    >
+                    <div class="flex justify-center items-center">
+                      {{ moraleFee }} DK
+                      <DKIcon class="w-10 h-10 ml-1" />
+                    </div>
+                  </div>
+                </DialogTitle>
+                <div class="flex grow flex-col text-sm gap-4 mt-5">
+                  <div class="flex justify-center gap-4 text-sm text-white">
+                    <PrimaryButton @click="buyMorale()"> SUBMIT</PrimaryButton>
+                    <SecondaryButton c @click="closeMoraleModal()">
+                      CANCEL</SecondaryButton
+                    >
+                  </div>
+                </div>
+              </div>
+            </TransitionChild>
+          </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
   </div>
 </template>
 <script lang="ts" setup>
@@ -212,7 +281,11 @@
   import DKIcon from '../components/DKIcon.vue'
   import { useContract } from '../stores/contract-store'
   import { useMain } from '../stores/main-store'
+  import { useRouter } from 'vue-router'
+  import { useGame } from '../stores/game-store'
+  import dayjs from 'dayjs'
 
+  const router = useRouter()
   const page = ref(1)
   const totalVisible = 3
   const rowsPerPage = 20
@@ -225,6 +298,8 @@
   const mintFee = ref(0)
   const hasAllowance = ref(false)
   const main = useMain()
+  const game = useGame()
+  const moraleDialog = ref(false)
 
   account.$subscribe(async (_, state) => {
     if (state.isConnected) {
@@ -250,6 +325,10 @@
 
   const closeModal = () => {
     dialog.value = false
+  }
+
+  const closeMoraleModal = () => {
+    moraleDialog.value = false
   }
 
   const mintGuild = async () => {
@@ -343,5 +422,44 @@
     } finally {
       main.loading = false
     }
+  }
+
+  const moraleFee = ref(0)
+
+  const showConquer = async (item: Guild) => {
+    if (item.morale > 0) {
+      router.push(`/conquer/${item.id}`)
+    } else {
+      const knights = (await guild.getAllKnights(item.id))[0]
+      console.log(knights)
+      moraleFee.value =
+        Number(utils.formatUnits(await priceManager.getMoraleFee(), 'ether')) *
+        (14 * knights.length)
+      id.value = item.id
+      moraleDialog.value = true
+    }
+  }
+
+  const id = ref(0)
+
+  const buyMorale = async () => {
+    try {
+      main.loading = true
+      const tx = await game.buyMorale(id.value)
+      await tx.wait()
+      closeMoraleModal()
+      router.push(`/conquer/${id.value}`)
+    } catch (error) {
+      //
+    } finally {
+      main.loading = false
+    }
+  }
+
+  const isCooldown = (item: Guild) => {
+    if (item.lastFight <= 0) {
+      return true
+    }
+    return dayjs.unix(item.lastFight).add(1, 'day').isSameOrBefore(dayjs())
   }
 </script>

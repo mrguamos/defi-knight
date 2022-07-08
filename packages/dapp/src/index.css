@@ -56,3 +56,11 @@ body {
     0px 0px 50px rgb(15 118 110), 0px 0px 60px rgb(15 118 110),
     0px 0px 70px rgb(15 118 110);
 }
+
+.swiper-button-prev {
+  /* @apply text-blue-500/50 !important; */
+}
+
+.swiper-button-next {
+  /* @apply text-blue-500/50 !important; */
+}

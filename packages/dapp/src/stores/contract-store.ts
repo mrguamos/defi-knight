@@ -27,12 +27,17 @@ import {
   abi as marketABI,
   networks as marketNetworks,
 } from 'smart-contracts/build/contracts/Market.json'
+import {
+  abi as rewardsManagerABI,
+  networks as rewardsManagerNetworks,
+} from 'smart-contracts/build/contracts/RewardsManager.json'
 import { useWeb3 } from './web3-store'
 import { ethers } from 'ethers'
 import { markRaw } from 'vue'
 import { useCommander } from './commander-store'
 import { useKnight } from './knight-store'
 import { useGuild } from './guild-store'
+import { useGame } from './game-store'
 
 export const useContract = defineStore('contracts', {
   state: () => {
@@ -44,6 +49,7 @@ export const useContract = defineStore('contracts', {
       game: undefined as unknown as ethers.Contract,
       priceManager: undefined as unknown as ethers.Contract,
       market: undefined as unknown as ethers.Contract,
+      rewardsManager: undefined as unknown as ethers.Contract,
     }
   },
   actions: {
@@ -52,6 +58,7 @@ export const useContract = defineStore('contracts', {
       const commanderStore = useCommander()
       const knightStore = useKnight()
       const guildStore = useGuild()
+      const gameStore = useGame()
       const networkId = import.meta.env.VITE_APP_NETWORK_ID || 1337
 
       this.dk = markRaw(
@@ -103,6 +110,8 @@ export const useContract = defineStore('contracts', {
         )
       )
 
+      gameStore.iGame = markRaw(new ethers.utils.Interface(gameABI))
+
       this.priceManager = markRaw(
         new ethers.Contract(
           priceManagerNetworks[
@@ -117,6 +126,16 @@ export const useContract = defineStore('contracts', {
         new ethers.Contract(
           marketNetworks[networkId as keyof typeof marketNetworks].address,
           marketABI,
+          eth.signer
+        )
+      )
+
+      this.rewardsManager = markRaw(
+        new ethers.Contract(
+          rewardsManagerNetworks[
+            networkId as keyof typeof rewardsManagerNetworks
+          ].address,
+          rewardsManagerABI,
           eth.signer
         )
       )

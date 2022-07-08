@@ -8,6 +8,10 @@
 <template>
   <DefiSpinner v-if="useMain().loading" />
   <LayoutHeader />
+  <div
+    v-if="useMain().drawer"
+    class="fixed h-screen w-screen bg-black/50"
+  ></div>
   <div class="flex min-h-screen">
     <div class="container mx-auto">
       <div v-if="useWeb3().isWrongNetwork" class="flex justify-center">

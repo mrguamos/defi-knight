@@ -27,10 +27,15 @@ import {
   faUserPlus,
   faTimes,
   faUsersSlash,
+  faCaretDown,
 } from '@fortawesome/free-solid-svg-icons'
 import { faStar as farStar } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import VueGtag from 'vue-gtag'
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
+import dayjs from 'dayjs'
+
+dayjs.extend(isSameOrBefore)
 ;(async () => {
   library.add(
     faAngleDown,
@@ -54,7 +59,9 @@ import VueGtag from 'vue-gtag'
     faTasks,
     faUserPlus,
     faTimes,
-    faUsersSlash
+    faUsersSlash,
+    faCheck,
+    faCaretDown
   )
 
   const app = createApp(App)

@@ -387,3 +387,86 @@ Moralis.Cloud.define('knights', async (request) => {
   const response = await query.find()
   return response
 })
+
+Moralis.Cloud.beforeSave('CombatEvents', async (request) => {
+  //moralis docs
+  const config = await Moralis.Config.get()
+  const web3 = Moralis.web3ByChain(config.get('NETWORK_ID'))
+  const logger = Moralis.Cloud.getLogger()
+  const confirmed = request.object.get('confirmed')
+  const abiGame = [
+    {
+      inputs: [
+        {
+          internalType: 'uint256',
+          name: 'combatId',
+          type: 'uint256',
+        },
+      ],
+      name: 'getCombatHistory',
+      outputs: [
+        {
+          components: [
+            {
+              internalType: 'uint256',
+              name: 'combatId',
+              type: 'uint256',
+            },
+            {
+              internalType: 'address',
+              name: 'account',
+              type: 'address',
+            },
+            {
+              internalType: 'uint256',
+              name: 'amount',
+              type: 'uint256',
+            },
+            {
+              internalType: 'uint256',
+              name: 'guildId',
+              type: 'uint256',
+            },
+            {
+              internalType: 'uint256',
+              name: 'timestamp',
+              type: 'uint256',
+            },
+            {
+              internalType: 'uint8',
+              name: 'level',
+              type: 'uint8',
+            },
+          ],
+          internalType: 'struct Game.Combat',
+          name: '',
+          type: 'tuple',
+        },
+      ],
+      stateMutability: 'view',
+      type: 'function',
+      constant: true,
+    },
+  ]
+  if (confirmed) {
+    logger.info('confirmed beforeSave!')
+    const combatId = request.object.get('combatId')
+    logger.info('combatId: ' + combatId)
+    const gameContract = new web3.eth.Contract(
+      abiGame,
+      config.get('GAME_ADDRESS')
+    )
+    const ch = await gameContract.methods.getCombatHistory(combatId).call()
+    const CombatHistory = Moralis.Object.extend('CombatHistory')
+    let combatHistory = new CombatHistory()
+    combatHistory.set('combatId', Number(combatId))
+    combatHistory.set('account', ch.account.toLowerCase())
+    combatHistory.set('amount', ch.amount)
+    combatHistory.set('guildId', Number(ch.guildId))
+    combatHistory.set('block_timestamp', Number(ch.timestamp))
+    combatHistory.set('level', Number(ch.level))
+    await combatHistory.save()
+  } else {
+    logger.info('unconfirmed beforeSave!')
+  }
+})

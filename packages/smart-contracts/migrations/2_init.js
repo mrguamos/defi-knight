@@ -15,6 +15,7 @@ const Oracle = artifacts.require("Oracle");
 const Morale = artifacts.require("Morale");
 const PriceManager = artifacts.require("PriceManager");
 const Market = artifacts.require("Market");
+const RewardsManager = artifacts.require("RewardsManager");
 
 module.exports = async (deployer, network, accounts) => {
   let vrf = "";
@@ -140,6 +141,10 @@ module.exports = async (deployer, network, accounts) => {
   );
   knightMinter = await deployer.deploy(LocalKnightMinter, knight.address);
 
+  const rewardsManager = await deployProxy(RewardsManager, [], {
+    deployer,
+  });
+
   const game = await deployProxy(
     Game,
     [
@@ -152,6 +157,8 @@ module.exports = async (deployer, network, accounts) => {
       commanderMinter.address,
       morale.address,
       priceManager.address,
+      rewardsManager.address,
+      oracle,
     ],
     { deployer }
   );
@@ -198,4 +205,8 @@ module.exports = async (deployer, network, accounts) => {
     { deployer }
   );
   await guild.grantRole(GUILD_GAME_ADMIN_ROLE, market.address);
+
+  const REWARDS_MANAGER_GAME_ADMIN_ROLE =
+    await rewardsManager.GAME_ADMIN_ROLE();
+  await rewardsManager.grantRole(REWARDS_MANAGER_GAME_ADMIN_ROLE, game.address);
 };

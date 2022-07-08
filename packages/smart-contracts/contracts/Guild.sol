@@ -254,4 +254,12 @@ contract Guild is
         guilds[guildId].emblem = emblem;
         updateWinRate(guildId, guilds[guildId].winRate + EMBLEM_BONUS);
     }
+
+    function updateLastFight(uint256 guildId)
+        public
+        onlyRole(GAME_ADMIN_ROLE)
+        whenNotPaused
+    {
+        guilds[guildId].lastFight = block.timestamp;
+    }
 }

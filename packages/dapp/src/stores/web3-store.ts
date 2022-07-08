@@ -3,6 +3,7 @@ import { useAccount } from './account-store'
 import { useContract } from './contract-store'
 import { ethers, providers } from 'ethers'
 import { markRaw } from 'vue'
+import { useRewards } from './rewards-store'
 
 // eslint-disable-next-line
 declare let window: any
@@ -40,6 +41,15 @@ export const useWeb3 = defineStore('web3', {
         contracts.init()
 
         await account.init(address)
+        const rewardsManager = useRewards()
+        rewardsManager.rewardsFee = await rewardsManager.getAccountRewards(
+          address
+        )
+        rewardsManager.rewardsDuration =
+          await rewardsManager.getRewardsDuration()
+        rewardsManager.rewardsFee = await rewardsManager.getRewardsFee()
+        rewardsManager.rewardsFeePerDay =
+          await rewardsManager.getRewardsFeePerDay()
         return
       }
       this.isWrongNetwork = true

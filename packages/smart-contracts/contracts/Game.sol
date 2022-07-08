@@ -13,6 +13,8 @@ import "./IMinter.sol";
 import "./Morale.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./PriceManager.sol";
+import "./RewardsManager.sol";
+import "./IOracle.sol";
 
 contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
     using Counters for Counters.Counter;
@@ -34,14 +36,32 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
     uint8 private constant TYPE_COMMANDER = 0;
     uint8 private constant TYPE_KNIGHT = 1;
 
-    struct Enemy {
-        uint16 combatPower;
-        uint256 rewards;
+    struct Combat {
+        uint256 combatId;
+        address account;
+        uint256 amount;
+        uint256 guildId;
+        uint256 timestamp;
+        uint8 level;
     }
 
-    mapping(uint8 => Enemy) enemies;
+    mapping(uint256 => Combat) public combatHistory;
 
     PriceManager priceManager;
+
+    RewardsManager rewardsManager;
+
+    Counters.Counter private combatCounter;
+
+    IOracle private oracle;
+
+    event CombatEvent(uint256 indexed combatId);
+
+    event Claim(
+        address indexed account,
+        uint256 indexed amount,
+        uint256 indexed timestamp
+    );
 
     function initialize(
         DefiKnight _defiKnight,
@@ -52,7 +72,9 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         IMinter _knightMinter,
         IMinter _commanderMinter,
         Morale _morale,
-        PriceManager _priceManager
+        PriceManager _priceManager,
+        RewardsManager _rewardsManager,
+        IOracle _oracle
     ) public initializer {
         __AccessControl_init();
         __UUPSUpgradeable_init();
@@ -68,6 +90,8 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         morale = _morale;
         isPaused = false;
         priceManager = _priceManager;
+        rewardsManager = _rewardsManager;
+        oracle = _oracle;
     }
 
     function mintKnight() external payable onlyNonContract {
@@ -120,6 +144,7 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         require(moraleFee > 0);
 
         uint256[] memory knights = guild.getAllKnights(guildId);
+        require(knights.length > 0, "Guild has no knights");
         uint256 totalMoraleFee = moraleFee * (14 * knights.length);
 
         require(
@@ -131,13 +156,65 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         guild.addMorale(guildId, 14);
     }
 
-    function conquer(uint256 guildId, uint8 enemy) external onlyNonContract {
+    function conquer(uint256 guildId, uint8 level) external onlyNonContract {
+        RewardsManager.Rewards memory rewards = rewardsManager.getRewards();
         require(guild.ownerOf(guildId) == msg.sender);
         Guild.GuildState memory g = guild.getGuild(guildId);
         require(g.morale > 0, "Out of morale");
         uint256 lastFight = g.lastFight;
-        require(lastFight >= lastFight + 1 days);
+        require(block.timestamp >= lastFight + 1 days, "Cooldown");
+        require(level > 0 && level <= rewards.maxLevel, "Invalid Level");
+
+        uint16 requiredCP = rewards.minCP +
+            (level - 1) *
+            rewards.levelIncrement;
+        require(g.combatPower >= requiredCP, "Not Enought Combat Power");
+        uint16 diff = g.combatPower - requiredCP;
+        uint8 subLevel = uint8(diff / uint16(rewards.cpIncrement));
+        if (subLevel > rewards.maxSubLevel - 1) {
+            subLevel = rewards.maxSubLevel - 1;
+        }
+        uint8 wr = rewards.minWR + (subLevel * rewards.wrIncrement) + g.winRate;
+        combatCounter.increment();
+        uint256 combatId = combatCounter.current();
+
         counter.increment();
+        uint256 random = uint256(
+            keccak256(
+                abi.encodePacked(
+                    blockhash(block.number - 1),
+                    msg.sender,
+                    block.timestamp,
+                    gasleft(),
+                    counter.current(),
+                    combatCounter.current()
+                )
+            )
+        );
+        uint256 amount;
+        uint256 roll = (random % 100);
+        if (roll >= wr) {
+            // if (roll < 0) {
+            amount = 0;
+        } else {
+            amount =
+                rewards.minAmount +
+                (rewards.amountIncrement * (level - 1));
+            amount =
+                (amount * oracle.getUsdPrice()) *
+                10**defiKnight.decimals();
+            rewardsManager.updateAccountRewards(msg.sender, amount);
+        }
+        combatHistory[combatId] = Combat(
+            combatId,
+            msg.sender,
+            amount,
+            guildId,
+            block.timestamp,
+            level
+        );
+        guild.updateLastFight(guildId);
+        emit CombatEvent(combatId);
     }
 
     function setPaused(bool _isPaused) public onlyRole(DEFAULT_ADMIN_ROLE) {
@@ -327,5 +404,19 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         } else {
             guild.updateWinRate(guildId, 0);
         }
+    }
+
+    function claim() external onlyNonContract {
+        uint256 amount = rewardsManager.claim(msg.sender);
+        defiKnight.transfer(msg.sender, amount);
+        emit Claim(msg.sender, amount, block.timestamp);
+    }
+
+    function getCombatHistory(uint256 combatId)
+        external
+        view
+        returns (Combat memory)
+    {
+        return combatHistory[combatId];
     }
 }

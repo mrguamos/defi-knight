@@ -1,5 +1,12 @@
 <template>
   <MenuDrawer v-model="drawer" />
+  <Transition name="account-drawer">
+    <AccountDrawer
+      v-if="accountDrawer"
+      :rewards="rewards"
+      @toggle="accountDrawer = !accountDrawer"
+    />
+  </Transition>
   <div
     class="flex w-full fixed top-0 z-10 items-center h-20 transition duration-700"
     :class="scroll ? 'bg-slate-900 bg-opacity-90 shadow-lg' : 'bg-transparent'"
@@ -11,7 +18,15 @@
     </div>
     <div class="flex flex-auto justify-between">
       <div class="ml-5 lg:hidden flex items-center">
-        <button class="inline-flex items-center" @click="drawer = true">
+        <button
+          class="inline-flex items-center"
+          @click="
+            () => {
+              drawer = true
+              useMain().drawer = true
+            }
+          "
+        >
           <FontAwesomeIcon :icon="['fas', 'bars']" size="lg" />
         </button>
       </div>
@@ -28,9 +43,9 @@
             >GUILDS</HeaderButton
           >
         </router-link>
-        <router-link to="/conquer">
+        <!-- <router-link to="/conquer">
           <HeaderButton>CONQUER</HeaderButton>
-        </router-link>
+        </router-link> -->
         <a href="https://marketplace.defiknight.io" target="_blank">
           <HeaderButton
             >MARKETPLACE
@@ -97,11 +112,11 @@
                   {{ numeral(account.getTotalDK('ether')).format('0a.00') }} DK
                 </span>
               </MenuItem>
-              <MenuItem>
+              <MenuItem @click="showAccountDrawer()">
                 <span
                   class="block px-4 py-2 hover:cursor-pointer hover:shadow-text rounded-lg"
                 >
-                  REWARDS
+                  Rewards
                 </span>
               </MenuItem>
             </MenuItems>
@@ -122,6 +137,9 @@
   import MenuDrawer from './MenuDrawer.vue'
   import DKIcon from './DKIcon.vue'
   import { useRoute } from 'vue-router'
+  import { useRewards } from '../stores/rewards-store'
+  import AccountDrawer from './AccountDrawer.vue'
+  import { useMain } from '../stores/main-store'
 
   const account = useAccount()
   const eth = useWeb3()
@@ -144,4 +162,25 @@
       console.log(error)
     }
   }
+
+  const rewards = ref()
+  const accountDrawer = ref(false)
+
+  const showAccountDrawer = async () => {
+    rewards.value = await useRewards().getAccountRewards(account.address)
+    accountDrawer.value = true
+    useMain().drawer = true
+  }
 </script>
+
+<style scoped>
+  .account-drawer-enter-active,
+  .account-drawer-leave-active {
+    @apply translate-x-0 ease-in-out duration-300;
+  }
+
+  .account-drawer-enter-from,
+  .account-drawer-leave-to {
+    @apply translate-x-full;
+  }
+</style>

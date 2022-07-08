@@ -13,8 +13,6 @@
       "**/smart-contracts/**",
       "**/dapp",
       "**/dapp/**",
-      "**/market",
-      "**/market/**",
       "**/marketplace-ui",
       "**/marketplace-ui/**"
     ]

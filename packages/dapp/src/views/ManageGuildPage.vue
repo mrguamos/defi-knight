@@ -115,7 +115,7 @@
                       scope="row"
                       class="flex w-full items-center justify-end px-6 py-4 font-medium text-white whitespace-nowrap"
                     >
-                      {{ selectedGuild.winRate }}
+                      {{ selectedGuild.winRate }}% WR
                     </th>
                   </tr>
                   <tr
@@ -132,11 +132,15 @@
 
                     <th
                       scope="row"
-                      class="flex w-full items-center justify-end px-6 py-4 font-medium text-white whitespace-nowrap"
+                      class="flex w-full items-center justify-end px-6 py-4 font-bold whitespace-nowrap"
+                      :class="isCooldown ? 'text-green-700' : 'text-red-700'"
                     >
                       {{
                         selectedGuild.lastFight > 0
-                          ? new Date(selectedGuild.lastFight)
+                          ? dayjs
+                              .unix(selectedGuild.lastFight)
+                              .toDate()
+                              .toLocaleString()
                           : 'N/A'
                       }}
                     </th>
@@ -398,7 +402,7 @@
                 class="inline-block w-full max-w-lg p-6 overflow-hidden text-left align-middle transition-all transform bg-slate-900 bg-opacity-90 rounded-md"
                 style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
               >
-                <div class="flex grow flex-col text-sm gap-4">
+                <div class="flex flex-col text-sm gap-4">
                   <div class="flex justify-center items-center">
                     <NFTCard
                       :nft="selectedNft"
@@ -420,6 +424,66 @@
         </div>
       </Dialog>
     </TransitionRoot>
+    <TransitionRoot appear :show="moraleDialog" as="template">
+      <Dialog as="div" @close="main.loading ? '' : closeMoraleModal()">
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+          <div class="min-h-screen px-4 text-center">
+            <TransitionChild
+              as="template"
+              enter="duration-300 ease-out"
+              enter-from="opacity-0"
+              enter-to="opacity-100"
+              leave="duration-200 ease-in"
+              leave-from="opacity-100"
+              leave-to="opacity-0"
+            >
+              <DialogOverlay class="fixed inset-0 bg-black opacity-70" />
+            </TransitionChild>
+
+            <span class="inline-block h-screen align-middle" aria-hidden="true">
+              &#8203;
+            </span>
+
+            <TransitionChild
+              as="template"
+              enter="duration-300 ease-out"
+              enter-from="opacity-0 scale-95"
+              enter-to="opacity-100 scale-100"
+              leave="duration-200 ease-in"
+              leave-from="opacity-100 scale-100"
+              leave-to="opacity-0 scale-95"
+            >
+              <div
+                class="inline-block w-auto max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-slate-900 bg-opacity-90 rounded-md"
+                style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
+              >
+                <DialogTitle
+                  as="h3"
+                  class="text-center text-lg font-medium text-teal-700"
+                  ><div class="flex flex-col gap-2">
+                    <span class="text-red-700 animate-pulse"
+                      >ADDITIONAL MORALE</span
+                    >
+                    <div class="flex justify-center items-center">
+                      {{ moraleFee }} DK
+                      <DKIcon class="w-10 h-10 ml-1" />
+                    </div>
+                  </div>
+                </DialogTitle>
+                <div class="flex grow flex-col text-sm gap-4 mt-5">
+                  <div class="flex justify-center gap-4 text-sm text-white">
+                    <PrimaryButton @click="addMembers()"> SUBMIT</PrimaryButton>
+                    <SecondaryButton c @click="closeMoraleModal()">
+                      CANCEL</SecondaryButton
+                    >
+                  </div>
+                </div>
+              </div>
+            </TransitionChild>
+          </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
   </div>
 </template>
 <script lang="ts" setup>
@@ -429,6 +493,7 @@
     TransitionChild,
     Dialog,
     DialogOverlay,
+    DialogTitle,
   } from '@headlessui/vue'
   import { useAccount } from '../stores/account-store'
   import { Commander } from '../types/commander'
@@ -445,6 +510,10 @@
   import NFTCard from '../components/NFTCard.vue'
   import type { CharacterCommon } from '../types/common'
   import SecondaryButton from '../components/SecondaryButton.vue'
+  import { usePriceManager } from '../stores/price-manager-store'
+  import PrimaryButton from '../components/PrimaryButton.vue'
+  import DKIcon from '../components/DKIcon.vue'
+  import dayjs from 'dayjs'
 
   const game = useGame()
   const account = useAccount()
@@ -464,6 +533,8 @@
   const selectedNft = ref('')
 
   const addMemberToggle = ref(false)
+
+  const priceManager = usePriceManager()
 
   const dialog = ref(false)
 
@@ -535,6 +606,15 @@
     assert(selectedGuild.value)
     if (!Number(selectedGuild.value.id)) {
       selectedGuild.value = undefined
+      return
+    }
+    if (selectedGuild.value.lastFight <= 0) {
+      isCooldown.value = true
+    } else {
+      isCooldown.value = dayjs
+        .unix(selectedGuild.value.lastFight)
+        .add(1, 'day')
+        .isSameOrBefore(dayjs())
     }
     const res = await Promise.all([
       useGuild().getAllCommanders(id),
@@ -575,7 +655,30 @@
     )
   }
 
+  const moraleFee = ref(0)
+  const moraleDialog = ref(false)
+
+  const closeMoraleModal = () => {
+    moraleDialog.value = false
+  }
+
+  const showMoraleDialog = async () => {
+    assert(selectedGuild.value)
+    moraleFee.value =
+      Number(utils.formatUnits(await priceManager.getMoraleFee(), 'ether')) *
+      (newKnightsGuild.value.length * selectedGuild.value.morale)
+    moraleDialog.value = true
+  }
+
   const submit = async () => {
+    if (selectedGuild.value?.morale) {
+      showMoraleDialog()
+      return
+    }
+    addMembers()
+  }
+
+  const addMembers = async () => {
     const commanderIds: number[] = []
     const knightIds: number[] = []
 
@@ -615,6 +718,8 @@
       main.loading = false
     }
   }
+
+  const isCooldown = ref(false)
 
   function getImageUrl(id: number) {
     return new URL(`/src/assets/emblems/${id}.png`, import.meta.url).href

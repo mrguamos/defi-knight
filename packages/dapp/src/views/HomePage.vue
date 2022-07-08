@@ -92,7 +92,6 @@
     function handler() {
       const value = counter
       const data = val.value
-      console.log(val.value)
       const time = value / speed
       if (data < value) {
         val.value = Math.ceil(data + time)

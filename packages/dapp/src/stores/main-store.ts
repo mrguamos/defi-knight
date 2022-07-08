@@ -10,6 +10,7 @@ export const useMain = defineStore('main', {
     return {
       loading: false,
       refresh: false,
+      drawer: false,
     }
   },
   getters: {

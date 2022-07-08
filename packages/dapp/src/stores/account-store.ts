@@ -58,5 +58,10 @@ export const useAccount = defineStore('account', {
         return ethers.utils.formatUnits(state.totalDK.toString(), unit)
       }
     },
+    getAccountRewards: () => {
+      return function (unit: string, amount: number) {
+        return ethers.utils.formatUnits(amount, unit)
+      }
+    },
   },
 })
