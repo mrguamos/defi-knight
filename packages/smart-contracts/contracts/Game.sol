@@ -165,8 +165,8 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         require(block.timestamp >= lastFight + 1 days, "Cooldown");
         require(level > 0 && level <= rewards.maxLevel, "Invalid Level");
 
-        uint16 requiredCP = rewards.minCP +
-            (level - 1) *
+        uint16 requiredCP = uint16(rewards.minCP) +
+            uint16(level - 1) *
             rewards.levelIncrement;
         require(g.combatPower >= requiredCP, "Not Enought Combat Power");
         uint16 diff = g.combatPower - requiredCP;

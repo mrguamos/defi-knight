@@ -374,7 +374,7 @@
     // console.log(item)
     try {
       main.loading = true
-      const res = await game.conquer(id, 1)
+      const res = await game.conquer(id, selectedLevel.value)
       const receipt = await res.wait()
       for (const log of receipt.logs) {
         try {

@@ -138,7 +138,7 @@
   const seconds = ref('00')
 
   setInterval(function () {
-    if (props.rewards.lastClaim > 0) {
+    if (Number(props.rewards.amount.toString()) > 0) {
       const now = new Date().getTime()
       const timeleft = countDownDate.valueOf() - now
 
@@ -172,7 +172,7 @@
 
   const fee = computed(() => {
     let _fee = 0
-    if (props.rewards.lastClaim > 0) {
+    if (Number(props.rewards.amount.toString()) > 0) {
       // const r =
       //   Number(hours.value) && Number(minutes.value) && Number(seconds.value)
       // _fee =
