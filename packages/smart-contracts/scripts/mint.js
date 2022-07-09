@@ -34,11 +34,11 @@ module.exports = async (callback, a) => {
       let knights = [1 + i * 5, 2 + i * 5, 3 + i * 5, 4 + i * 5, 5 + i * 5];
       await game.addGuildMembers(i + 1, comms, knights);
       await game.buyMorale(i + 1);
-      try {
-        await game.conquer(i + 1, 2);
-      } catch (error) {
-        console.log(error);
-      }
+      // try {
+      //   await game.conquer(i + 1, 2);
+      // } catch (error) {
+      //   console.log(error);
+      // }
     }
 
     // let balance = await defiKnight.balanceOf(

@@ -248,33 +248,7 @@
         </table>
       </div>
     </div>
-    <!-- <div
-      class="flex w-full md:max-w-2xl h-full justify-center items-center mt-10 bg-black/20 py-20 rounded-lg"
-    >
-      <swiper
-        :loop="true"
-        :loop-fill-group-with-blank="true"
-        :keyboard="{
-          enabled: true,
-        }"
-        :navigation="true"
-        :modules="modules"
-        class="w-full h-full max-w-sm md:max-w-2xl"
-      >
-        <swiper-slide
-          v-for="slide in 25"
-          :key="slide"
-          class="flex justify-center items-center"
-          ><div class="flex justify-center items-center w-full h-full mx-20">
-            <img
-              src="/src/assets/war.jpg"
-              class="max-w-sm md:max-w-lg rounded-lg"
-            />
-            <span class="absolute">LEVEL {{ slide }}</span>
-          </div></swiper-slide
-        >
-      </swiper>
-    </div> -->
+
     <div
       v-if="selectedLevel"
       class="flex items-center justify-center mt-10 w-full max-w-sm animate-pulse"
@@ -290,6 +264,62 @@
         >COOLDOWN</span
       >
     </div>
+    <TransitionRoot appear :show="dialog" as="template">
+      <Dialog as="div" @close="main.loading ? '' : closeModal()">
+        <div class="fixed inset-0 z-40 overflow-y-auto">
+          <div class="min-h-screen px-4 text-center">
+            <TransitionChild
+              as="template"
+              enter="duration-300 ease-out"
+              enter-from="opacity-0"
+              enter-to="opacity-100"
+              leave="duration-200 ease-in"
+              leave-from="opacity-100"
+              leave-to="opacity-0"
+            >
+              <DialogOverlay class="fixed inset-0 bg-black opacity-70" />
+            </TransitionChild>
+
+            <span class="inline-block h-screen align-middle" aria-hidden="true">
+              &#8203;
+            </span>
+
+            <TransitionChild
+              as="template"
+              enter="duration-300 ease-out"
+              enter-from="opacity-0 scale-95"
+              enter-to="opacity-100 scale-100"
+              leave="duration-200 ease-in"
+              leave-from="opacity-100 scale-100"
+              leave-to="opacity-0 scale-95"
+            >
+              <div
+                class="inline-block w-full max-w-lg p-6 overflow-hidden text-left align-middle transition-all transform bg-slate-900 bg-opacity-90 rounded-md"
+                style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
+              >
+                <div class="flex flex-col text-sm gap-4">
+                  <div class="flex justify-center items-center">
+                    <video class="object-contain" autoplay playsinline>
+                      <source
+                        :src="result ? victory : defeat"
+                        type="video/webm"
+                      />
+                    </video>
+                  </div>
+                  <div
+                    class="flex justify-center gap-4 text-sm text-white mt-2"
+                  >
+                    <SecondaryButton @click="closeModal(true)">
+                      CLOSE</SecondaryButton
+                    >
+                  </div>
+                </div>
+              </div>
+            </TransitionChild>
+          </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
   </div>
 </template>
 
@@ -301,40 +331,38 @@
   import type { Guild } from '../types/guild'
   import dayjs from 'dayjs'
 
-  import { Swiper, SwiperSlide } from 'swiper/vue'
-
-  // Import Swiper styles
-  import 'swiper/css'
-
-  import 'swiper/css/pagination'
-  import 'swiper/css/navigation'
-
-  import { Pagination, Navigation, Keyboard } from 'swiper'
-  import SwiperClass from 'swiper/types'
-  import PrimaryButton from '../components/PrimaryButton.vue'
   import { useGame } from '../stores/game-store'
   import { useMain } from '../stores/main-store'
-  import { useAccount } from '../stores/account-store'
   import { useRewards } from '../stores/rewards-store'
+  import victory from '/src/assets/victory.webm'
+  import defeat from '/src/assets/defeat.webm'
+  import SecondaryButton from '../components/SecondaryButton.vue'
 
   import {
     Listbox,
     ListboxButton,
     ListboxOptions,
     ListboxOption,
+    TransitionRoot,
+    TransitionChild,
+    Dialog,
+    DialogOverlay,
+    DialogTitle,
   } from '@headlessui/vue'
+
+  const dialog = ref(false)
+
+  const closeModal = (exit?: boolean) => {
+    dialog.value = false
+    if (exit) router.push('/guilds')
+  }
+
+  const showDialog = async () => {
+    dialog.value = true
+  }
 
   const game = useGame()
   const main = useMain()
-
-  const modules = [Navigation, Pagination, Keyboard]
-
-  const onSwiper = (swiper: SwiperClass.Swiper) => {
-    console.log(swiper)
-  }
-  const onSlideChange = () => {
-    console.log('slide change')
-  }
 
   const selectedGuild = ref<Guild>()
   const route = useRoute()
@@ -369,6 +397,8 @@
 
   const router = useRouter()
 
+  const result = ref(false)
+
   const conquer = async () => {
     // const item = await game.getCombat(1)
     // console.log(item)
@@ -383,15 +413,15 @@
             const item = await game.getCombat(Number(data.args[0].toString()))
 
             if (Number(item.amount.toString())) {
-              alert('WIN')
+              result.value = true
               return
             }
-            alert('LOSE')
+            result.value = false
           }
         } catch (error) {
           console.log(error)
         } finally {
-          router.push('/guilds')
+          showDialog()
         }
       }
     } catch (error) {
