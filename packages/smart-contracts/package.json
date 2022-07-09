@@ -9,7 +9,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "generate-types": "typechain --target=truffle-v5 'build/contracts/*.json'",
-    "compile": "truffle compile",
+    "compile": "truffle compile --all",
     "migrate": "truffle migrate",
     "migrate-local": "truffle migrate --reset --compile-all --network development",
     "truffle-exec": "truffle exec"

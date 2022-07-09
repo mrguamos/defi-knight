@@ -28,6 +28,7 @@ import {
   faTimes,
   faUsersSlash,
   faCaretDown,
+  faInfoCircle,
 } from '@fortawesome/free-solid-svg-icons'
 import { faStar as farStar } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -61,7 +62,8 @@ dayjs.extend(isSameOrBefore)
     faTimes,
     faUsersSlash,
     faCheck,
-    faCaretDown
+    faCaretDown,
+    faInfoCircle
   )
 
   const app = createApp(App)

@@ -19,7 +19,7 @@ module.exports = async (callback, a) => {
         "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
       )
     );
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 100; i++) {
       await game.mintCommander({
         value: 100000000000000000,
       });
@@ -28,7 +28,7 @@ module.exports = async (callback, a) => {
       });
     }
 
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 20; i++) {
       await game.mintGuild("0x");
       let comms = [1 + i * 5, 2 + i * 5, 3 + i * 5, 4 + i * 5, 5 + i * 5];
       let knights = [1 + i * 5, 2 + i * 5, 3 + i * 5, 4 + i * 5, 5 + i * 5];

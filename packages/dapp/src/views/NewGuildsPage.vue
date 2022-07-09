@@ -1,121 +1,83 @@
 <template>
-  <div class="flex flex-col h-full pb-10 pt-28">
+  <div class="flex flex-col h-full pb-10 pt-28 w-full">
     <div
-      class="overflow-x-auto overflow-y-auto sm:-mx-6 lg:-mx-8 h-[calc(100vh-300px)]"
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-7 w-full mb-10"
     >
-      <div class="inline-block py-2 min-w-full sm:px-6 lg:px-8">
-        <div class="overflow-hidden shadow-md sm:rounded-lg">
-          <table class="min-w-full">
-            <thead
-              class="bg-blue-700 text-white"
-              style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
+      <div
+        v-for="item in paginatedGuilds"
+        :key="item.id"
+        class="flex flex-col justify-center items-center gap-4 px-5 md:px-0"
+      >
+        <div
+          class="relative flex flex-col w-full justify-center items-center gap-2"
+        >
+          <router-link :to="`/guilds/manage/${item.id}`">
+            <button
+              class="absolute top-0 right-0 text-blue-500 inline-flex items-center"
+              title="Manage"
             >
-              <tr>
-                <th
-                  scope="col"
-                  class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                >
-                  ID
-                </th>
-
-                <th
-                  scope="col"
-                  class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                >
-                  NAME
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                >
-                  MORALE
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                >
-                  COMBAT POWER
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                >
-                  BONUS WR
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                >
-                  LAST FIGHT
-                </th>
-                <th scope="col" class="relative py-3 px-6">
-                  <span class="sr-only">Manage</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody class="">
-              <tr
-                v-for="item of paginatedGuilds"
-                :key="item.id"
-                class="border-b even:bg-blue-700/30 odd:bg-blue-700/50 border-gray-700"
-                style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
-              >
-                <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                  {{ item.id }}
-                </td>
-                <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                  {{ utils.parseBytes32String(item.name) }}
-                </td>
-                <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                  {{ item.morale }}
-                </td>
-                <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                  {{ item.combatPower }}
-                </td>
-                <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                  {{ item.winRate }}
-                </td>
-                <td
-                  class="py-4 px-6 text-sm font-bold whitespace-nowrap"
-                  :class="isCooldown(item) ? 'text-green-700' : 'text-red-700'"
-                >
-                  {{
-                    item.lastFight > 0
-                      ? dayjs.unix(item.lastFight).toDate().toLocaleString()
-                      : 'N/A'
-                  }}
-                </td>
-                <td
-                  class="text-right px-6 text-sm font-medium whitespace-nowrap space-x-2"
-                >
-                  <router-link :to="`/guilds/manage/${item.id}`">
-                    <button
-                      class="text-teal-700 inline-flex items-center"
-                      title="Manage"
-                    >
-                      <FontAwesomeIcon :icon="['fas', 'tasks']" size="2x" />
-                    </button>
-                  </router-link>
-
-                  <button
-                    class="text-red-700 inline-flex items-center"
-                    title="Conquer"
-                    @click="showConquer(item)"
-                  >
-                    <FontAwesomeIcon
-                      :icon="['fas', 'khanda']"
-                      size="2x"
-                      class="fa-beat"
-                    />
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+              <FontAwesomeIcon :icon="['fas', 'info-circle']" size="2x" />
+            </button>
+          </router-link>
+          <img :src="getImageUrl(item.emblem)" class="w-36" />
+        </div>
+        <div class="text-sm font-bold text-center">
+          {{
+            utils.parseBytes32String(item.name)
+              ? utils.parseBytes32String(item.name)
+              : 'G #' +
+                item.id.toLocaleString('en-US', {
+                  minimumIntegerDigits: 2,
+                  useGrouping: false,
+                })
+          }}
+        </div>
+        <div
+          class="flex flex-col w-full p-6 rounded-lg gap-2 min-h-[170px]"
+          style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
+        >
+          <div class="grid grid-cols-2 text-sm font-medium h-min w-full mt-2">
+            <div class="flex justify-start items-center w-full">
+              <span>ID</span>
+            </div>
+            <div class="flex justify-end items-center">
+              <span>{{ item.id }}</span>
+            </div>
+            <div class="flex justify-start items-center w-full">
+              <span>CP</span>
+            </div>
+            <div class="flex justify-end items-center">
+              <span>{{ item.combatPower }} </span>
+            </div>
+            <div
+              v-if="isCooldown(item)"
+              class="flex justify-start items-center w-full"
+            >
+              <span>WR</span>
+            </div>
+            <div v-if="isCooldown(item)" class="flex justify-end items-center">
+              <span>{{ item.winRate }}% </span>
+            </div>
+          </div>
+          <div class="mt-2 flex w-full justify-center items-center h-full">
+            <button
+              v-if="isCooldown(item)"
+              class="text-red-700 inline-flex items-center"
+              title="Conquer"
+              @click.stop="showConquer(item)"
+            >
+              <FontAwesomeIcon
+                :icon="['fas', 'khanda']"
+                size="2x"
+                class="animate-ping absolute"
+              />
+              <FontAwesomeIcon :icon="['fas', 'khanda']" size="2x" class="" />
+            </button>
+            <CountDown v-else :timestamp="Number(item.lastFight.toString())" />
+          </div>
         </div>
       </div>
     </div>
-
     <div class="grow"></div>
     <GridPagination
       v-model="page"
@@ -136,7 +98,6 @@
       @click="approveDK()"
       >APPROVE</PrimaryButton
     >
-
     <TransitionRoot appear :show="dialog" as="template">
       <Dialog as="div" @close="main.loading ? '' : closeModal()">
         <div class="fixed inset-0 z-10 overflow-y-auto">
@@ -188,7 +149,7 @@
                   />
                   <div class="flex justify-center gap-4 text-sm text-white">
                     <PrimaryButton @click="mintGuild()"> SUBMIT</PrimaryButton>
-                    <SecondaryButton c @click="closeModal()">
+                    <SecondaryButton @click="closeModal()">
                       CANCEL</SecondaryButton
                     >
                   </div>
@@ -261,10 +222,24 @@
     </TransitionRoot>
   </div>
 </template>
-<script lang="ts" setup>
+
+<script setup lang="ts">
   import { ref, computed } from 'vue'
+  import CountDown from '../components/CountDown.vue'
+  import { useAccount } from '../stores/account-store'
   import { useGuild } from '../stores/guild-store'
+  import { useMain } from '../stores/main-store'
+  import { Guild } from '../types/guild'
+  import GridPagination from '../components/GridPagination.vue'
+
+  import { useRouter } from 'vue-router'
   import { usePriceManager } from '../stores/price-manager-store'
+  import { useGame } from '../stores/game-store'
+  import { useContract } from '../stores/contract-store'
+  import { utils } from 'ethers'
+  import SecondaryButton from '../components/SecondaryButton.vue'
+  import DKIcon from '../components/DKIcon.vue'
+
   import {
     TransitionRoot,
     TransitionChild,
@@ -273,16 +248,6 @@
     DialogTitle,
   } from '@headlessui/vue'
   import PrimaryButton from '../components/PrimaryButton.vue'
-  import SecondaryButton from '../components/SecondaryButton.vue'
-  import { useAccount } from '../stores/account-store'
-  import { Guild } from '../types/guild'
-  import { utils } from 'ethers'
-  import GridPagination from '../components/GridPagination.vue'
-  import DKIcon from '../components/DKIcon.vue'
-  import { useContract } from '../stores/contract-store'
-  import { useMain } from '../stores/main-store'
-  import { useRouter } from 'vue-router'
-  import { useGame } from '../stores/game-store'
   import dayjs from 'dayjs'
 
   const router = useRouter()
@@ -317,6 +282,52 @@
     }
   })
 
+  const getMintFee = async () => {
+    mintFee.value = Number(
+      utils.formatUnits(await priceManager.getGuildMintFee(), 'ether')
+    )
+  }
+
+  const getAllowance = async () => {
+    if (account.isConnected) {
+      const allowance = await account.getDKAllowance(useContract().game.address)
+      if (allowance.isZero()) {
+        hasAllowance.value = false
+        return
+      }
+      hasAllowance.value = true
+    }
+  }
+
+  const isCooldown = (item: Guild) => {
+    if (item.lastFight <= 0) {
+      return true
+    }
+    return dayjs.unix(item.lastFight).add(1, 'day').isSameOrBefore(dayjs())
+  }
+
+  getAllowance()
+
+  const approveDK = async () => {
+    try {
+      main.loading = true
+      const res = await account.approveDK(useContract().game.address)
+      const receipt = await res.wait()
+      console.log(receipt)
+      getAllowance()
+      // eslint-disable-next-line
+    } catch (error: any) {
+      console.log(error)
+      if (error.code !== 4001) {
+        //
+      }
+    } finally {
+      main.loading = false
+    }
+  }
+
+  const moraleFee = ref(0)
+
   const guildDialog = async () => {
     await getMintFee()
     name.value = ''
@@ -350,6 +361,21 @@
     }
   }
 
+  const getGuild = async () => {
+    const tokenId: number = parseInt(await guild.getLastIndexGuild(), 10)
+    const c = (await guild.getGuild(tokenId))[0]
+    return { ...c, id: tokenId }
+  }
+
+  const pagesNumber = computed(() =>
+    Math.ceil(guilds.value.length / rowsPerPage)
+  )
+
+  const paginatedGuilds = computed(() => {
+    const start = (page.value - 1) * rowsPerPage
+    return guilds.value.slice(start, start + rowsPerPage)
+  })
+
   const getGuilds = async () => {
     if (account.isConnected) {
       try {
@@ -372,59 +398,9 @@
   }
   getGuilds()
 
-  const getGuild = async () => {
-    const tokenId: number = parseInt(await guild.getLastIndexGuild(), 10)
-    const c = (await guild.getGuild(tokenId))[0]
-    return { ...c, id: tokenId }
+  const showManage = (id: number) => {
+    router.push(`/guilds/manage/${id}`)
   }
-
-  const pagesNumber = computed(() =>
-    Math.ceil(guilds.value.length / rowsPerPage)
-  )
-
-  const paginatedGuilds = computed(() => {
-    const start = (page.value - 1) * rowsPerPage
-    return guilds.value.slice(start, start + rowsPerPage)
-  })
-
-  const getMintFee = async () => {
-    mintFee.value = Number(
-      utils.formatUnits(await priceManager.getGuildMintFee(), 'ether')
-    )
-  }
-
-  const getAllowance = async () => {
-    if (account.isConnected) {
-      const allowance = await account.getDKAllowance(useContract().game.address)
-      if (allowance.isZero()) {
-        hasAllowance.value = false
-        return
-      }
-      hasAllowance.value = true
-    }
-  }
-
-  getAllowance()
-
-  const approveDK = async () => {
-    try {
-      main.loading = true
-      const res = await account.approveDK(useContract().game.address)
-      const receipt = await res.wait()
-      console.log(receipt)
-      getAllowance()
-      // eslint-disable-next-line
-    } catch (error: any) {
-      console.log(error)
-      if (error.code !== 4001) {
-        //
-      }
-    } finally {
-      main.loading = false
-    }
-  }
-
-  const moraleFee = ref(0)
 
   const showConquer = async (item: Guild) => {
     if (item.morale > 0) {
@@ -456,10 +432,9 @@
     }
   }
 
-  const isCooldown = (item: Guild) => {
-    if (item.lastFight <= 0) {
-      return true
-    }
-    return dayjs.unix(item.lastFight).add(1, 'day').isSameOrBefore(dayjs())
+  function getImageUrl(id: number) {
+    return new URL(`/src/assets/emblems/${id}.png`, import.meta.url).href
   }
 </script>
+
+<style scoped></style>
