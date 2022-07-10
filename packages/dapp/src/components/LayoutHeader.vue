@@ -133,7 +133,7 @@
   import numeral from 'numeral'
   import { useAccount } from '../stores/account-store'
   import { useWeb3 } from '../stores/web3-store'
-  import { ref } from 'vue'
+  import { ref, watch } from 'vue'
   import MenuDrawer from './MenuDrawer.vue'
   import DKIcon from './DKIcon.vue'
   import { useRoute } from 'vue-router'
@@ -146,6 +146,14 @@
   const drawer = ref(false)
   const scroll = ref(false)
   const route = useRoute()
+
+  watch(drawer, (drawer) => {
+    if (drawer) {
+      window.document.body.style.overflow = 'hidden'
+      return
+    }
+    window.document.body.style.overflow = 'scroll'
+  })
 
   window.addEventListener('scroll', () => {
     if (window.scrollY > 34) {

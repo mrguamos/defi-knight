@@ -30,7 +30,7 @@
               leave-to="opacity-0 scale-95"
             >
               <div
-                class="inline-block w-full max-w-lg p-6 overflow-hidden text-left align-middle transition-all transform bg-slate-900 bg-opacity-90 rounded-md"
+                class="inline-block w-full max-w-lg p-6 text-left align-middle transition-all transform bg-slate-900 bg-opacity-90 rounded-md"
                 style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
               >
                 <div

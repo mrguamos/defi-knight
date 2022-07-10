@@ -14,7 +14,7 @@
   ></div>
   <div class="flex min-h-screen">
     <div class="container mx-auto">
-      <div v-if="useWeb3().isWrongNetwork" class="flex justify-center">
+      <div v-if="useWeb3().isWrongNetwork" class="flex justify-center pt-28">
         <div
           class="text-center w-full p-4 mb-4 max-w-sm text-sm text-white bg-[#530002] rounded-lg"
           role="alert"

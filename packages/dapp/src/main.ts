@@ -28,6 +28,7 @@ import {
   faTimes,
   faUsersSlash,
   faCaretDown,
+  faCog,
   faInfoCircle,
 } from '@fortawesome/free-solid-svg-icons'
 import { faStar as farStar } from '@fortawesome/free-regular-svg-icons'
@@ -63,6 +64,7 @@ dayjs.extend(isSameOrBefore)
     faUsersSlash,
     faCheck,
     faCaretDown,
+    faCog,
     faInfoCircle
   )
 

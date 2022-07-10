@@ -1,5 +1,5 @@
 <template>
-  <div class="z-30 flex h-screen w-full fixed justify-end">
+  <div class="z-30 flex h-screen w-full fixed inset-0 justify-end">
     <div
       class="grow"
       @click="
@@ -107,7 +107,7 @@
   import numeral from 'numeral'
   import { useAccount } from '../stores/account-store'
   import dayjs from 'dayjs'
-  import { ref } from 'vue'
+  import { onMounted, onUnmounted, ref } from 'vue'
   import { useMain } from '../stores/main-store'
   import { computed } from '@vue/reactivity'
   import { useRewards } from '../stores/rewards-store'
@@ -201,6 +201,13 @@
       useMain().loading = false
     }
   }
+
+  onMounted(() => {
+    window.document.body.style.overflow = 'hidden'
+  })
+  onUnmounted(() => {
+    window.document.body.style.overflow = 'auto'
+  })
 </script>
 
 <style scoped>

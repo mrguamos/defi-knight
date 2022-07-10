@@ -13,10 +13,14 @@
         >
           <router-link :to="`/guilds/manage/${item.id}`">
             <button
-              class="absolute top-0 right-0 text-blue-500 inline-flex items-center"
+              class="absolute top-0 right-0 text-slate-300 inline-flex items-center"
               title="Manage"
             >
-              <FontAwesomeIcon :icon="['fas', 'info-circle']" size="2x" />
+              <FontAwesomeIcon
+                :icon="['fas', 'cog']"
+                size="2x"
+                class="animate-spin-slow"
+              />
             </button>
           </router-link>
           <img :src="getImageUrl(item.emblem)" class="w-36" />
@@ -48,15 +52,6 @@
             </div>
             <div class="flex justify-end items-center">
               <span>{{ item.combatPower }} </span>
-            </div>
-            <div
-              v-if="isCooldown(item)"
-              class="flex justify-start items-center w-full"
-            >
-              <span>WR</span>
-            </div>
-            <div v-if="isCooldown(item)" class="flex justify-end items-center">
-              <span>{{ item.winRate }}% </span>
             </div>
           </div>
           <div class="mt-2 flex w-full justify-center items-center h-full">
