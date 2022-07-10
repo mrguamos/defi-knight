@@ -207,7 +207,7 @@
                   <div class="flex relative justify-center items-center">
                     <img
                       :src="getImageUrl(selectedGuild.emblem)"
-                      class="w-40 absolute"
+                      class="w-28 md:w-40 absolute"
                     />
                     <div
                       class="grid grid-cols-2 text-sm font-medium h-min w-full mt-2 gap-2"
@@ -285,7 +285,8 @@
                       <div
                         class="flex justify-start items-center w-full text-blue-500"
                       >
-                        <span>COMMANDERS</span>
+                        <span class="hidden md:block">COMMANDERS</span>
+                        <span class="md:hidden">Cs</span>
                       </div>
                       <div
                         class="flex justify-end items-center text-yellow-500"
@@ -295,7 +296,8 @@
                       <div
                         class="flex justify-start items-center w-full text-blue-500"
                       >
-                        <span>KNIGHTS</span>
+                        <span class="hidden md:block">KNIGHTS</span>
+                        <span class="md:hidden">Ks</span>
                       </div>
                       <div
                         class="flex justify-end items-center text-yellow-500"
@@ -305,22 +307,6 @@
                             selectedGuild.maxKnight
                           }}</span
                         >
-                      </div>
-                      <div
-                        class="flex justify-start items-center w-full text-blue-500"
-                      >
-                        <span>LAST BATTLE</span>
-                      </div>
-                      <div
-                        class="flex justify-end items-center text-yellow-500"
-                      >
-                        <span>{{
-                          selectedGuild.lastFight > 0
-                            ? new Date(
-                                selectedGuild.lastFight * 1000
-                              ).toLocaleString()
-                            : 'N/A'
-                        }}</span>
                       </div>
                     </div>
                   </div>

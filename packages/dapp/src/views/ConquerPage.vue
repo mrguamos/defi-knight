@@ -11,8 +11,11 @@
         <span class="text-center text-teal-700 text-base font-bold"
           >GUILD INFORMATION</span
         >
-        <div class="flex relative justify-center items-center w-full my-7">
-          <img :src="getImageUrl(selectedGuild.emblem)" class="w-40 absolute" />
+        <div class="flex relative justify-center items-center w-full my-10">
+          <img
+            :src="getImageUrl(selectedGuild.emblem)"
+            class="w-28 md:w-40 absolute"
+          />
           <div
             class="grid grid-cols-2 text-sm font-medium h-min w-full mt-2 gap-2"
           >
@@ -62,16 +65,6 @@
             </div>
             <div class="flex justify-end items-center text-yellow-500">
               <span>{{ selectedGuild.winRate }}%</span>
-            </div>
-            <div class="flex justify-start items-center w-full text-blue-500">
-              <span>LAST BATTLE</span>
-            </div>
-            <div class="flex justify-end items-center text-yellow-500">
-              <span>{{
-                selectedGuild.lastFight > 0
-                  ? new Date(selectedGuild.lastFight * 1000).toLocaleString()
-                  : 'N/A'
-              }}</span>
             </div>
           </div>
         </div>
