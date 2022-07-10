@@ -11,8 +11,8 @@
         <span class="text-center text-teal-700 text-base font-bold"
           >GUILD INFORMATION</span
         >
-        <div class="flex relative justify-center items-center w-full">
-          <img :src="getImageUrl(selectedGuild.emblem)" class="w-28 absolute" />
+        <div class="flex relative justify-center items-center w-full my-7">
+          <img :src="getImageUrl(selectedGuild.emblem)" class="w-40 absolute" />
           <div
             class="grid grid-cols-2 text-sm font-medium h-min w-full mt-2 gap-2"
           >

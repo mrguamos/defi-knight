@@ -28,7 +28,7 @@
                 class="text-teal-700"
               />
             </button>
-            <button title="Disband Guild">
+            <button title="Disband Guild" @click="disband()">
               <FontAwesomeIcon
                 :icon="['fas', 'users-slash']"
                 size="2x"
@@ -207,7 +207,7 @@
                   <div class="flex relative justify-center items-center">
                     <img
                       :src="getImageUrl(selectedGuild.emblem)"
-                      class="w-28 absolute"
+                      class="w-40 absolute"
                     />
                     <div
                       class="grid grid-cols-2 text-sm font-medium h-min w-full mt-2 gap-2"
@@ -465,6 +465,21 @@
 
         moraleDialog.value = true
       }
+    }
+  }
+
+  const disband = async () => {
+    try {
+      main.loading = true
+      const tx = await game.disbandGuild(id)
+      await tx.wait()
+      router.push({
+        path: `/guilds`,
+      })
+    } catch (error) {
+      //
+    } finally {
+      main.loading = false
     }
   }
 
