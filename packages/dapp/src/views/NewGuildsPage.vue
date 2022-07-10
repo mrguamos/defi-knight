@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col h-full pb-10 pt-28 w-full">
     <div
-      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-7 w-full mb-10"
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-7 w-full mb-10 px-2 lg:px-0"
     >
       <div
         v-for="item in paginatedGuilds"
