@@ -1,305 +1,36 @@
 <template>
-  <div class="flex flex-col w-full h-full items-center">
-    <div
-      class="uppercase mt-10 text-base font-bold py-2 text-teal-700 max-w-lg w-full text-center"
-      style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
-    >
-      New Commanders
-    </div>
-    <div class="flex flex-col lg:flex-row w-full gap-2">
-      <div class="overflow-x-auto mt-10 lg:w-1/2 max-w-4xl lg:max-h-96">
-        <div class="inline-block py-2 min-w-full sm:px-6 lg:px-8">
-          <div class="overflow-hidden shadow-md sm:rounded-lg">
-            <table class="min-w-full">
-              <thead
-                class="bg-blue-700 text-white"
-                style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
-              >
-                <tr>
-                  <th
-                    scope="col"
-                    class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                  >
-                    ID
-                  </th>
+  <div class="flex flex-col w-full items-center gap-10">
+    <div class="grid grid-cols-2 max-w-7xl w-full">
+      <MiniCharacter
+        class="lg:flex hidden"
+        nft="Commanders"
+        :items="commanders"
+        @view-item="viewItem"
+      />
 
-                  <th
-                    scope="col"
-                    class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                  >
-                    RARITY
-                  </th>
-                  <th
-                    scope="col"
-                    class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                  >
-                    BONUS
-                  </th>
-                  <th scope="col"></th>
-                </tr>
-              </thead>
-              <tbody class="">
-                <tr
-                  v-for="c of commanders"
-                  :key="c.id"
-                  class="border-b even:bg-blue-700/30 odd:bg-blue-700/50 border-gray-700 hover:cursor-pointer"
-                  style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
-                  @click.stop="
-                    () => {
-                      selectedNft = 'commanders'
-                      selected = c
-                      dialog = true
-                    }
-                  "
-                >
-                  <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                    {{ c.id }}
-                  </td>
-                  <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                    {{ c.rarity + 1 }}
-                  </td>
-                  <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                    {{ c.isGenesis ? commander.bonus + '% WR' : 'N/A' }}
-                  </td>
-                  <td @click.stop="emit('add-commander', c)">
-                    <button title="Add Member">
-                      <FontAwesomeIcon
-                        :icon="['fas', 'user-plus']"
-                        size="lg"
-                        class="text-teal-700"
-                      />
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="overflow-x-auto mt-10 lg:w-1/2 max-w-4xl lg:max-h-96">
-        <div class="inline-block py-2 min-w-full sm:px-6 lg:px-8">
-          <div class="overflow-hidden shadow-md sm:rounded-lg">
-            <table class="min-w-full">
-              <thead
-                class="bg-blue-700 text-white"
-                style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
-              >
-                <tr>
-                  <th
-                    scope="col"
-                    class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                  >
-                    ID
-                  </th>
-
-                  <th
-                    scope="col"
-                    class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                  >
-                    RARITY
-                  </th>
-                  <th
-                    scope="col"
-                    class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                  >
-                    BONUS
-                  </th>
-                  <th scope="col"></th>
-                </tr>
-              </thead>
-              <tbody class="">
-                <tr
-                  v-for="c of newCommanders"
-                  :key="c.id"
-                  class="border-b even:bg-blue-700/30 odd:bg-blue-700/50 border-gray-700 hover:cursor-pointer"
-                  style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
-                  @click.stop="
-                    () => {
-                      selectedNft = 'commanders'
-                      selected = c
-                      dialog = true
-                    }
-                  "
-                >
-                  <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                    {{ c.id }}
-                  </td>
-                  <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                    {{ c.rarity + 1 }}
-                  </td>
-                  <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                    {{ c.isGenesis ? commander.bonus + '% WR' : 'N/A' }}
-                  </td>
-                  <td @click.stop="emit('remove-commander', c.id)">
-                    <button title="Remove Member">
-                      <FontAwesomeIcon
-                        :icon="['fas', 'times']"
-                        size="lg"
-                        class="text-red-700"
-                      />
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+      <MiniCharacter
+        class="lg:flex hidden"
+        nft="New Commanders"
+        :items="newCommanders"
+        @view-item="viewItem"
+      />
     </div>
-    <div
-      class="uppercase mt-10 text-base font-bold py-2 text-teal-700 max-w-lg w-full text-center"
-      style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
-    >
-      New Knights
-    </div>
-    <div class="flex flex-col lg:flex-row w-full gap-2">
-      <div class="overflow-x-auto mt-10 lg:w-1/2 max-w-4xl lg:max-h-96">
-        <div class="inline-block py-2 min-w-full sm:px-6 lg:px-8">
-          <div class="overflow-hidden shadow-md sm:rounded-lg">
-            <table class="min-w-full">
-              <thead
-                class="bg-blue-700 text-white"
-                style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
-              >
-                <tr>
-                  <th
-                    scope="col"
-                    class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                  >
-                    ID
-                  </th>
+    <div class="grid grid-cols-2 max-w-7xl w-full mt-32">
+      <MiniCharacter
+        class="lg:flex hidden"
+        nft="Knights"
+        :items="knights"
+        @view-item="viewItem"
+      />
 
-                  <th
-                    scope="col"
-                    class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                  >
-                    RARITY
-                  </th>
-                  <th
-                    scope="col"
-                    class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                  >
-                    Combat Power
-                  </th>
-                  <th scope="col"></th>
-                </tr>
-              </thead>
-              <tbody class="">
-                <tr
-                  v-for="k of knights"
-                  :key="k.id"
-                  class="border-b even:bg-blue-700/30 odd:bg-blue-700/50 border-gray-700 hover:cursor-pointer"
-                  style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
-                  @click.stop="
-                    () => {
-                      selectedNft = 'knights'
-                      selected = k
-                      dialog = true
-                    }
-                  "
-                >
-                  <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                    {{ k.id }}
-                  </td>
-                  <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                    {{ k.rarity + 1 }}
-                  </td>
-                  <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                    {{
-                      k.isGenesis
-                        ? `${k.combatPower} + ${knight.bonus}`
-                        : k.combatPower
-                    }}
-                  </td>
-                  <td @click.stop="emit('add-knight', k)">
-                    <button title="Add Member">
-                      <FontAwesomeIcon
-                        :icon="['fas', 'user-plus']"
-                        size="lg"
-                        class="text-teal-700"
-                      />
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="overflow-x-auto mt-10 lg:w-1/2 max-w-4xl lg:max-h-96">
-        <div class="inline-block py-2 min-w-full sm:px-6 lg:px-8">
-          <div class="overflow-hidden shadow-md sm:rounded-lg">
-            <table class="min-w-full">
-              <thead
-                class="bg-blue-700 text-white"
-                style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
-              >
-                <tr>
-                  <th
-                    scope="col"
-                    class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                  >
-                    ID
-                  </th>
-
-                  <th
-                    scope="col"
-                    class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                  >
-                    RARITY
-                  </th>
-                  <th
-                    scope="col"
-                    class="py-3 px-6 text-xs font-medium tracking-wider text-left uppercase"
-                  >
-                    Combat Power
-                  </th>
-                  <th scope="col"></th>
-                </tr>
-              </thead>
-              <tbody class="">
-                <tr
-                  v-for="k of newKnights"
-                  :key="k.id"
-                  class="border-b even:bg-blue-700/30 odd:bg-blue-700/50 border-gray-700 hover:cursor-pointer"
-                  style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
-                  @click.stop="
-                    () => {
-                      selectedNft = 'knights'
-                      selected = k
-                      dialog = true
-                    }
-                  "
-                >
-                  <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                    {{ k.id }}
-                  </td>
-                  <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                    {{ k.rarity + 1 }}
-                  </td>
-                  <td class="py-4 px-6 text-sm font-medium whitespace-nowrap">
-                    {{
-                      k.isGenesis
-                        ? `${k.combatPower} + ${knight.bonus}`
-                        : k.combatPower
-                    }}
-                  </td>
-                  <td @click.stop="emit('remove-knight', k.id)">
-                    <button title="Remove Member">
-                      <FontAwesomeIcon
-                        :icon="['fas', 'times']"
-                        size="lg"
-                        class="text-red-700"
-                      />
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+      <MiniCharacter
+        class="lg:flex hidden"
+        nft="New Knights"
+        :items="newKnights"
+        @view-item="viewItem"
+      />
     </div>
+
     <div class="flex gap-2 mt-10">
       <PrimaryButton
         v-if="commanderApproved && knightApproved"
@@ -329,7 +60,7 @@
               leave-from="opacity-100"
               leave-to="opacity-0"
             >
-              <DialogOverlay class="fixed inset-0 bg-black opacity-70" />
+              <DialogOverlay class="fixed inset-0 bg-black/90" />
             </TransitionChild>
 
             <span class="inline-block h-screen align-middle" aria-hidden="true">
@@ -346,10 +77,9 @@
               leave-to="opacity-0 scale-95"
             >
               <div
-                class="inline-block w-full max-w-lg p-6 overflow-hidden text-left align-middle transition-all transform bg-slate-900 bg-opacity-90 rounded-md"
-                style="box-shadow: 0 0 10px 3px rgb(59 130 246)"
+                class="inline-block w-full max-w-lg p-6 overflow-hidden text-left align-middle transition-all transform rounded-md"
               >
-                <div class="flex grow flex-col text-sm gap-4">
+                <div class="flex flex-col text-sm gap-4">
                   <div class="flex justify-center items-center">
                     <NFTCard
                       :nft="selectedNft"
@@ -393,6 +123,8 @@
   import SecondaryButton from './SecondaryButton.vue'
   import PrimaryButton from './PrimaryButton.vue'
   import NFTCard from './NFTCard.vue'
+  import MiniCharacter from './MiniCharacter.vue'
+
   const commander = useCommander()
   const knight = useKnight()
   const main = useMain()
@@ -401,6 +133,12 @@
   const selectedNft = ref('')
 
   const dialog = ref(false)
+
+  const viewItem = (item: CharacterCommon, nft: string) => {
+    selectedNft.value = nft.toLowerCase()
+    selected.value = item
+    dialog.value = true
+  }
 
   defineProps({
     commanders: {

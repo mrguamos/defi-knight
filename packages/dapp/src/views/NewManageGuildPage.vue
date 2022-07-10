@@ -15,13 +15,11 @@
           >
             <MiniCharacter
               class="lg:flex hidden"
-              :height="mid ? `${mid.clientHeight}` : ''"
               nft="Commanders"
               :items="commandersGuild"
               @view-item="viewItem"
             />
             <div
-              ref="mid"
               class="flex flex-col gap-10 relative w-full justify-start items-center"
             >
               <div class="flex justify-between max-w-sm w-full absolute">
@@ -95,7 +93,6 @@
             </div>
             <MiniCharacter
               class="lg:flex hidden"
-              :height="mid ? `${mid.clientHeight}` : ''"
               nft="Knights"
               :items="knightsGuild"
               @view-item="viewItem"
@@ -103,7 +100,6 @@
           </div>
           <MiniCharacter
             class="flex lg:hidden pt-10"
-            :height="mid ? `${mid.clientHeight}` : ''"
             nft="Commanders"
             :items="commandersGuild"
             size="md"
@@ -111,7 +107,6 @@
           />
           <MiniCharacter
             class="flex lg:hidden pt-10"
-            :height="mid ? `${mid.clientHeight}` : ''"
             nft="Knights"
             :items="knightsGuild"
             size="md"
@@ -475,7 +470,6 @@
   const moraleFee = ref(0)
   const priceManager = usePriceManager()
   const moraleDialog = ref(false)
-  const mid = ref<HTMLElement>(null as unknown as HTMLElement)
 
   const infoDialog = ref(false)
 
