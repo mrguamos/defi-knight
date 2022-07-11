@@ -12,7 +12,8 @@
     "compile": "truffle compile --all",
     "migrate": "truffle migrate",
     "migrate-local": "truffle migrate --reset --compile-all --network development",
-    "truffle-exec": "truffle exec"
+    "truffle-exec": "truffle exec",
+    "truffle-verify": "truffle run verify"
   },
   "keywords": [],
   "author": "",

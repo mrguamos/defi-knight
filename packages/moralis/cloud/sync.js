@@ -5,7 +5,7 @@ const networkId = process.env.VITE_APP_NETWORK_ID || 1337
 
 const marketAddress = marketNetworks[networkId].address
 
-const marketDesc = 'ListingEvent'
+const marketDesc = 'ListingEvents'
 
 const marketTableName = 'ListingEvents'
 

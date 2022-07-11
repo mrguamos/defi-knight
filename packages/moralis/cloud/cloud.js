@@ -1,4 +1,4 @@
-Moralis.Cloud.beforeSave('ListingEvents', async (request) => {
+Moralis.Cloud.afterSave('ListingEvents', async (request) => {
   //moralis docs
   const config = await Moralis.Config.get()
   const web3 = Moralis.web3ByChain(config.get('NETWORK_ID'))
@@ -49,7 +49,7 @@ Moralis.Cloud.beforeSave('ListingEvents', async (request) => {
     },
   ]
   if (confirmed) {
-    logger.info('confirmed beforeSave!')
+    logger.info('confirmed afterSave!')
     const nftType = request.object.get('nftType')
     const tokenId = request.object.get('tokenId')
     logger.info('nftType: ' + nftType + ' tokenId: ' + tokenId)
@@ -134,7 +134,7 @@ Moralis.Cloud.beforeSave('ListingEvents', async (request) => {
       if (web3.utils.toBN(listing.owner).isZero()) {
         commander.set('status', 0)
       }
-      await commander.save()
+      await commander.save(null, { useMasterKey: true })
     } else if (nftType == 1) {
       const abiKnight = [
         {
@@ -215,10 +215,10 @@ Moralis.Cloud.beforeSave('ListingEvents', async (request) => {
       if (web3.utils.toBN(listing.owner).isZero()) {
         knight.set('status', 0)
       }
-      await knight.save()
+      await knight.save(null, { useMasterKey: true })
     }
   } else {
-    logger.info('unconfirmed beforeSave!')
+    logger.info('unconfirmed afterSave!')
   }
 })
 
@@ -388,7 +388,7 @@ Moralis.Cloud.define('knights', async (request) => {
   return response
 })
 
-Moralis.Cloud.beforeSave('CombatEvents', async (request) => {
+Moralis.Cloud.afterSave('CombatEvents', async (request) => {
   //moralis docs
   const config = await Moralis.Config.get()
   const web3 = Moralis.web3ByChain(config.get('NETWORK_ID'))
@@ -449,7 +449,7 @@ Moralis.Cloud.beforeSave('CombatEvents', async (request) => {
     },
   ]
   if (confirmed) {
-    logger.info('confirmed beforeSave!')
+    logger.info('confirmed afterSave!')
     const combatId = request.object.get('combatId')
     logger.info('combatId: ' + combatId)
     const gameContract = new web3.eth.Contract(
@@ -465,8 +465,8 @@ Moralis.Cloud.beforeSave('CombatEvents', async (request) => {
     combatHistory.set('guildId', Number(ch.guildId))
     combatHistory.set('block_timestamp', Number(ch.timestamp))
     combatHistory.set('level', Number(ch.level))
-    await combatHistory.save()
+    await combatHistory.save(null, { useMasterKey: true })
   } else {
-    logger.info('unconfirmed beforeSave!')
+    logger.info('unconfirmed afterSave!')
   }
 })
