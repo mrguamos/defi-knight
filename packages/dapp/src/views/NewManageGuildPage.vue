@@ -402,7 +402,9 @@
                   </DialogTitle>
                   <div class="flex grow flex-col text-sm gap-4 mt-5">
                     <div class="flex justify-center gap-4 text-sm text-white">
-                      <PrimaryButton @click="buyMorale()">
+                      <PrimaryButton
+                        @click="isConquer ? buyMorale() : addMembers()"
+                      >
                         SUBMIT</PrimaryButton
                       >
                       <SecondaryButton c @click="closeMoraleModal()">
@@ -474,6 +476,7 @@
   const infoDialog = ref(false)
 
   const submit = async () => {
+    isConquer.value = false
     if (selectedGuild.value?.morale) {
       showMoraleDialog()
       return
@@ -517,20 +520,6 @@
         Number(utils.formatUnits(await priceManager.getMoraleFee(), 'ether')) *
         (newKnightsGuild.value.length * selectedGuild.value.morale)
       moraleDialog.value = true
-    }
-  }
-
-  const buyMorale = async () => {
-    try {
-      main.loading = true
-      const tx = await game.buyMorale(id)
-      await tx.wait()
-      closeMoraleModal()
-      router.push(`/conquer/${id}`)
-    } catch (error) {
-      //
-    } finally {
-      main.loading = false
     }
   }
 
@@ -681,7 +670,10 @@
 
   getGuild()
 
+  const isConquer = ref(false)
+
   const showConquer = async () => {
+    isConquer.value = true
     if (selectedGuild.value) {
       if (selectedGuild.value.morale > 0) {
         router.push(`/conquer/${selectedGuild.value.id}`)
@@ -707,6 +699,20 @@
       router.push({
         path: `/guilds`,
       })
+    } catch (error) {
+      //
+    } finally {
+      main.loading = false
+    }
+  }
+
+  const buyMorale = async () => {
+    try {
+      main.loading = true
+      const tx = await game.buyMorale(id)
+      await tx.wait()
+      closeMoraleModal()
+      router.push(`/conquer/${id}`)
     } catch (error) {
       //
     } finally {
