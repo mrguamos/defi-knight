@@ -1,42 +1,43 @@
 <template>
   <div class="flex flex-col justify-center items-center lg:px-10 w-full h-full">
-    <span class="text-white font-bold text-base uppercase">{{ nft }}</span>
-    <div class="w-full h-full overflow-y-auto overscroll-contain mt-10">
-      <ul
-        v-if="items.length > 0"
-        class="flex flex-col w-full items-center justify-center divide-y divide-slate-700 h-full lg:mt-10"
-        :class="{ 'max-h-[364px]': size == 'lg' }"
+    <span class="text-slate-300 font-extrabold text-lg uppercase"
+      >{{ nft }}
+    </span>
+
+    <ul
+      v-if="items.length > 0"
+      class="flex flex-col w-full divide-y divide-slate-700 h-full mt-10 overflow-y-auto overscroll-contain"
+      :class="{ 'max-h-[364px]': size == 'lg' }"
+    >
+      <li
+        v-for="item in items"
+        :key="item.id"
+        class="flex justify-between items-center py-2 px-1 w-full hover:cursor-pointer"
+        @click="emit('view-item', item, nft)"
       >
-        <li
-          v-for="item in items"
-          :key="item.id"
-          class="flex justify-between items-center py-2 px-1 w-full hover:cursor-pointer"
-          @click="emit('view-item', item, nft)"
-        >
-          <img
-            src="/src/assets/avatar3.png"
-            class="inline-block w-14 h-14 rounded-full ring-2"
-            :class="getBorder(item.rarity)"
-          />
-          <div class="flex flex-col justify-center items-center">
-            {{
-              (nft.toLowerCase().includes('commanders') ? 'C ' : 'K ') +
-              '#' +
-              Number(item.id).toLocaleString('en-US', {
-                minimumIntegerDigits: 2,
-                useGrouping: false,
-              })
-            }}
-          </div>
-        </li>
-      </ul>
-      <div
-        v-else
-        class="flex flex-col w-full items-center justify-center divide-y divide-slate-700 overflow-y-auto h-full lg:mt-10"
-        :class="{ 'max-h-[364px]': size == 'lg' }"
-      >
-        <img src="/src/assets/empty.png" class="inline-block w-24 h-24" />
-      </div>
+        <img
+          src="/src/assets/avatar3.png"
+          class="inline-block w-14 h-14 rounded-full ring-2"
+          :class="getBorder(item.rarity)"
+        />
+        <div class="flex flex-col justify-center items-center">
+          {{
+            (nft.toLowerCase().includes('commanders') ? 'C ' : 'K ') +
+            '#' +
+            Number(item.id).toLocaleString('en-US', {
+              minimumIntegerDigits: 2,
+              useGrouping: false,
+            })
+          }}
+        </div>
+      </li>
+    </ul>
+    <div
+      v-else
+      class="flex flex-col w-full items-center justify-center divide-y divide-slate-700 overflow-y-auto h-full lg:mt-10"
+      :class="{ 'max-h-[364px]': size == 'lg' }"
+    >
+      <img src="/src/assets/empty.png" class="inline-block w-24 h-24" />
     </div>
   </div>
 </template>

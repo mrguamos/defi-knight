@@ -1,30 +1,26 @@
 <template>
-  <div class="flex flex-col w-full items-center gap-10">
-    <div class="grid grid-cols-2 max-w-7xl w-full">
+  <div class="flex flex-col w-full items-center gap-10 pb-10">
+    <div
+      class="grid grid-cols-1 gap-10 md:grid-cols-2 max-w-7xl w-full bg-black/20 p-5 rounded-lg"
+    >
       <MiniCharacter
-        class="lg:flex hidden"
         nft="Commanders"
         :items="commanders"
         @view-item="viewItem"
       />
 
       <MiniCharacter
-        class="lg:flex hidden"
         nft="New Commanders"
         :items="newCommanders"
         @view-item="viewItem"
       />
     </div>
-    <div class="grid grid-cols-2 max-w-7xl w-full mt-32">
-      <MiniCharacter
-        class="lg:flex hidden"
-        nft="Knights"
-        :items="knights"
-        @view-item="viewItem"
-      />
+    <div
+      class="grid grid-cols-1 gap-10 md:grid-cols-2 max-w-7xl w-full mt-14 bg-black/20 p-5 rounded-lg"
+    >
+      <MiniCharacter nft="Knights" :items="knights" @view-item="viewItem" />
 
       <MiniCharacter
-        class="lg:flex hidden"
         nft="New Knights"
         :items="newKnights"
         @view-item="viewItem"
@@ -82,14 +78,28 @@
                 <div class="flex flex-col text-sm gap-4">
                   <div class="flex justify-center items-center">
                     <NFTCard
-                      :nft="selectedNft"
-                      :item="selected!"
+                      :nft="
+                        selectedNft.toLowerCase().includes('commanders')
+                          ? 'commanders'
+                          : 'knights'
+                      "
+                      :item="selected"
                       :mode="'inventory'"
                     />
                   </div>
                   <div
                     class="flex justify-center gap-4 text-sm text-white mt-2"
                   >
+                    <button
+                      v-if="selectedNft.toLowerCase().includes('new')"
+                      class="border-2 border-red-700 p-2 rounded-lg"
+                      @click="removeItem(selected)"
+                    >
+                      REMOVE
+                    </button>
+                    <PrimaryButton v-else @click="addItem(selected)">
+                      ADD</PrimaryButton
+                    >
                     <SecondaryButton @click="closeModal()">
                       CLOSE</SecondaryButton
                     >
@@ -129,10 +139,38 @@
   const knight = useKnight()
   const main = useMain()
   const contract = useContract()
-  const selected = ref<CharacterCommon>()
+  const selected = ref<CharacterCommon>(undefined as unknown as CharacterCommon)
   const selectedNft = ref('')
 
   const dialog = ref(false)
+
+  const addItem = (item: CharacterCommon) => {
+    if (item) {
+      try {
+        if (selectedNft.value.includes('commanders')) {
+          emit('add-commander', item)
+          return
+        }
+        emit('add-knight', item)
+      } finally {
+        closeModal()
+      }
+    }
+  }
+
+  const removeItem = (item: CharacterCommon) => {
+    if (item) {
+      try {
+        if (selectedNft.value.includes('commanders')) {
+          emit('remove-commander', item)
+          return
+        }
+        emit('remove-knight', item)
+      } finally {
+        closeModal()
+      }
+    }
+  }
 
   const viewItem = (item: CharacterCommon, nft: string) => {
     selectedNft.value = nft.toLowerCase()
