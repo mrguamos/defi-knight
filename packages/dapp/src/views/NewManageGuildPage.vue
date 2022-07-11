@@ -402,7 +402,7 @@
                   </DialogTitle>
                   <div class="flex grow flex-col text-sm gap-4 mt-5">
                     <div class="flex justify-center gap-4 text-sm text-white">
-                      <PrimaryButton @click="addMembers()">
+                      <PrimaryButton @click="buyMorale()">
                         SUBMIT</PrimaryButton
                       >
                       <SecondaryButton c @click="closeMoraleModal()">
@@ -517,6 +517,20 @@
         Number(utils.formatUnits(await priceManager.getMoraleFee(), 'ether')) *
         (newKnightsGuild.value.length * selectedGuild.value.morale)
       moraleDialog.value = true
+    }
+  }
+
+  const buyMorale = async () => {
+    try {
+      main.loading = true
+      const tx = await game.buyMorale(id)
+      await tx.wait()
+      closeMoraleModal()
+      router.push(`/conquer/${id}`)
+    } catch (error) {
+      //
+    } finally {
+      main.loading = false
     }
   }
 

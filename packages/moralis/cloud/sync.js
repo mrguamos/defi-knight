@@ -14,7 +14,7 @@ const marketTopic =
 
 const gameAddress = gameNetworks[networkId].address
 
-const combatDesc = 'CombatEvent'
+const combatDesc = 'CombatEvents'
 
 const combatTableName = 'CombatEvents'
 
