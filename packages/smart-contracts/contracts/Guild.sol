@@ -262,4 +262,12 @@ contract Guild is
     {
         guilds[guildId].lastFight = block.timestamp;
     }
+
+    function updateMorale(uint256 guildId, uint8 morale)
+        public
+        onlyRole(GAME_ADMIN_ROLE)
+        whenNotPaused
+    {
+        guilds[guildId].morale = morale;
+    }
 }

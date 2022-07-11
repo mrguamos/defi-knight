@@ -214,6 +214,7 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
             level
         );
         guild.updateLastFight(guildId);
+        guild.updateMorale(guildId, g.morale - 1);
         emit CombatEvent(combatId);
     }
 
