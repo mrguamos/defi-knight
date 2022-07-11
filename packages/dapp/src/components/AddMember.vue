@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col w-full items-center gap-10 pb-10">
     <div
-      class="grid grid-cols-1 gap-10 md:grid-cols-2 max-w-7xl w-full bg-black/20 p-5 rounded-lg"
+      class="hidden lg:grid grid-cols-1 gap-10 md:grid-cols-2 max-w-7xl w-full bg-black/20 p-5 rounded-lg"
     >
       <MiniCharacter
         nft="Commanders"
@@ -16,7 +16,7 @@
       />
     </div>
     <div
-      class="grid grid-cols-1 gap-10 md:grid-cols-2 max-w-7xl w-full mt-14 bg-black/20 p-5 rounded-lg"
+      class="hidden lg:grid grid-cols-1 gap-10 md:grid-cols-2 max-w-7xl w-full mt-14 bg-black/20 p-5 rounded-lg"
     >
       <MiniCharacter nft="Knights" :items="knights" @view-item="viewItem" />
 
@@ -25,6 +25,114 @@
         :items="newKnights"
         @view-item="viewItem"
       />
+    </div>
+
+    <div
+      class="grid grid-cols-2 md:hidden max-w-7xl w-full rounded-lg divide-x-4 divide-black text-base font-extrabold"
+    >
+      <button
+        class="bg-teal-700 p-2"
+        :class="{
+          'bg-teal-500': toggleView,
+        }"
+        @click="toggleView = true"
+      >
+        COMMANDERS
+      </button>
+      <button
+        class="bg-teal-700 p-2"
+        :class="{
+          'bg-teal-500': !toggleView,
+        }"
+        @click="toggleView = false"
+      >
+        KNIGHTS
+      </button>
+    </div>
+    <div v-if="toggleView" class="md:hidden flex flex-col w-full p-5 gap-10">
+      <Disclosure>
+        <DisclosureButton
+          class="flex justify-between items-center w-full rounded-lg border border-teal-700 py-2 px-5"
+        >
+          SHOW COMMANDERS
+          <FontAwesomeIcon
+            :icon="['fas', 'angle-down']"
+            size="2x"
+            class="text-teal-700"
+          />
+        </DisclosureButton>
+        <DisclosurePanel>
+          <MiniCharacter
+            nft="Commanders"
+            :items="commanders"
+            size="md"
+            @view-item="viewItem"
+          />
+        </DisclosurePanel>
+      </Disclosure>
+      <Disclosure>
+        <DisclosureButton
+          class="flex justify-between items-center w-full rounded-lg border border-teal-700 py-2 px-5"
+        >
+          SHOW NEW COMMANDERS
+          <FontAwesomeIcon
+            :icon="['fas', 'angle-down']"
+            size="2x"
+            class="text-teal-700"
+          />
+        </DisclosureButton>
+        <DisclosurePanel>
+          <MiniCharacter
+            nft="New Commanders"
+            :items="newCommanders"
+            size="md"
+            @view-item="viewItem"
+          />
+        </DisclosurePanel>
+      </Disclosure>
+    </div>
+
+    <div v-else class="fmd:hidden lex flex-col w-full p-5 gap-10">
+      <Disclosure>
+        <DisclosureButton
+          class="flex justify-between items-center w-full rounded-lg border border-teal-700 py-2 px-5"
+        >
+          SHOW KNIGHTS
+          <FontAwesomeIcon
+            :icon="['fas', 'angle-down']"
+            size="2x"
+            class="text-teal-700"
+          />
+        </DisclosureButton>
+        <DisclosurePanel>
+          <MiniCharacter
+            nft="Knights"
+            :items="knights"
+            size="md"
+            @view-item="viewItem"
+          />
+        </DisclosurePanel>
+      </Disclosure>
+      <Disclosure>
+        <DisclosureButton
+          class="flex justify-between items-center w-full rounded-lg border border-teal-700 py-2 px-5"
+        >
+          SHOW NEW KNIGHTS
+          <FontAwesomeIcon
+            :icon="['fas', 'angle-down']"
+            size="2x"
+            class="text-teal-700"
+          />
+        </DisclosureButton>
+        <DisclosurePanel>
+          <MiniCharacter
+            nft="New Knights"
+            :items="newKnights"
+            size="md"
+            @view-item="viewItem"
+          />
+        </DisclosurePanel>
+      </Disclosure>
     </div>
 
     <div class="flex gap-2 mt-10">
@@ -120,6 +228,9 @@
     TransitionChild,
     Dialog,
     DialogOverlay,
+    Disclosure,
+    DisclosureButton,
+    DisclosurePanel,
   } from '@headlessui/vue'
   import { PropType, ref } from 'vue'
   import { useCommander } from '../stores/commander-store'
@@ -143,6 +254,8 @@
   const selectedNft = ref('')
 
   const dialog = ref(false)
+
+  const toggleView = ref(true)
 
   const addItem = (item: CharacterCommon) => {
     if (item) {
