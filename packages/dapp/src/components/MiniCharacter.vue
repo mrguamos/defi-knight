@@ -16,19 +16,22 @@
         @click="emit('view-item', item, nft)"
       >
         <img
-          src="/src/assets/avatar3.png"
+          :src="getImageUrl(item)"
           class="inline-block w-14 h-14 rounded-full ring-2"
           :class="getBorder(item.rarity)"
         />
         <div class="flex flex-col justify-center items-center">
-          {{
-            (nft.toLowerCase().includes('commanders') ? 'C ' : 'K ') +
-            '#' +
-            Number(item.id).toLocaleString('en-US', {
-              minimumIntegerDigits: 2,
-              useGrouping: false,
-            })
-          }}
+          <span>
+            {{
+              (nft.toLowerCase().includes('commanders') ? 'C ' : 'K ') +
+              '#' +
+              Number(item.id).toLocaleString('en-US', {
+                minimumIntegerDigits: 2,
+                useGrouping: false,
+              })
+            }}
+          </span>
+          <span class="text-yellow-300"> R{{ item.rarity + 1 }} </span>
         </div>
       </li>
     </ul>
@@ -48,7 +51,7 @@
 
   const emit = defineEmits(['view-item'])
 
-  defineProps({
+  const props = defineProps({
     nft: {
       type: String,
       required: true,
@@ -71,6 +74,14 @@
     else if (rarity == 3) return 'ring-red-500'
     else if (rarity == 4) return 'ring-purple-500'
     return ''
+  }
+
+  function getImageUrl(item: CharacterCommon) {
+    const _nft = props.nft.toLowerCase().includes('commanders')
+      ? 'commanders'
+      : 'knights'
+    const name = `${_nft}/avatars/${item.gender}-${item.class}.png`
+    return new URL(`/src/assets/${name}`, import.meta.url).href
   }
 </script>
 

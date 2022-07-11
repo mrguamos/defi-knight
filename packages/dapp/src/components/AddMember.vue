@@ -50,7 +50,7 @@
       </button>
     </div>
     <div v-if="toggleView" class="md:hidden flex flex-col w-full p-5 gap-10">
-      <Disclosure>
+      <Disclosure v-slot="{ open }">
         <DisclosureButton
           class="flex justify-between items-center w-full rounded-lg border border-teal-700 py-2 px-5"
         >
@@ -59,6 +59,7 @@
             :icon="['fas', 'angle-down']"
             size="2x"
             class="text-teal-700"
+            :class="open ? 'transform rotate-180' : ''"
           />
         </DisclosureButton>
         <DisclosurePanel>
@@ -70,7 +71,7 @@
           />
         </DisclosurePanel>
       </Disclosure>
-      <Disclosure>
+      <Disclosure v-slot="{ open }">
         <DisclosureButton
           class="flex justify-between items-center w-full rounded-lg border border-teal-700 py-2 px-5"
         >
@@ -79,6 +80,7 @@
             :icon="['fas', 'angle-down']"
             size="2x"
             class="text-teal-700"
+            :class="open ? 'transform rotate-180' : ''"
           />
         </DisclosureButton>
         <DisclosurePanel>
@@ -92,8 +94,8 @@
       </Disclosure>
     </div>
 
-    <div v-else class="fmd:hidden lex flex-col w-full p-5 gap-10">
-      <Disclosure>
+    <div v-else class="md:hidden flex flex-col w-full p-5 gap-10">
+      <Disclosure v-slot="{ open }">
         <DisclosureButton
           class="flex justify-between items-center w-full rounded-lg border border-teal-700 py-2 px-5"
         >
@@ -102,6 +104,7 @@
             :icon="['fas', 'angle-down']"
             size="2x"
             class="text-teal-700"
+            :class="open ? 'transform rotate-180' : ''"
           />
         </DisclosureButton>
         <DisclosurePanel>
@@ -113,7 +116,7 @@
           />
         </DisclosurePanel>
       </Disclosure>
-      <Disclosure>
+      <Disclosure v-slot="{ open }">
         <DisclosureButton
           class="flex justify-between items-center w-full rounded-lg border border-teal-700 py-2 px-5"
         >
@@ -122,6 +125,7 @@
             :icon="['fas', 'angle-down']"
             size="2x"
             class="text-teal-700"
+            :class="open ? 'transform rotate-180' : ''"
           />
         </DisclosureButton>
         <DisclosurePanel>
