@@ -456,8 +456,15 @@ Moralis.Cloud.afterSave('CombatEvents', async (request) => {
       abiGame,
       config.get('GAME_ADDRESS')
     )
-    const ch = await gameContract.methods.getCombatHistory(combatId).call()
+
     const CombatHistory = Moralis.Object.extend('CombatHistory')
+    const query = new Moralis.Query(CombatHistory)
+    query.equalTo('combatId', Number(combatId))
+    const result = await query.first()
+    if (result) {
+      return
+    }
+    const ch = await gameContract.methods.getCombatHistory(combatId).call()
     let combatHistory = new CombatHistory()
     combatHistory.set('combatId', Number(combatId))
     combatHistory.set('account', ch.account.toLowerCase())
