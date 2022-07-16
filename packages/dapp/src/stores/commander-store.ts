@@ -16,6 +16,10 @@ export const useCommander = defineStore('commander', {
     async mintCommander(): Promise<providers.TransactionResponse> {
       const contracts = useContract()
       const mintFee = await usePriceManager().getStableFee()
+      await contracts.game.callStatic.mintCommander({
+        value: mintFee,
+        gasLimit: 400000,
+      })
       return contracts.game.functions.mintCommander({
         value: mintFee,
         gasLimit: 400000,

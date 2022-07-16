@@ -33,6 +33,9 @@ export const useGame = defineStore('game', {
       level: number
     ): Promise<providers.TransactionResponse> {
       const contracts = useContract()
+      await contracts.game.callStatic.conquer(guildId, level, {
+        gasLimit: 400000,
+      })
       return contracts.game.conquer(guildId, level, {
         gasLimit: 400000,
       })
