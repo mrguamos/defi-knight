@@ -10,8 +10,11 @@ export const useGuild = defineStore('guild', {
     }
   },
   actions: {
-    mintGuild(name: string): Promise<providers.TransactionResponse> {
+    async mintGuild(name: string): Promise<providers.TransactionResponse> {
       const contracts = useContract()
+      await contracts.game.callStatic.mintGuild(
+        ethers.utils.formatBytes32String(name)
+      )
       return contracts.game.functions.mintGuild(
         ethers.utils.formatBytes32String(name)
       )

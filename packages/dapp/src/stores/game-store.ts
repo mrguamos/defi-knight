@@ -15,12 +15,18 @@ export const useGame = defineStore('game', {
       knights: number[]
     ): Promise<providers.TransactionResponse> {
       const contracts = useContract()
+      await contracts.game.callStatic.addGuildMembers(
+        guildId,
+        commanders,
+        knights
+      )
       return contracts.game.addGuildMembers(guildId, commanders, knights)
     },
     async disbandGuild(
       guildId: number
     ): Promise<providers.TransactionResponse> {
       const contracts = useContract()
+      await contracts.game.callStatic.disbandGuild(guildId)
       return contracts.game.disbandGuild(guildId)
     },
 
@@ -42,6 +48,7 @@ export const useGame = defineStore('game', {
     },
     async buyMorale(guildId: number): Promise<providers.TransactionResponse> {
       const contracts = useContract()
+      await contracts.game.callStatic.buyMorale(guildId)
       return contracts.game.buyMorale(guildId)
     },
     async getCombat(combatId: number) {
@@ -50,6 +57,7 @@ export const useGame = defineStore('game', {
     },
     async claim(): Promise<providers.TransactionResponse> {
       const contracts = useContract()
+      await contracts.game.callStatic.claim()
       return contracts.game.claim()
     },
   },

@@ -341,7 +341,7 @@ contract Game is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         uint256[] memory commandersId = guild.getAllCommanders(guildId);
         require(
             (commandersId.length + newCommanderTokens.length) <= 5,
-            "Invalid number of assigned commanders."
+            "Invalid number of commanders."
         );
         Guild.GuildState memory g = guild.getGuild(guildId);
 

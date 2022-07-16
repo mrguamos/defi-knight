@@ -503,8 +503,12 @@
       router.push({
         path: `/guilds`,
       })
-    } catch (error) {
-      //
+      // eslint-disable-next-line
+    } catch (error: any) {
+      if (error.reason) {
+        // TODO
+        console.log(error.reason)
+      }
     } finally {
       main.loading = false
     }
@@ -699,8 +703,12 @@
       router.push({
         path: `/guilds`,
       })
-    } catch (error) {
-      //
+      // eslint-disable-next-line
+    } catch (error: any) {
+      if (error.reason) {
+        // TODO
+        console.log(error.reason)
+      }
     } finally {
       main.loading = false
     }

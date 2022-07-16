@@ -342,8 +342,12 @@
             }
             result.value = false
           }
-        } catch (error) {
-          console.log(error)
+          // eslint-disable-next-line
+        } catch (error: any) {
+          if (error.reason) {
+            // TODO
+            console.log(error.reason)
+          }
         } finally {
           showDialog()
         }

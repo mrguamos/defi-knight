@@ -346,7 +346,10 @@
       guilds.value.push(await getGuild())
       // eslint-disable-next-line
     } catch (error: any) {
-      console.log(error)
+      if (error.reason) {
+        // TODO
+        console.log(error.reason)
+      }
       if (error.code !== 4001) {
         //
       }
