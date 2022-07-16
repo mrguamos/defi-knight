@@ -37,7 +37,7 @@
     </ul>
     <div
       v-else
-      class="flex flex-col w-full items-center justify-center divide-y divide-slate-700 overflow-y-auto h-full lg:mt-10"
+      class="flex flex-col w-full items-center justify-center divide-y divide-slate-700 overflow-y-hidden hover:overflow-y-auto h-full lg:mt-10"
       :class="{ 'max-h-[364px]': size == 'lg' }"
     >
       <img src="/src/assets/empty.png" class="inline-block w-24 h-24" />

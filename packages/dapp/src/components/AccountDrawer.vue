@@ -107,9 +107,8 @@
   import numeral from 'numeral'
   import { useAccount } from '../stores/account-store'
   import dayjs from 'dayjs'
-  import { onMounted, onUnmounted, ref } from 'vue'
+  import { onMounted, onUnmounted, ref, computed } from 'vue'
   import { useMain } from '../stores/main-store'
-  import { computed } from '@vue/reactivity'
   import { useRewards } from '../stores/rewards-store'
   import { useGame } from '../stores/game-store'
 

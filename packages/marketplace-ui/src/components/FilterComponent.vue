@@ -26,7 +26,7 @@
 <template>
   <div
     :key="useMain().key"
-    class="z-20 lg:z-0 ease-in-out duration-300 bg-gray-900/50 w-full lg:flex lg:w-80 flex-col overflow-y-auto border-r-2 border-r-gray-500/20 items-center divide-y divide-gray-500/50 shrink-0"
+    class="z-20 lg:z-0 ease-in-out duration-300 bg-gray-900/50 w-full lg:flex lg:w-80 flex-col overflow-y-hidden hover:overflow-y-auto border-r-2 border-r-gray-500/20 items-center divide-y divide-gray-500/50 shrink-0"
     style="height: calc(100vh - 142px)"
     :class="
       ({ 'translate-x-0': useMain().filter && useMain().width < 1024 },
