@@ -11,6 +11,8 @@ export const useMain = defineStore('main', {
       loading: false,
       refresh: false,
       drawer: false,
+      errorDialog: false,
+      errorMessage: '',
     }
   },
   getters: {

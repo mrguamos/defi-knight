@@ -3,11 +3,13 @@
   import { useWeb3 } from './stores/web3-store'
   import { useMain } from './stores/main-store'
   import DefiSpinner from './components/DefiSpinner.vue'
+  import ErrorDialog from './components/ErrorDialog.vue'
 </script>
 
 <template>
   <DefiSpinner v-if="useMain().loading" />
   <LayoutHeader />
+  <ErrorDialog />
   <div
     v-if="useMain().drawer"
     class="fixed h-screen w-screen bg-black/50"

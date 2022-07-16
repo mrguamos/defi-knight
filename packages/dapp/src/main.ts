@@ -30,6 +30,7 @@ import {
   faCaretDown,
   faCog,
   faInfoCircle,
+  faExclamationTriangle,
 } from '@fortawesome/free-solid-svg-icons'
 import { faStar as farStar } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -65,7 +66,8 @@ dayjs.extend(isSameOrBefore)
     faCheck,
     faCaretDown,
     faCog,
-    faInfoCircle
+    faInfoCircle,
+    faExclamationTriangle
   )
 
   const app = createApp(App)

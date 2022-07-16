@@ -202,7 +202,8 @@
       // eslint-disable-next-line
     } catch (error: any) {
       if (error.reason) {
-        // TODO
+        main.errorDialog = true
+        main.errorMessage = error.reason
         console.log(error.reason)
       }
       if (error.code !== 4001) {

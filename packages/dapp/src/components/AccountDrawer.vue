@@ -136,6 +136,8 @@
   const minutes = ref('00')
   const seconds = ref('00')
 
+  const main = useMain()
+
   setInterval(function () {
     if (Number(props.rewards.amount.toString()) > 0) {
       const now = new Date().getTime()
@@ -194,8 +196,13 @@
       await res.wait()
       emit('toggle', false)
       useMain().drawer = false
-    } catch (error) {
-      //
+      // eslint-disable-next-line
+    } catch (error: any) {
+      if (error.reason) {
+        main.errorDialog = true
+        main.errorMessage = error.reason
+        console.log(error.reason)
+      }
     } finally {
       useMain().loading = false
     }
