@@ -40,13 +40,13 @@ contract PriceManager is
         _grantRole(UPGRADER_ROLE, msg.sender);
         oracle = _oracle;
         defiKnight = _defiKnight;
-        mintFee = 50;
-        stableFee = 100000000000000000;
-        guildFee = 50;
+        mintFee = 5;
+        stableFee = 50000000000000000;
+        guildFee = 5;
         moraleFee = 1;
-        emblemFee = 50;
-        potionCPFee = 50;
-        potionWRFee = 50;
+        emblemFee = 10;
+        potionCPFee = 10;
+        potionWRFee = 10;
     }
 
     function getMintFee() public view returns (uint256) {

@@ -27,8 +27,8 @@ contract RewardsManager is
     //   wrIncrement: 5,
     //   minWR: 30,
     //   maxWR: 70,
-    //   minAmount: 10,
-    //   amountIncrement: 4,
+    //   minAmount: 8,
+    //   amountIncrement: 6,
 
     struct AccountRewards {
         address account;
@@ -58,7 +58,7 @@ contract RewardsManager is
         __UUPSUpgradeable_init();
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(UPGRADER_ROLE, msg.sender);
-        rewards = Rewards(25, 9, 50, 6250, 25, 250, 5, 30, 70, 10, 4);
+        rewards = Rewards(25, 9, 50, 6250, 25, 250, 5, 30, 70, 8, 6);
     }
 
     function _authorizeUpgrade(address newImplementation)
