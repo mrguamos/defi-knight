@@ -174,7 +174,7 @@
         class="flex items-center justify-center mt-10 w-full max-w-sm animate-pulse"
       >
         <div
-          v-if="isCooldown"
+          v-if="isCooldown && winRate >= 30"
           class="hover:cursor-pointer bg-teal-700 flex w-full justify-center items-center p-2 rounded-lg"
           @click="conquer()"
         >
