@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="!useMain().filter || useMain().width > 1024"
-    class="absolute lg:static z-10 lg:z-0 bg-gray-900/50 flex w-full flex-col overflow-y-auto overflow-x-hidden border-r-2 border-r-gray-500/20 items-center"
+    class="absolute lg:static z-10 lg:z-0 bg-gray-900/50 flex w-full flex-col overflow-y-hidden hover:overflow-y-auto overflow-x-hidden border-r-2 border-r-gray-500/20 items-center"
     style="height: calc(100vh - 142px)"
   >
     <div class="py-5 flex relative w-full justify-center items-center text-xl">

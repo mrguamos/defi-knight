@@ -6,7 +6,7 @@
 
     <ul
       v-if="items.length > 0"
-      class="flex flex-col w-full divide-y divide-slate-700 h-full mt-10 overflow-y-auto overscroll-contain"
+      class="flex flex-col w-full divide-y divide-slate-700 h-full mt-10 overflow-y-hidden hover:overflow-y-auto overscroll-contain"
       :class="{ 'max-h-[364px]': size == 'lg' }"
     >
       <li

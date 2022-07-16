@@ -218,14 +218,18 @@
                 >
                   <span>Price</span>
                   <span
-                    >{{ main.getEthAmount((item as CommanderMarket).amount)}}
+                    >{{
+                      main.getEthAmount((item as CommanderMarket).amount)
+                    }}
                     BNB</span
                   >
                 </div>
                 <div class="flex justify-center items-center gap-10 mt-2">
                   <button
                     title="Edit"
-                    @click="openEditDialog(item.id , (item as CommanderMarket).amount)"
+                    @click="
+                      openEditDialog(item.id, (item as CommanderMarket).amount)
+                    "
                   >
                     <PencilIcon class="h-7 w-7 text-teal-700" />
                   </button>

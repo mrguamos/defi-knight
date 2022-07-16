@@ -220,14 +220,18 @@
                 >
                   <span>Price</span>
                   <span
-                    >{{ main.getEthAmount((item as KnightMarket).amount)}}
+                    >{{
+                      main.getEthAmount((item as KnightMarket).amount)
+                    }}
                     BNB</span
                   >
                 </div>
                 <div class="flex justify-center items-center gap-10 mt-2">
                   <button
                     title="Edit"
-                    @click="openEditDialog(item.id, (item as KnightMarket).amount)"
+                    @click="
+                      openEditDialog(item.id, (item as KnightMarket).amount)
+                    "
                   >
                     <PencilIcon class="h-7 w-7 text-teal-700" />
                   </button>

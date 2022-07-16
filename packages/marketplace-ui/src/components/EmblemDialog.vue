@@ -171,7 +171,7 @@
 
 <script setup lang="ts">
   import 'vue3-carousel/dist/carousel.css'
-  import { ref, onMounted, nextTick } from 'vue'
+  import { ref, onMounted, nextTick, computed } from 'vue'
   import { Carousel, Slide, Navigation } from 'vue3-carousel'
   import {
     TransitionRoot,
@@ -189,7 +189,6 @@
   import { useGuild } from '@/stores/guild-store'
   import type { Guild } from '@/types/guild'
   import { useAccount } from '@/stores/account-store'
-  import { computed } from '@vue/reactivity'
   import { useMarket } from '@/stores/market-store'
   import { usePriceManager } from '@/stores/price-manager-store'
   import { utils } from 'ethers'

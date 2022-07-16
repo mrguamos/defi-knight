@@ -198,14 +198,18 @@
                 >
                   <span>Price</span>
                   <span
-                    >{{ main.getEthAmount((item as KnightMarket).amount)}}
+                    >{{
+                      main.getEthAmount((item as KnightMarket).amount)
+                    }}
                     BNB</span
                   >
                 </div>
                 <div class="flex justify-center items-center mt-2">
                   <button
                     title="Buy"
-                    @click="openBuyDialog(item.id, (item as KnightMarket).amount)"
+                    @click="
+                      openBuyDialog(item.id, (item as KnightMarket).amount)
+                    "
                   >
                     <CashIcon class="h-7 w-7 text-teal-700" />
                   </button>
