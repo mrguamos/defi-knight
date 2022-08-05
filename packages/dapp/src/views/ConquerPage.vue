@@ -222,12 +222,21 @@
                 >
                   <div class="flex flex-col text-sm gap-4">
                     <div class="flex justify-center items-center">
-                      <video class="object-contain" autoplay playsinline>
+                      <video
+                        class="hidden lg:block object-contain"
+                        autoplay
+                        playsinline
+                      >
                         <source
                           :src="result ? victory : defeat"
                           type="video/webm"
                         />
+                        <img :src="result ? _victory : _defeat" />
                       </video>
+                      <img
+                        :src="result ? _victory : _defeat"
+                        class="lg:hidden"
+                      />
                     </div>
                     <div
                       class="flex justify-center gap-4 text-sm text-white mt-2"
@@ -261,6 +270,8 @@
   import victory from '/src/assets/victory.webm'
   import defeat from '/src/assets/defeat.webm'
   import SecondaryButton from '../components/SecondaryButton.vue'
+  import _victory from '/src/assets/victory.png'
+  import _defeat from '/src/assets/defeat.png'
 
   import {
     Listbox,

@@ -115,7 +115,10 @@ contract RewardsManager is
         AccountRewards storage ar = accountRewards[account];
         require(ar.amount > 0, "Nothing to claim");
         uint256 countdown = ar.lastClaim + REWARDS_DURATION_DAYS;
-        uint256 diff = (countdown + 1 days) - block.timestamp;
+        uint256 diff = 0;
+        if (countdown + 1 days >= block.timestamp) {
+            diff = (countdown + 1 days) - block.timestamp;
+        }
         uint256 daysDiff = diff / 1 days;
         uint256 tax = daysDiff * REWARDS_FEE_PER_DAY;
         uint256 fee = (ar.amount * tax) / 100;

@@ -512,6 +512,7 @@
       }
     } finally {
       main.loading = false
+      moraleDialog.value = false
     }
   }
 
